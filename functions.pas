@@ -1,0 +1,278 @@
+unit functions;
+
+{$mode objfpc}{$H+}
+
+interface
+uses
+  Classes, SysUtils, Forms, LCLType, Graphics, SynEdit, SynHighlighterPosition;
+
+type
+    tri =   array of smallint;
+    tServ = record
+            netw:     string;
+            serv:     array[1..15] of string; // server address
+            n1,n2,n3: string;                 // nicks
+            user:     string;                 // User name
+            rn:       string;                 // Real name
+    end;
+
+type
+  csynedit = class(TCustomSynEdit)                  // TCustomSynedit subclass to change SetLines
+  private
+   FStrings: TStrings;
+  public
+   BStrings: TStrings;                              // TStrings with characters to be replaces
+   hl:       TSynPositionHighlighter;
+
+   constructor Create(AOwner: TComponent); override;
+   destructor Destroy; override;
+  end;
+
+  bsynedit = class(csynedit)
+  end;
+
+function replce(r: string): string;
+function colors(c: string): TColor;
+function icolors(c: TColor): smallint;
+function posit(max: smallint): smallint;
+function arstat(newnick: string): string;
+function univ(Txt, cption: PChar; Flags: longint; sender: tobject): boolean;
+
+implementation
+
+constructor csynedit.Create(AOwner: TComponent);
+begin
+     inherited create(AOwner);
+     BStrings:= TStringList.Create;
+     hl:= TSynPositionHighlighter.Create(self);
+     self.Highlighter:= hl;
+end;
+
+destructor csynedit.Destroy;
+begin
+     BStrings.Free;
+     hl.Free;
+     inherited Destroy;
+end;
+
+function replce(r: string): string;
+{if channel is needed, the replacement must be given after colon (:)}
+var chan: string;
+    tmp:  string;
+begin
+     delete(r, 1, 1);
+     chan:= copy(r, pos(':', r)+1, length(r));
+
+     // Join
+     if (pos(lowercase('j'), r) = 1) or (pos('J', r) = 1) then begin
+        r:= StringReplace(r, lowercase('j'), 'JOIN', [rfReplaceAll]);
+        tmp:= '13';
+     end;
+
+     {
+     // Topic
+     if (pos(lowercase('topic'),r) = 1) then
+     r:= 'topic ' + chan + ' :Topic is: ' + char(2) + char(3) + '1,11 Bienvenidos al canal ' + char(3) +'0,13 #LC-Argentina' + char(15) + char(2) + char(3) + '1 Ahora podes chatear desde ' + char(15) + char(2) + char(3) + '1,3Kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + '1en ' + char(2) + char(3) + '12http://canalargentina.net/kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 y desde ' + char(15) + char(2) + char(3) + '4,14Mibbit' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 desde ' + char(15) + char(2) + char(3) + '12http://canalargentina.net/mibbit' + char(15);
+     }
+
+     // Notice
+     if (pos('notice', lowercase(r)) = 1) then begin
+        tmp:= copy(r, pos(' ', r)+1, length(r));
+        delete(tmp, 1, pos(' ', tmp));
+        delete(r, pos(tmp, r), length(r));
+        r:= StringReplace(r, 'notice', 'NOTICE', [rfReplaceAll]) + ':' + tmp;
+        tmp:= '13';
+     end;
+
+     // INVITE
+     if (pos(lowercase('invite'), r) = 1) then begin
+        r:= StringReplace(r, 'invite', 'INVITE', [rfReplaceAll]);
+        delete(r, pos(':', r), length(r));
+        r:= r + ' ' + chan;
+        tmp:= '13';
+     end;
+
+     // INVITE SENT                            // mcclane #chan
+     if (pos(lowercase('sinvite'), r) = 1) then begin
+        delete(r, 1, pos(' ', r)); delete(r, 1, pos(' ', r));
+        r:= 'You have invited ' + copy(r, 1, pos(' ' , r)) + copy(r, pos('#', r), length(r));
+     end;
+
+     // /me
+     if (pos('me', lowercase(r)) = 1) or (pos('me', lowercase(r)) = 2) then begin
+        if pos('me', lowercase(r)) = 1 then tmp:= '1';
+        r:= StringReplace(r, ' me', '', [rfReplaceAll]);
+        r:= StringReplace(r, 'me', '', [rfReplaceAll]);
+        // nick: baila
+        //delete(r, pos(':', r), 1);
+        if tmp = '1' then begin
+           // Show local
+           r:= '* ' + copy(r, pos(':', r)+1, length(r)) + copy(r, 1, pos(':', r)-1);
+        end else
+        // Send to server
+           r:= char(1) + 'ACTION' +r + char(1);
+           delete(r, pos(':', r), Length(r));
+     end;
+
+     // Query: example /query hola no way
+     // Getting the first word after /query
+     if (pos('query', lowercase(r)) = 1) then begin
+        delete(r, 1, pos(' ',r));
+        delete(r, pos(' ',r), length(r));
+     end;
+
+     // Voice
+     if (pos(lowercase('voice'), r) = 1) then begin
+        r:= StringReplace(r, 'voice', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +v', [rfReplaceAll]);
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+     if (pos(lowercase('devoice'), r) = 1) then begin
+        r:= StringReplace(r, 'devoice', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -v', [rfReplaceAll]);
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+
+     // OP
+     if (pos(lowercase('op'), r) = 1) then begin
+        r:= StringReplace(r, 'op', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +o', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+     if (pos(lowercase('deop'), r) = 1) then begin
+        r:= StringReplace(r, 'deop', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -o', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+
+     // KICK
+     if (pos(lowercase('kick'), r) = 1) then begin
+        r:= StringReplace(r, 'kick', 'KICK ' + copy(r, pos('#',r), pos(':',r)-1), [rfReplaceAll]);
+        delete(r, pos(':',r), length(r));
+        chan:= r;
+        delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan));
+        chan:= chan;
+        r:= StringReplace(r, chan, ':'+chan, [rfReplaceAll]);
+        tmp:= '13';
+     end;
+
+     // BAN
+     if (pos(lowercase('ban'), r) = 1) then begin
+        r:= StringReplace(r, 'ban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +b', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+     if (pos(lowercase('unban'), r) = 1) then begin
+        r:= StringReplace(r, 'unban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -b', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+        tmp:= '13';
+     end;
+     if tmp = '13' then result:= r + #13#10 else result:= r;
+end;
+
+function arstat(newnick: string): string;
+var
+   stat:   string = '~@%+';
+   n:      smallint = 1;
+   tmp:    string = '';
+   t:      char;
+   ch:     boolean = false;
+begin
+     //newnick:= '+@~hola';
+     // Adding stat to tmp
+     while (pos(newnick[n], stat) > 0) and (n <= length(newnick)) do begin
+           tmp:= tmp + newnick[n];
+     inc(n);
+     end;
+
+     // Sorting
+     n:= 1;
+     repeat
+       ch:= false;
+       n:= 1;
+     while (n < length(tmp)) do begin
+           //ShowMessage(inttostr(ord(tmp[n+1])) + ' n: ' + inttostr(ord(tmp[n])));
+           if ( ord(tmp[n+1]) > ord(tmp[n]) ) then begin
+              t:= tmp[n];
+              tmp[n]:= tmp[n+1];
+              tmp[n+1]:= t;
+              ch:= true;
+           end;
+     inc(n);
+     end;
+     until ch = false;
+
+     result:= tmp + copy(newnick, length(tmp)+1, length(newnick));
+end;
+
+function colors(c: string): TColor;
+begin
+     if c = '0' then result:= clWhite;
+     if c = '1' then result:= clBlack;
+     if c = '2' then result:= clNavy;
+     if c = '3' then result:= clGreen;
+     if c = '4' then result:= clRed;
+     if c = '5' then result:= clMaroon;
+     if c = '6' then result:= clPurple;
+     if c = '7' then result:= clOlive;
+     if c = '8' then result:= clYellow;
+     if c = '9' then result:= clLime;
+     if c = '10' then result:= clTeal;
+     if c = '11' then result:= clAqua;
+     if c = '12' then result:= clBlue;
+     if c = '13' then result:= clFuchsia;
+     if c = '14' then result:= clGray;
+     if c = '15' then result:= clSilver;
+end;
+
+function icolors(c: TColor): smallint;
+begin
+     if c = clWhite then result:= 0;
+     if c = clBlack then result:= 1;
+     if c = clNavy then result:= 2;
+     if c = clGreen then result:= 3;
+     if c = clRed then result:= 4;
+     if c = clMaroon then result:= 5;
+     if c = clPurple then result:= 6;
+     if c = clOlive then result:= 7;
+     if c = clYellow then result:= 8;
+     if c = clLime then result:= 9;
+     if c = clTeal then result:= 10;
+     if c = clAqua then result:= 11;
+     if c = clBlue then result:= 12;
+     if c = clFuchsia then result:= 13;
+     if c = clGray then result:= 14;
+     if c = clSilver then result:= 15;
+end;
+
+function posit(max: smallint): smallint;
+const
+     las: array of smallint = nil;
+     p:   smallint = 0;
+begin
+     if max = 0 then inc(p);
+     las[p]:= max;
+     //result:= inc(las[p]);
+
+end;
+
+// Universal Ok
+function univ(Txt, cption: PChar; Flags: longint; sender: tobject): boolean;
+var reply, boxstyle: integer;
+begin
+     if flags = 1 then
+           boxstyle :=  MB_ICONASTERISK + MB_YESNO else
+           boxstyle :=  MB_ICONHAND + MB_OK;
+
+     reply:= Application.MessageBox(Txt, pchar(Application.Title), boxstyle);
+
+     if reply = idno then result:= false;
+     if reply = idyes then result:= true;
+end;
+
+end.
+

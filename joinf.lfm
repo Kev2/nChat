@@ -1,0 +1,38 @@
+object fjoin: Tfjoin
+  Left = 623
+  Height = 89
+  Top = 310
+  Width = 173
+  BorderStyle = bsDialog
+  Caption = 'Join a channel'
+  ClientHeight = 89
+  ClientWidth = 173
+  OnActivate = FormActivate
+  OnKeyPress = FormKeyPress
+  Position = poMainFormCenter
+  LCLVersion = '1.6.0.4'
+  object jedit: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    AnchorSideTop.Side = asrCenter
+    Left = 36
+    Height = 25
+    Top = 32
+    Width = 100
+    OnKeyPress = jeditKeyPress
+    TabOrder = 0
+    Text = '#'
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = jedit
+    AnchorSideBottom.Control = jedit
+    Left = 36
+    Height = 15
+    Top = 17
+    Width = 78
+    Anchors = [akLeft, akBottom]
+    Caption = 'Join a channel'
+    ParentColor = False
+  end
+end

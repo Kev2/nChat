@@ -1,0 +1,27 @@
+object fkickmess: Tfkickmess
+  Left = 289
+  Height = 37
+  Top = 262
+  Width = 757
+  BorderStyle = bsNone
+  Caption = 'nChat - Message'
+  ClientHeight = 37
+  ClientWidth = 757
+  Position = poMainFormCenter
+  ShowInTaskBar = stNever
+  LCLVersion = '1.6.0.4'
+  object Edit1: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 5
+    Height = 25
+    Top = 5
+    Width = 747
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Around = 5
+    OnKeyPress = Edit1KeyPress
+    TabOrder = 0
+  end
+end

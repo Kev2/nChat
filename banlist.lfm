@@ -1,0 +1,100 @@
+object fbanlist: Tfbanlist
+  Left = 708
+  Height = 364
+  Top = 337
+  Width = 635
+  Caption = 'Banlist'
+  ClientHeight = 364
+  ClientWidth = 635
+  Color = 12966084
+  OnResize = FormResize
+  Position = poMainFormCenter
+  LCLVersion = '1.6.0.4'
+  object StringGrid1: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = clb
+    Left = 5
+    Height = 317
+    Top = 5
+    Width = 625
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 5
+    ColCount = 3
+    ColumnClickSorts = True
+    Columns = <    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Ban'
+        Width = 200
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'From'
+        Width = 200
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Date'
+        Width = 200
+      end>
+    DefaultRowHeight = 20
+    FixedCols = 0
+    Font.Height = -11
+    GridLineWidth = 0
+    Options = [goHorzLine, goRangeSelect, goColSizing, goRowSelect, goSmoothScroll]
+    ParentFont = False
+    RowCount = 2
+    TabOrder = 0
+    TitleFont.Height = -11
+    TitleStyle = tsNative
+  end
+  object remb: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 200
+    Height = 22
+    Top = 332
+    Width = 75
+    Anchors = [akBottom]
+    BorderSpacing.Around = 10
+    Caption = 'Remove'
+    Font.Height = -11
+    OnClick = rembClick
+    ParentFont = False
+    TabOrder = 1
+  end
+  object cropb: TButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 280
+    Height = 22
+    Top = 332
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Around = 10
+    Caption = 'Crop'
+    Font.Height = -11
+    ParentFont = False
+    TabOrder = 2
+  end
+  object clb: TButton
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 360
+    Height = 22
+    Top = 332
+    Width = 75
+    Anchors = [akBottom]
+    BorderSpacing.Around = 10
+    Caption = 'Clear'
+    Font.Height = -11
+    OnClick = clbClick
+    ParentFont = False
+    TabOrder = 3
+  end
+end
