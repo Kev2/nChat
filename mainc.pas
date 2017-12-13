@@ -1242,9 +1242,9 @@ case s of
           if (pos('#', cname) = 0) then begin
           s:= 0;
           if fmainc.TreeView1.Items.Count > 1 then
-          while (fmainc.TreeView1.Items.Item[s].Text <> cname) and (s < fmainc.TreeView1.Items.Count-1) do inc(s);
+          while (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) and (s < fmainc.TreeView1.Items.Count-1) do inc(s);
                 //ShowMessage(fmainc.TreeView1.Items.Item[s].Text);
-                if (fmainc.TreeView1.Items.Item[s].Text <> cname) then begin
+                if (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) then begin
                 fmainc.txp(num, cname, nick, false, true, false);
                 //cname:= inttostr(num) + cname;
                 {
@@ -2839,7 +2839,8 @@ begin
 
           2: begin // Search channel
           while (n < length(chanod)) do begin
-                if (chanod[n].chan = chan) then result:= chanod[n].arr;
+                chanod[n].chan:= lowercase(chanod[n].chan);
+                if (chanod[n].chan = lowercase(chan)) then result:= chanod[n].arr;
           inc(n); end;
           //ShowMessage('chan:: ' + inttostr(result));
           end; // Search
