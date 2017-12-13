@@ -6,7 +6,7 @@ interface
 
 uses
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LConvEncoding, blcksock, SynEdit, SynHighlighterPosition,
+    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, SynEdit, SynHighlighterPosition,
     dateutils, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
@@ -49,6 +49,9 @@ Type
     banlm: TMenuItem;
     chanm: TMenuItem;
     gopm: TMenuItem;
+    clink: TMenuItem;
+    opm: TMenuItem;
+    poplm: TPopupMenu;
     topm: TMenuItem;
     tvm: TMenuItem;
     opam: TMenuItem;
@@ -141,6 +144,12 @@ Type
     function nickinfo(nick: string): string;
     procedure bans(com, chan: string; con: smallint);
     procedure nickrclick(sender: TMenuItem);
+
+    procedure tsynMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure opmClick(Sender: TObject);
+    procedure clinkClick(Sender: TObject);
+
   private
     { private declarations }
   public
@@ -176,7 +185,7 @@ Type
   end;
 
   TSyn = class(bsynedit)
-  property Cursor: TCursor write SetCursor default crNo;
+  //property Cursor: TCursor write SetCursor default crNo;
   public
   var
      nnick,chan:   string;
@@ -190,6 +199,7 @@ Type
   procedure fcolors(app: boolean; co: tcolor; r: string);
   procedure wr(app: boolean); // o = memo id
   procedure unwr; // o = memo id
+  //procedure tsynOnMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   //procedure crb(posx,posy: integer);
   end;
 
@@ -210,6 +220,7 @@ var
   //com:      array of array of string;
   rc:       smallint; // right click treenode or nick / Send origin
   gr:       array[1..4] of TPortableNetworkGraphic;
+  str:      string; // Hyperlink in clipboard
 
 implementation
 
@@ -2197,6 +2208,80 @@ begin
      writeln(t, FormatDateTime('MMM d hh:mm:ss', now) + '  ' + r);
 end;
 
+procedure Tfmainc.opmClick(Sender: TObject);
+begin
+  OpenURL(str);
+end;
+
+procedure Tfmainc.clinkClick(Sender: TObject);
+begin
+     //if cl <> '' then
+     Clipboard.AsText:= str;
+end;
+
+procedure TFmainc.tsynMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+var x1,y1:  integer;
+    o:      smallint;
+begin
+     o:= cnode(5, TreeView1.Selected.AbsoluteIndex,0, '');
+
+     with m0[o] do begin
+
+
+     x1:= (x div 7);
+     y1:= (y div (LineHeight) + TopLine);
+     //if x < Width -100 then CaretX:= x1;
+     //if (y < Height - LineHeight) then CaretY:= y1;
+     //label1.Caption:= 'x: ' + inttostr(x) + ' y: ' + inttostr(y);
+     //label2.Caption:= copy(se.Lines[se.CaretY-1], se.CaretX, 1);
+
+     end;
+end;
+
+
+procedure tfmainc.tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var x1,y1:   integer;
+    s,e:     smallint;
+    o:       smallint;
+begin
+     //x1:= x - form1.Left - se.Left;
+     //y1:= y - form1.Top -  se.top;
+     o:= cnode(5, TreeView1.Selected.AbsoluteIndex,0, '');
+
+     with m0[o] do begin
+
+     x1:= (x) div 7;
+     y1:= (y div (LineHeight) + TopLine);
+     if button = mbRight then begin
+        CaretX:= x1;
+        if (y < Height - LineHeight) then CaretY:= y1;
+     end;
+
+     str:= Lines[carety-1];
+
+     // Getting boundaries
+     if str <> '' then begin
+     s:= CaretX;
+     while (str[s] <> ' ') do dec(s);
+     e:= s+1;
+     while (str[e] <> ' ') do inc(e);
+
+     str:= copy(Lines[CaretY-1], s+1, e-s-1);
+     if (pos('http://',str) = 1) or (pos('https://',str) = 1) then begin
+        x1:= x + fmainc.Left + Left;
+        y1:= y +20+ fmainc.Top  + top;
+        //label1.Caption:= 'x: ' + inttostr(x1) + ' y: ' + inttostr(y1);
+        //Clipboard.AsText:= str;
+     if Button = mbRight then
+        fmainc.poplm.PopUp(x1+100,y1+50) else fmainc.opmClick(nil);
+     end;
+
+     //ed0[o].Caption:= str;
+     end;
+     //if (x > s) and (x < e) then se.Cursor:= crHandPoint;
+     end;
+end;
+
 {
 procedure tsyn.crb(posx,posy: integer);
 begin
@@ -2424,10 +2509,11 @@ begin
      m0[a].Text:= '';
      m0[a].lc:= 0; // Counting lines;
      m0[a].node:= a;
+     m0[a].Cursor:= crHandPoint;
      m0[a].Color:= RGBToColor(243,243,243);
      m0[a].Gutter.Visible:= false;
      m0[a].RightGutter.Visible:= false;
-     m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol];
+     m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol] + [eoNoCaret] + [eoRightMouseMovesCursor];
      m0[a].Height:= 509;
      m0[a].Width:= 550;
      m0[a].lines.Add('Now chatting on ' + c);
@@ -2437,6 +2523,9 @@ begin
      m0[a].Modified:= false;
      //m0[a].OnChange:= @mstatusChange;
      m0[a].OnKeyUp:= @Memo1KeyUp;
+     m0[a].OnMouseMove:= @tsynMouseMove;
+     m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+
 
      // RichMemo Font Attribues
      // adobe-courier-medium-r-normal-*-*-100-*-*-m-*-iso10646-1
@@ -2615,7 +2704,7 @@ begin
      m0[a].Color:= RGBToColor(243,243,243);
      m0[a].Gutter.Visible:= false;
      m0[a].RightGutter.Visible:= false;
-     m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol];
+     m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol] + [eoNoCaret] + [eoRightMouseMovesCursor];
      m0[a].Height:= 509;
      m0[a].Width:= 750;
      m0[a].lines.Add(c);
@@ -2624,6 +2713,8 @@ begin
      m0[a].Modified:= false;
      //m0[a].OnChange:= @mstatusChange;
      m0[a].OnKeyUp:= @Memo1KeyUp;
+     m0[a].OnMouseMove:= @tsynMouseMove;
+     m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 
      // RichMemo Font Attribues
      //      // spanish iso8859-1
@@ -3721,7 +3812,10 @@ begin
                  TrayIcon1.Icon:= i;
               end else
 
-              if (pos('quit', lowercase(s)) = 0) or (mess[m] = true)
+              if (pos('quit', lowercase(s)) = 0) and (pos('quit:', lowercase(s)) = 0)
+                 and (pos('part', lowercase(s)) = 0)
+                 and (pos('has joined #', lowercase(s)) = 0)
+                 or (pos(':', s) > 0) or mess[m] = true
 
               then begin
                    mess[m]:= true;
