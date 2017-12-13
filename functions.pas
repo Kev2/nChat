@@ -26,6 +26,8 @@ type
 
    constructor Create(AOwner: TComponent); override;
    destructor Destroy; override;
+   //procedure SetCursor(Value: TCursor); override;
+   //OnMouseUp:= tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   end;
 
   bsynedit = class(csynedit)
@@ -55,6 +57,17 @@ begin
      inherited Destroy;
 end;
 
+{
+procedure csynedit.SetCursor(Value: TCursor);
+begin
+  if FCursor <> Value then
+  begin
+    FCursor := Value;
+    Perform(CM_CURSORCHANGED, 0, 0);
+  end;
+end;
+}
+
 function replce(r: string): string;
 {if channel is needed, the replacement must be given after colon (:)}
 var chan: string;
@@ -66,7 +79,6 @@ begin
      // Join
      if (pos(lowercase('j'), r) = 1) or (pos('J', r) = 1) then begin
         r:= StringReplace(r, lowercase('j'), 'JOIN', [rfReplaceAll]);
-        tmp:= '13';
      end;
 
      {
@@ -81,7 +93,6 @@ begin
         delete(tmp, 1, pos(' ', tmp));
         delete(r, pos(tmp, r), length(r));
         r:= StringReplace(r, 'notice', 'NOTICE', [rfReplaceAll]) + ':' + tmp;
-        tmp:= '13';
      end;
 
      // INVITE
@@ -89,7 +100,6 @@ begin
         r:= StringReplace(r, 'invite', 'INVITE', [rfReplaceAll]);
         delete(r, pos(':', r), length(r));
         r:= r + ' ' + chan;
-        tmp:= '13';
      end;
 
      // INVITE SENT                            // mcclane #chan
@@ -112,6 +122,7 @@ begin
         // Send to server
            r:= char(1) + 'ACTION' +r + char(1);
            delete(r, pos(':', r), Length(r));
+     tmp:= 'no13';
      end;
 
      // Query: example /query hola no way
@@ -119,18 +130,17 @@ begin
      if (pos('query', lowercase(r)) = 1) then begin
         delete(r, 1, pos(' ',r));
         delete(r, pos(' ',r), length(r));
+     tmp:= 'no13';
      end;
 
      // Voice
      if (pos(lowercase('voice'), r) = 1) then begin
         r:= StringReplace(r, 'voice', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +v', [rfReplaceAll]);
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
      if (pos(lowercase('devoice'), r) = 1) then begin
         r:= StringReplace(r, 'devoice', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -v', [rfReplaceAll]);
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
 
      // OP
@@ -138,13 +148,11 @@ begin
         r:= StringReplace(r, 'op', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +o', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
      if (pos(lowercase('deop'), r) = 1) then begin
         r:= StringReplace(r, 'deop', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -o', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
 
      // KICK
@@ -155,7 +163,6 @@ begin
         delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan));
         chan:= chan;
         r:= StringReplace(r, chan, ':'+chan, [rfReplaceAll]);
-        tmp:= '13';
      end;
 
      // BAN
@@ -163,15 +170,13 @@ begin
         r:= StringReplace(r, 'ban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +b', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
      if (pos(lowercase('unban'), r) = 1) then begin
         r:= StringReplace(r, 'unban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -b', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
         delete(r, pos(':',r), length(r));
-        tmp:= '13';
      end;
-     if tmp = '13' then result:= r + #13#10 else result:= r;
+     if tmp = 'no13' then result:= r else result:= r + #13#10;
 end;
 
 function arstat(newnick: string): string;
