@@ -272,6 +272,7 @@ begin
      //TTCBlockSocket.Create;
      //Tloop.Create(true); // Connecting
      //Tloop.Start;
+     conn.SetRemoteSin('','');
      while (conn.GetRemoteSinIP = '') do begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
@@ -315,19 +316,19 @@ begin
    while (fmainc.TreeView1.Items[n].Index < num) do begin
          n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
    end;
-   if fmainc.TreeView1.Items.Count = 2 then n:= 1;
+   //if fmainc.TreeView1.Items.Count = 2 then n:= 1;
 
-   m0[n].Lines.Add('Connected... now logging in');
+   if conn.GetRemoteSinIP <> '' then m0[n].Lines.Add('Connected... now logging in');
 
    fmainc.TreeView1.Items[n].Selected:= true;
    m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
    //fmainc.createlog(co, server);
 
-   {
+{
    // Testing connection
    //fmainc.createlog('test');
    r:= '';
-   fmainc.Timer1.Enabled:= false;
+   fmainc.Timer1.Enabled:= true;
    repeat
    r:= '';
    r:= conn.RecvString(1000);
@@ -340,19 +341,21 @@ begin
       r:= '';
    delete(r, pos(mess, r)-1, length(r));
 
-   writeln(t, r + mess);
+   output(clnone, r, n);
+   until r = '';
+   //writeln(t, r + mess);
    {
    m0[n].lines.append(r + mess);
    m0[n].SelStart:= length(m0[n].Text);
 
    m0[n].Append(r);
-   }
+
    output(clnone, r, n);
    writeln(t, r);
 
    until r='';
    closefile(t);
-   }
+   }}
    if not fmainc.timer1.Enabled then fmainc.Timer1.Enabled:= true;
 
      except
@@ -418,6 +421,7 @@ begin
      //net[s+1].conn.SendString('KILL' + #13#10);
      //net[s+1].conn.SendString('KILL ' + net[s+1].nick + #13#10);
      net[s+1].conn.CloseSocket;
+     //ShowMessage(net[s+1].conn.SocksIP:= '');
      result:= s+1;
 end;
 
@@ -429,7 +433,7 @@ begin
         s:= TreeView1.Selected.Parent.Index;
 
      s:= dconmClick(rconm);
-     net[s].conn.AbortSocket;
+     net[s].conn.CloseSocket;
      net[s].connect(s-1, false);
 end;
 
@@ -1871,7 +1875,7 @@ begin
 
                  // Searching in prior line. Bold and hyperlinks
                  c:= 1;
-                 while (c < length(tmp2)) do begin
+                 while (c <= length(tmp2)) do begin
                        if (tmp2[c] = char(2)) then
                           if b = false then b:= true else b:= false;
                        if (tmp2[c] = char(15)) then b:= false;
