@@ -381,17 +381,19 @@ begin
 end;
 
 procedure Tfserv.connbClick(Sender: TObject);
-var n:  smallint = 1;
+var n:  smallint = 0;
 begin
-     while (assigned(net[n])) do begin
+     with (fmainc) do begin
+     while (TreeView1.Items[n].GetNextSibling <> nil) do
+           n:= TreeView1.Items[n].GetNextSibling.Index;
      inc(n);
-     //ShowMessage('con: ' + inttostr(n));
+     if assigned(m0[0]) then inc(n);
      end;
+     fserv.Close;
      net[n]:= connex.create;
      net[n].connect(n-1, True);
      //inc(n);
      //nick1.Text:= 'coccco';
-     fserv.Close;
 end;
 
 

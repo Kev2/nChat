@@ -118,11 +118,11 @@ begin
         if tmp = '1' then begin
            // Show local
            r:= '* ' + copy(r, pos(':', r)+1, length(r)) + copy(r, 1, pos(':', r)-1);
+           tmp:= 'no13';
         end else
         // Send to server
            r:= char(1) + 'ACTION' +r + char(1);
            delete(r, pos(':', r), Length(r));
-     tmp:= 'no13';
      end;
 
      // Query: example /query hola no way

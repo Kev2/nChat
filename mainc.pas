@@ -145,6 +145,7 @@ Type
     procedure bans(com, chan: string; con: smallint);
     procedure nickrclick(sender: TMenuItem);
 
+    // Hypertext
     procedure tsynMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure opmClick(Sender: TObject);
@@ -236,7 +237,7 @@ end;
 
 destructor connex.destroy;
 begin
-     conn.free;
+     FreeAndNil(conn);
 end;
 
 
@@ -683,7 +684,13 @@ begin
                if (pos('/nick ', s) = 1) then net[ne].nick:= copy(s, pos(' ',s)+1, length(s));
 
            if (pos(lowercase('/list'), lowercase(s)) = 1) then fclist.getchannels(ne, net[ne].nick) else
-           if (pos('/query', lowercase(s)) = 1) then txp(ne-1,replce(s), net[ne].nick,false,true,true) else
+
+           if (pos('/query', lowercase(s)) = 1) then begin
+              if (pos('#', replce(s)) > 0) then
+                 m0[n].Append('Usage /query <nick>, opens a private message window for someone') else
+                 txp(ne-1,replce(s), net[ne].nick,false,true,true);
+                 m0[n].TopLine:= m0[n].Lines.Count-1;
+           end else
 
            if (pos('/', s) = 1) then begin
 
@@ -903,15 +910,16 @@ var
           mess:  string;      // Message
           tmp:   string;
 begin
-
         // Getting connection in the tree where num = connection number starting with 0
-        if num > 0 then
+        //if (num = 0) then ShowMessage('zero');
+        //if num > 0 then
         while (fmainc.TreeView1.Items[n].Index < num) do begin
               //ShowMessage(fmainc.TreeView1.Items[n].Text);
               n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
               //while (n <> m0[n].node) do inc(n);
         end;
-        if num > 0 then n:= fmainc.cnode(2,0,0,inttostr(num) + server);
+
+        n:= fmainc.cnode(2,0,0,inttostr(num) + server);
 
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
@@ -991,12 +999,13 @@ begin
      end;
      if cname = '' then cname:= inttostr(num) + server;
 
+     {
      // Getting the right memo
      if fmainc.TreeView1.Items[n].HasChildren then
         if (cname <> '') then
         if (pos('JOIN',r) = 0) then
            n:= fmainc.cnode(2,0,0, cname);
-
+      }
      if (pos('You left', mess) > 0) then begin
         n:= fmainc.cnode(2,0,0, inttostr(num) + server);
      end;
@@ -1057,10 +1066,11 @@ case s of
 
      1: Begin // Join
        // Create room tab
-       //ShowMessage('j ' + r+#13 + mess);
+       //ShowMessage('J: '+ cname);
 
        // Searching for created room
-       if num > 0 then
+       //if num > 0 then
+       n:= 0;
        while (fmainc.TreeView1.Items[n].Index < num) do
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
        if (fmainc.TreeView1.Items[n].HasChildren) then
@@ -1391,7 +1401,7 @@ case s of
        // Getting the right memo
        n:= fmainc.cnode(5, m, 0, '');
 
-       fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+       fmainc.createlog(num, fmainc.TreeView1.Items[m].Text);
 
        output(clgreen, '< ' + copy(r, 1, pos('!', r)-1) + ' > ' + mess, n);
        closefile(t);
@@ -1626,13 +1636,15 @@ begin
          r:= 'Brioso: ' + char(2) + char(3) + '01,00You' + char(3) + '00,04Tube' + char(3) + '04,99' + char(15) + char(3) + '14 Sopa_Man-->' + char(3) + '01' + char(2) + 'POR TENER TU AMOR ' + char(3) + '04[' + char(3) +  '016:36' + char(3) + '04] ' + char(15) + '-- 4.994.912 vistas';
          r:= 'Bienvenidos al canal Argentina!! DisfrutÃ¡ mejor de tu estancia en la sala con el nuevo webchat del canal, probalo acÃ¡: https://argentinachatea.com/';
          r:= 'Topic is: Bienvenidos al canal ' + char(3) + '1,11ARG' + char(3) + '1,00ENT' + char(3) +  '1,11INA' + char(15) + '-- Visitanos en www.argentinachatea.com  -- ' + char(3) + '11(Consultas y reclamos únicamente por privado)';
-
-     if (pos('orbita', r) > 0) then begin
-     r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
-     //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/ ';
-        //c:= clPurple;
-     end;
      }
+     if (pos('orbita', r) > 0) then begin
+     //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
+     r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
+     //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for support use ' +
+     //      '#linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only.';
+     //   c:= clmaroon;
+     end;
+
 
      {
      // Sending to test file
@@ -1644,6 +1656,7 @@ begin
      end;
      }
 
+     //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
 
@@ -1663,7 +1676,7 @@ begin
      m0[o].Lines.Add(r);
 
      if c = clnone then m0[o].BStrings.Add(r) else
-     m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + r);
+        m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + r);
 
      if m0[o].lines.Count = 100 then begin
         l:= m0[o].TopLine;
@@ -1713,6 +1726,7 @@ var
    l1:                smallint = 0;
    tmp,k:             string;
    tmp2:              string;
+   tmp3:              string;
    c:                 smallint = 1; // Character position
    len:               smallint = 0;
    w:                 integer;
@@ -1721,6 +1735,7 @@ var
    hy:                boolean = false; // hyperlink
    r1:                boolean = false;
    col:               boolean = false; // Colored line
+   nd:                string = ' ,()[]';     // Hypertext end
 begin
 
      if app then l:= Lines.Count-1;
@@ -1730,6 +1745,7 @@ begin
      //if lines.Count > 1 then
 
      while (l < Lines.Count) do begin
+           hy:= false;
            //if (pos('bkcol',lines[l]) > 0) then ShowMessage(lines[l]);
            //if l = lines.Count-1 then lines[l]:= lines[l] + char(15);
            //BStrings[BStrings.Count-1]:= BStrings[BStrings.Count-1] + char(15);
@@ -1740,23 +1756,28 @@ begin
               col:= true;
               //tmp:= StringReplace(tmp, 'bkcol', '', [rfReplaceAll]);
               //lines[l]:= StringReplace(lines[l], 'bkcol', '', [rfReplaceAll]);
-              tmp2:= copy(lines[l], 6, 3);
-              while not (tmp2[length(tmp2)] in ['0'..'9']) do delete(tmp2, length(tmp2), 1);
-              k:= tmp2;
+              k:= copy(lines[l], 6, 3);
+              while not (k[length(k)] in ['0'..'9']) do delete(k, length(k), 1);
            end;
 
            //Searching for the original string
            l1:= BStrings.Count-1;
-           while (pos(copy(tmp,7, length(tmp)), BStrings[l1]) = 0) and (l1 > 0) do dec(l1);
+           while (pos(copy(tmp,6, length(tmp)), BStrings[l1]) = 0) and (l1 > 0) do dec(l1);
 
            // Getting hyperlink
               // hola http://hole.net hey no way http://no.way
+           //hy:= false;
+           c:= 1;
+           tmp3:= BStrings[l1];
+           //if assigned(m0[1]) and (pos('http', tmp3) > 0) then ShowMessage(tmp3);
            if (pos('http://',tmp) > 0) or (pos('https://', tmp) > 0) then begin
+              //hy:= true;
+              //ShowMessage(tmp);
               while (c < length(tmp)) do begin
                     tmp2:= tmp2 + tmp[c];
                     if (pos('http://',tmp2) > 0) or (pos('https://',tmp2) > 0) then begin
                     tmp2:= '';
-                    while (tmp[c] <> ' ') and (tmp[c] <> ',') and (c <= length(tmp)) do inc(c);
+                    while (pos(tmp[c],nd) = 0) and (c <= length(tmp)) do inc(c);
                     tmp:= copy(tmp,1, c-1) + char(1) + copy(tmp, c, length(tmp));
                     end;
            inc(c);
@@ -1764,13 +1785,14 @@ begin
            if (pos(char(1) + 'http', tmp) = 0) then
            tmp:= StringReplace(tmp, 'http://', char(1) + 'http://', [rfReplaceAll]);
            tmp:= StringReplace(tmp, 'https://', char(1) + 'https://', [rfReplaceAll]);
-           if tmp[length(tmp)] = char(1) then delete(tmp, length(tmp), 1);
-           if (pos('bkcol', BStrings[l1]) = 1) then
-              BStrings[l1]:= Copy(BStrings[l1],1,7) + tmp else
-              BStrings[l1]:= tmp;
-           lines[l]:= tmp;
-           //ShowMessage(tmp)
+           //if tmp[length(tmp)] = char(1) then delete(tmp, length(tmp), 1);
+
+           tmp3:= '';
            end;
+
+           if (pos('bkcol', BStrings[l1]) = 1) then
+              lines[l]:= k + tmp else
+              lines[l]:= tmp;
 
            c:= 1;
            // Counting published characters
@@ -1800,7 +1822,6 @@ begin
                  end;
                  }
 
-
                  if pos('bkcol', BStrings[l1]) = 1 then col:= true; // Colored
                  // Getting K
                  if (col = true) then begin
@@ -1821,6 +1842,7 @@ begin
                     //lines.add(k+copy(tmp, c+1, length(tmp)) + lines[l+1]) else
                     lines.add(copy(tmp, c+1, length(tmp)) );
                     //ShowMessage(k + copy(tmp, c+1,length(tmp)));
+
 
                  // Adding color;
                  //if (pos(k, tmp) > 0) then col:= true;
@@ -1845,6 +1867,7 @@ begin
                  inc(c);
                  end;
                  }
+                 //if assigned(m0[1]) then ShowMessage(tmp2);
 
                  // Searching in prior line. Bold and hyperlinks
                  c:= 1;
@@ -1853,9 +1876,10 @@ begin
                           if b = false then b:= true else b:= false;
                        if (tmp2[c] = char(15)) then b:= false;
 
+                       //if hy = true then
+                       //if (pos(char(1), BStrings[l1]) > 0) then hy:= true;
                        if (tmp2[c] = char(1)) then
                           if hy = false then hy:= true else hy:= false;
-
                  inc(c);
                  end;
 
@@ -1886,10 +1910,17 @@ begin
                     if b = true then lines[l+1]:= char(2) + lines[l+1];
                     if co = true then lines[l+1]:= k + lines[l+1];
                     if hy = true then lines[l+1]:= char(1) + lines[l+1];
+                    //if assigned(m0[1]) then if hy = false then ShowMessage(lines[l+1]);
+
+                    // Removing end of hypertext at the beginning of line
+                    if (pos(char(1) + char(1), lines[l+1]) = 1) then begin
+                       tmp3:= lines[l+1];
+                       delete(tmp3, 1,2);
+                       lines[l+1]:= tmp3;
+                    end;
                     //if (pos('Orbita', tmp2) > 0) then ShowMessage('wr: ' + lines[l+1]);
                  //end;
            end; // w length
-
 
      //if col = true then lines[l]:= lines[l] + char(15);
      inc(l);
@@ -1912,7 +1943,7 @@ end;
 procedure TSyn.fcolors(app: boolean; co: TColor; r: string);
 var
   Modi:         Boolean = false;
-  Attr1, Attr2, Attr3: TtkTokenKind;
+  Attr1, Attr2, Attr3: TtkTokenKind; // Attr1 = color, Attr2 = bold, Attr3 = Hypertext
   str:          string;
   l:            smallint = 0;
   ch:           smallint = 1;
@@ -1923,7 +1954,6 @@ var
   b1:           boolean = false;
   c1:           boolean = false;
   hy:           boolean = false; // Is hyperlink
-  hy1:          boolean = false;
   k:            string;
   f:            TColor;
   bco:          TColor = clnone;
@@ -1947,8 +1977,7 @@ begin
 
         lines[l]:= k + lines[l];
         while (pos(copy(lines[l],1, length(lines[l])), BStrings[BStrings.Count-1]) <> 1) and (l > 0) do dec(l);
-        //ShowMessage(inttostr(l));
-        if not app then l:= lines.Count-1;
+        if app then l:= lines.Count-1;
      end;
 
      // Multiline
@@ -1961,13 +1990,14 @@ begin
         while (pos(lines[l], copy(BStrings[BStrings.Count-1], 1, length(lines[l]))) <> 1) and (l > 0) do dec(l);
      //if assigned(m0[1]) then ShowMessage(inttostr(l) + #13 + lines[l]);
 
-     if (not app) then hl.ClearAllTokens;
+     if app = false then hl.ClearAllTokens;
+
+     //if (not app) then hl.ClearAllTokens;
   while (l < Lines.Count) do begin
         if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
         str:= Lines[l];
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
-        //if assigned(m0[1]) then ShowMessage(str);
         //if (pos('online', lines[l]) > 0) then ShowMessage(str);
         //str:= 'hola ' + char(3) + 'no way no way no way';
         str:= StringReplace(str, char(1)+char(1), char(1), [rfReplaceAll]);
@@ -1978,7 +2008,7 @@ begin
         //if l < BStrings.Count then if (pos('bkcol', BStrings[l]) = 1) then ShowMessage(BStrings[l]);
         ch:= 1;
         chs:= 0;
-        hy:= false; hy1:= false;
+        hy:= false;
 
   while (ch <= length(str)) do begin
 
@@ -2002,6 +2032,7 @@ begin
 
         if (str[ch] = char(1)) then begin
            if hy = false then hy:= true else hy:= false;
+           //if (ch = length(str)) and (hy = true) then hy:= false;
         end;
 
   // Processing colors
@@ -2117,7 +2148,7 @@ begin
         if (hy = false) then begin
         if (ch = length(str)) and not (str[ch] = char(1)) then if (b1 = true) and (c1 = false) then hl.AddToken(l, ch-chs, Attr2);
         if (ch = length(str)) and not (str[ch] = char(1)) then if (c1 = true) then hl.AddToken(l, ch-chs, Attr1);
-        //if (ch = length(str)) then if (b1 = c1 = true) then hl.AddToken(l, ch-chs, Attr2);
+        //if (ch = length(str)) then if (hy = true) then hl.AddToken(l, ch-chs, Attr3);
         end;
 
   if (str[ch] = char(2)) and (str[ch+1] = char(3)) then begin
@@ -2126,14 +2157,13 @@ begin
      //hl.AddToken(l, ch-chs, Attr1);
   end;
         //if (str[ch] = char(3)) then if (c1 = false) then hl.AddToken(l, ch-chs, tktext);
-        if (str[ch+1] = char(3)) then hl.AddToken(l, ch-chs, Attr1);
-        //if (ch = length(str)) and (b = false) then hl.AddToken(l, ch, tkText);
-
+        if (str[ch+1] = char(3)) then hl.AddToken(l, ch-chs, Attr1);                         //if (ch = length(str)) and (b = false) then hl.AddToken(l, ch, tkText);
 
 
         // Coloring hyperlinks with purple
         //if (hy = true) and (str[ch] = char(1)) then hl.AddToken(l, ch-chs+1, tkText);
         if (str[ch] = char(1)) then
+           //if () then hl.AddToken(l, ch-chs, Attr3) else
            if (hy = false) then hl.AddToken(l, ch-chs, Attr3) else
            if (c1 = true) then hl.AddToken(l, ch-chs-1, Attr1) else
               hl.AddToken(l, ch-chs-1, tkText);
@@ -2148,12 +2178,11 @@ begin
            c1:= false;
            fr:= ''; bk:= '';
            f:= clnone; bco:= clnone;
-
         end;
         if (str[ch] = char(2)) then begin
            if b = false then b1:= false;
         end;
-        //if (ch = length(str)) and (hy = true) then hy:= false;
+
         //if hy = true then hy:= false else hy:= true;
         //if (ch = length(str)) then k:= ''; f:= clblack;
 
@@ -2241,32 +2270,64 @@ end;
 
 procedure tfmainc.tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var x1,y1:   integer;
-    s,e:     smallint;
+    s:       smallint = 0; // Start position
+    e:       smallint = 0; // End position
     o:       smallint;
+    chr:     string;   // Characters which can enclose and hyperlink
+    tmp:     string;
 begin
+     chr:= ' ,()[]';
+
+     s:= 1; // start position
      //x1:= x - form1.Left - se.Left;
      //y1:= y - form1.Top -  se.top;
+
      o:= cnode(5, TreeView1.Selected.AbsoluteIndex,0, '');
 
      with m0[o] do begin
 
-     x1:= (x) div 7;
-     y1:= (y div (LineHeight) + TopLine);
+     x1:= (x div 7);
+     y1:= (y div (LineHeight) + TopLine) -1;
+
+     {x1:= m0[o].CaretX;
+     y1:= carety-1;}
+
      if button = mbRight then begin
         CaretX:= x1;
-        if (y < Height - LineHeight) then CaretY:= y1;
+        CaretY:= y1;
      end;
 
-     str:= Lines[carety-1];
+     str:= Lines[y1];
+     tmp:= str;
 
-     // Getting boundaries
-     if str <> '' then begin
+     // Getting string
+     // Searching backwards from caret position to find a space or bracket
      s:= CaretX;
-     while (str[s] <> ' ') do dec(s);
-     e:= s+1;
-     while (str[e] <> ' ') do inc(e);
+     while (pos(str[s], chr) = 0) do begin
+           if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
+              dec(y1);
+              str:= lines[y1] + str;
+              s:= length(lines[y1]);
+           end;
+     dec(s);
+     end; // s = space
 
-     str:= copy(Lines[CaretY-1], s+1, e-s-1);
+     // Getting string
+     // Searching forward from caret position to find a space or bracket
+     e:= CaretX+1;
+     y1:= CaretY;
+     while (pos(str[e], chr) = 0) do begin
+
+           if (pos(str[e], chr) = 0) and (e = length(str)) and (y1 < lines.Count) then begin
+              inc(y1);
+              str:= str + lines[y1];
+           end;
+     inc(e);
+     end; // e = space
+     //ShowMessage('_'+str[e]+'_');
+
+     str:= copy(str, s+1, e-s-1); // copying from s+1 to e-1
+
      if (pos('http://',str) = 1) or (pos('https://',str) = 1) then begin
         x1:= x + fmainc.Left + Left;
         y1:= y +20+ fmainc.Top  + top;
@@ -2277,8 +2338,8 @@ begin
      end;
 
      //ed0[o].Caption:= str;
-     end;
      //if (x > s) and (x < e) then se.Cursor:= crHandPoint;
+
      end;
 end;
 
@@ -2431,6 +2492,7 @@ procedure tfmainc.nbadd1(c,nick: string; con,i: smallint);
  c = text, con = connection, i = pageindex}
 var a: smallint = 0; // Memo number
 begin
+     //ShowMessage('nb1 '+inttostr(Notebook1.PageCount));
       if i = Notebook1.PageCount then
          Notebook1.Pages.Add('Page' + inttostr(i))
       else
@@ -2652,7 +2714,7 @@ procedure tfmainc.nbadd2(c,nick: string; con,i: smallint);
 var a: smallint = 0;      // Memo number
     p: smallint = 0; // Array of tsyn position
 begin
-     //ShowMessage(inttostr(Notebook1.PageCount));
+     //ShowMessage('nb2 '+inttostr(Notebook1.PageCount));
 
      //if i > Notebook1.PageCount -1 then Carefull!!!
      if (i > 0) then
@@ -2839,13 +2901,13 @@ begin
 
           2: begin // Search channel
           while (n < length(chanod)) do begin
-                chanod[n].chan:= lowercase(chanod[n].chan);
-                if (chanod[n].chan = lowercase(chan)) then result:= chanod[n].arr;
+                //chanod[n].chan:= lowercase(chanod[n].chan);
+                if (lowercase(chanod[n].chan) = lowercase(chan)) then result:= chanod[n].arr;
           inc(n); end;
-          //ShowMessage('chan:: ' + inttostr(result));
+          //ShowMessage('chan: ' + inttostr(result));
           end; // Search
 
-          3: begin // array
+          3: begin // array-array
           //for n:= 0 to length(chanod)-1 do begin
               //if (chanod[n].arr = ord) then
               result:= chanod[ord].arr;
@@ -2868,9 +2930,11 @@ begin
 
           6: Begin // Delete a connection. Delete nodes and update channels
           for n:= 0 to length(chanod)-1 do begin
+              //ShowMessage('6 ' + inttostr(n));
               if (n+1) < length(chanod) then
                 if chanod[n].node >= nod then chanod[n]:= chanod[n+1];
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
+                //ShowMessage('6 ' + inttostr(chanod[n].node));
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
           end;
@@ -2881,6 +2945,7 @@ begin
           if b = false then
           for n:= 0 to length(chanod) -1 do begin
               conn:= chanod[n].chan;
+              //ShowMessage(conn);
               while conn[c] in ['0'..'9'] do inc(c); dec(c);
               conn:= copy(conn, 1, c);
               if conn <> '' then begin
@@ -3599,8 +3664,8 @@ begin
      //TreeView1.Refresh;
      //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
-     end; // Notebook
      timer1.Enabled:= true;
+     end; // Notebook
 end;
 
 procedure Tfmainc.closenClick(rc: smallint; c: string); // Delete Tree Items and TNotebook pages and close network
@@ -3620,7 +3685,7 @@ begin
      fmainc.Timer1.Enabled:= false;
 
      with TreeView1 do begin
-     items[0].Selected:= true;
+     //items[0].Selected:= true;
 
      // Getting max node to delete
      if (items[rc].HasChildren) then maxnode:= Items[rc].GetLastChild.AbsoluteIndex else maxnode:= rc;
@@ -3674,9 +3739,10 @@ begin
 
      if (TreeView1.Items.Item[rc].GetNextSibling <> nil) then TreeView1.Items.Item[rc].GetNextSibling.Selected:= true;
 
+
      // Deleting controls.
      n:= rc;
-     while (n <= maxnode) do begin
+     while (n <= maxnode) do begin // OjO
            p:= cnode(5,n,0, '');
            //ShowMessage('p ' + inttostr(p));
            if TreeView1.Items[rc].HasChildren then
@@ -3684,6 +3750,7 @@ begin
               FreeAndNil(splt[p]);
               FreeAndNil(lab0[p]);
               FreeAndNil(gb0[p]);
+              FreeAndNil(lb0[p]);
            end;
 
            freeandnil(m0[p]);
@@ -3701,17 +3768,28 @@ begin
      n:= rc;
      while (n <= maxnode) do begin
            Notebook1.Pages.Delete(rc);
-           //ShowMessage('del ' + inttostr(maxnode));
+           Notebook1.PageIndex:= Notebook1.PageIndex +1;
+           Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
+
+     {
+     p:= 0;
+     while (p < Notebook1.PageCount) do begin
+           c:= Notebook1.Page[p].name;
+           ShowMessage(inttostr(p));
+           Notebook1.PageIndex:= p;
+           m0[p+1].Visible:= true;
+           inc(p);
+     end;
+     }
      {Notebook1.PageIndex:= 1;
      if assigned(items[rc+1]) then items[rc].Selected:= true;}
 
      // Deleting Tree Nodes
      n:= rc;
-     Items[rc].GetNextSibling.Selected:= true;
+     if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true;
      TreeView1.Items.Item[n].Delete;
-     Notebook1.PageIndex:= rc;
 
      end; // TreeView
 
@@ -3720,20 +3798,25 @@ begin
      net[rc+1].conn.CloseSocket; // Disconnect
      //items[rc].Text:= '(' + items[rc].text + ')';
 
-     // Copy Network (if Network = 1 then Network 2 = Network 1
      // net:      array[1..10] of connex;
-     net[rc+1]:= nil;
+     FreeAndNil(net[rc+1]);
 
      // 4. Copy Network
      p:= rc+1; //2
+     //ShowMessage('ppp ' + inttostr(p));
      while (assigned(net[p+1])) do begin
+     //ShowMessage('net: ' + inttostr(p+1));
            net[p]:= net[p+1];
            net[p].num:= p-1;
            net[p].server:= net[p+1].server;
-           net[p+1]:= nil;
-           //if assigned(net[p]) then ShowMessage('net: ' + inttostr(p));
+           //net[p+1].conn.CloseSocket;
      p:= p+1;
      end;
+
+     //net[2].destroy;
+     //FreeAndNil(net[2]);
+     //if assigned(net[1]) then ShowMessage('puta' + inttostr(rc+2));
+     //net[1].conn.CloseSocket;
 
      fmainc.Timer1.Enabled:= true;
 end;
@@ -3798,7 +3881,7 @@ begin
 
            if assigned(m0[n]) then
 
-              if (m0[n].Modified) and not (m = Notebook1.PageIndex) then
+              if (m0[n].Modified) and not (Notebook1.Page[m].Visible) then
                  //ShowMessage(TNotebook(m0[n].Parent.Parent).Name);
               //then
 
@@ -3829,7 +3912,7 @@ begin
                   if (mess[m] = false) then
                   sender.Canvas.Font.Color:= clMaroon;
 
-              if (m = Notebook1.PageIndex) then begin
+              if (Notebook1.Page[m].Visible) then begin
                  blue[m]:= false;
                  mess[m]:= false;
                  m0[n].Modified:= false;
@@ -3891,27 +3974,25 @@ var
    n: smallint = 0;
    i: TIcon;
    p: smallint = 0;
+   c: string;
 begin
      i:= TIcon.Create;
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
-     {
-     while (p < TreeView1.Selected.AbsoluteIndex) do begin
-           inc(p);
-           c:= Notebook1.Page[p].name[length(Notebook1.Page[p].name)];
-           ShowMessage(c);
-     end;
-     }
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
      if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
-                       //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
-     if TreeView1.Items.Count > 1 then
+
+
+     //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
+     if TreeView1.Items.Count > 0 then
      for p:= 0 to length(chanod)-1 do begin
          n:= cnode(3,0,p,'');
          if assigned(m0[n]) then
          //if m0[n].Visible then ShowMessage(inttostr(m0[n].node));
          if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin
+            //Notebook1.PageIndex:= n;
          m0[n].Modified:= false;
          b:= false;
            //ShowMessage(inttostr(cnode(4,0,p,'')));
@@ -3935,6 +4016,7 @@ begin
            //ShowMessage('count ' + inttostr(Notebook1.PageCount));
      inc(n);
      end;
+
 end;
 
 procedure Tfmainc.mstatusChange(Sender: TObject);
@@ -3964,7 +4046,7 @@ begin
            }
      end;
      end;
-     TreeView1.Refresh;
+     //TreeView1.Refresh;
 
      if b = true then begin
         i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
@@ -3987,9 +4069,11 @@ begin
      n:= 1
      end else begin
      }
+
      while not assigned(net[n]) do inc(n);
 
      while assigned(net[n]) do begin
+     //ShowMessage('t ' + inttostr(n));
 
      if (timer1.Interval = 50) then begin
         while (Assigned(net[n])) do inc(n);
