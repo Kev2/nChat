@@ -1640,7 +1640,7 @@ begin
          r:= 'Brioso: ' + char(2) + char(3) + '01,00You' + char(3) + '00,04Tube' + char(3) + '04,99' + char(15) + char(3) + '14 Sopa_Man-->' + char(3) + '01' + char(2) + 'POR TENER TU AMOR ' + char(3) + '04[' + char(3) +  '016:36' + char(3) + '04] ' + char(15) + '-- 4.994.912 vistas';
          r:= 'Bienvenidos al canal Argentina!! DisfrutÃ¡ mejor de tu estancia en la sala con el nuevo webchat del canal, probalo acÃ¡: https://argentinachatea.com/';
          r:= 'Topic is: Bienvenidos al canal ' + char(3) + '1,11ARG' + char(3) + '1,00ENT' + char(3) +  '1,11INA' + char(15) + '-- Visitanos en www.argentinachatea.com  -- ' + char(3) + '11(Consultas y reclamos únicamente por privado)';
-     }
+
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1648,7 +1648,7 @@ begin
      //      '#linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only.';
      //   c:= clmaroon;
      end;
-
+     }
 
      {
      // Sending to test file
@@ -2276,6 +2276,7 @@ procedure tfmainc.tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShi
 var x1,y1:   integer;
     s:       smallint = 0; // Start position
     e:       smallint = 0; // End position
+    e1:      smallint = 0;
     o:       smallint;
     chr:     string;   // Characters which can enclose and hyperlink
     tmp:     string;
@@ -2320,9 +2321,10 @@ begin
      // Searching forward from caret position to find a space or bracket
      e:= CaretX+1;
      y1:= CaretY;
-     while (pos(str[e], chr) = 0) do begin
-
-           if (pos(str[e], chr) = 0) and (e = length(str)) and (y1 < lines.Count) then begin
+     while (pos(str[e], chr) = 0) and (str[e] <> ':') and (str[e] <> '*') do begin
+           if (str[e] = '/') then e1:= s+e;
+           //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
+           if (pos(str[e], chr) = 0) and (e = length(str)) and (str[e] = '/') and (y1 < lines.Count) then begin
               inc(y1);
               str:= str + lines[y1];
            end;
@@ -2330,7 +2332,16 @@ begin
      end; // e = space
      //ShowMessage('_'+str[e]+'_');
 
-     str:= copy(str, s+1, e-s-1); // copying from s+1 to e-1
+     str:= copy(str, s+1, e-s); // copying from s+1 to e-1 -> resulting link
+
+     //Removing the next line if necessary
+     if (pos('*', str) > 0) or (str[length(str)] = ':') then begin
+             e:= length(str);
+             while not (str[e] = '/') do dec(e);
+     delete(str, e+1, length(str)-e);
+     end;
+     //m0[o].Append(str);
+
 
      if (pos('http://',str) = 1) or (pos('https://',str) = 1) then begin
         x1:= x + fmainc.Left + Left;
