@@ -1358,7 +1358,7 @@ case s of
 
           while (n < length(chanod)) do begin
 
-                if (assigned(lb0[chanod[n].arr])) then
+                if (assigned(lb0[n])) then
                 if fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n) = 'true' then begin
 
                 fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
@@ -1643,7 +1643,8 @@ begin
 
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
-     r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
+     //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
+     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for support use ' +
      //      '#linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only.';
      //   c:= clmaroon;
@@ -2324,12 +2325,14 @@ begin
      while (pos(str[e], chr) = 0) and (str[e] <> ':') and (str[e] <> '*') do begin
            if (str[e] = '/') then e1:= s+e;
            //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
-           if (pos(str[e], chr) = 0) and (e = length(str)) and (str[e] = '/') and (y1 < lines.Count) then begin
+           if (pos(str[e], chr) = 0) and (e = length(str)) and (str[e] = '/') or (str[e] = '%')
+              and (y1 < lines.Count) then begin
               inc(y1);
               str:= str + lines[y1];
            end;
      inc(e);
-     end; // e = space
+     end;
+     if str[e] = '.' then dec(e);
      //ShowMessage('_'+str[e]+'_');
 
      str:= copy(str, s+1, e-s); // copying from s+1 to e-1 -> resulting link
@@ -2337,7 +2340,7 @@ begin
      //Removing the next line if necessary
      if (pos('*', str) > 0) or (str[length(str)] = ':') then begin
              e:= length(str);
-             while not (str[e] = '/') do dec(e);
+             while not (str[e] = '/') and not (str[e] = '%') do dec(e);
      delete(str, e+1, length(str)-e);
      end;
      //m0[o].Append(str);
@@ -3914,7 +3917,8 @@ begin
               if (pos('quit', lowercase(s)) = 0) and (pos('quit:', lowercase(s)) = 0)
                  and (pos('part', lowercase(s)) = 0)
                  and (pos('has joined #', lowercase(s)) = 0)
-                 or (pos(':', s) > 0) or mess[m] = true
+                 and (pos(':', s) > 0)
+                 or mess[m] = true
 
               then begin
                    mess[m]:= true;
