@@ -712,10 +712,10 @@ begin
                  //if (s[length(s)] = ' ') then delete(s, length(s), 1);
                  bans(s, chan, ne);
                  //ShowMessage('hey ' + s);
+
               end else
 
-              if
-                 (pos(lowercase('/topic'),lowercase(s)) = 1) or
+              if (pos(lowercase('/topic'), lowercase(s)) = 1) or
                  (pos(lowercase('/op'),lowercase(s)) = 1) or (pos(lowercase('/deop'),lowercase(s)) = 1) or
                  (pos(lowercase('/voice'),lowercase(s)) = 1) or (pos(lowercase('/devoice'),lowercase(s)) = 1) or
                  (pos(lowercase('/ban'),lowercase(s)) = 1) or (pos(lowercase('/unban'),lowercase(s)) = 1) or
@@ -726,6 +726,7 @@ begin
               //if (pos('/ban', s) = 0) and (pos('/kb', s) = 0) then begin
 
                  net[ne].conn.SendString(replce(s + ':' + chan))
+                 //ShowMessage(replce(s + ':' + chan))
               else
                   if (pos('/me', lowercase(s)) = 1) then
                   net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
@@ -970,9 +971,8 @@ begin
      // Getting Message
      if pos(':', r) > 0 then begin
         mess:= copy(r, pos(':', r)+1, length(r));
-        if (pos(':', r) > 0) and (pos('JOIN', r) = 0) then r:= copy(r, 1, pos(':', r)-1);
+         if (pos(':', r) > 0) and (pos('JOIN', r) = 0) then r:= copy(r, 1, pos(':', r)-1);
      end;
-     //if pos('JOIN', r) > 0 then ShowMessage(r);
 
      // Getting Server and Channel
      //if emotd = true then begin
@@ -994,10 +994,11 @@ begin
      //if (pos('@', r) > 0) and (pos('!', r) > 0) and (pos('JOIN', r) = 0) then s:= 6; // Whois
      //if (pos('QUERY', r) > 0) and (pos('coccco', r) > 0) then s:= 7;
      //if fmainc.TreeView1.Items[n].HasChildren then
-        if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
+     //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
-     if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 8;
+     if (pos('TOPIC #',r) > 0) or (pos('331', r) > 0) or (pos('332', r) > 0) or (pos('333', r) > 0) then s:= 6;
      if (pos('INVITE',r) > 0) or (pos('341', r) > 0) then s:= 7;
+     if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 8;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) and (pos('=#',r) = 0) then begin
@@ -1009,6 +1010,7 @@ begin
      cname:= inttostr(num) + cname;
      end;
      if cname = '' then cname:= inttostr(num) + server;
+     //if pos('topic is set', mess) > 0 then ShowMessage('mess ' + r);
 
      {
      // Getting the right memo
@@ -1031,7 +1033,7 @@ case s of
                         fmainc.Timer1.Interval:= 2000;
 
         if (r <> '') and (mess <> '') then begin
-           //if (pos('Nickname is already in use', mess) > 0) then
+           //if (pos('hola', mess) > 0) then ShowMessage(mess);
 
         fmainc.createlog(num, server); //file open on connect
 
@@ -1065,7 +1067,7 @@ case s of
               r:= StringReplace(r, char(3), '', [rfReplaceAll]);
 
            //delete(r, pos(mess, r)-1, length(r));
-           //if pos('online', mess) > 0 then ShowMessage(r + mess);
+           //if pos('31,', mess) > 0 then ShowMessage(r + mess);
            //writeln(t, r + mess);
            output(clnone, r+mess, n);
            //m0[1].Lines.LoadFromFile(log[0]);
@@ -1431,6 +1433,38 @@ case s of
        end;
     end;
     }
+
+    6: Begin // TOPIC
+       n:= fmainc.cnode(2,0,0, cname);
+       cname:= copy(cname, pos('#', cname), length(cname));
+       tmp:= copy(r, 1, pos('!', r)-1); // User
+             //ShowMessage('6: ' + r + ' m: ' + mess + ' n ' + inttostr(n));
+
+       if (pos('TOPIC', r)) = 0 then tmp:= r;
+
+       while (pos(':', r) > 0) do delete(r, 1, pos(':', r));
+       //m0[0].Append(r+mess);
+       if (pos('331', r) > 0) then
+          r:= 'Topic for ' + cname + ' is not set' else
+
+       if (pos('332', r) > 0) then
+          r:= 'Topic for ' + cname + ' is ' + mess;
+
+       if (pos('333', r) > 0) then
+          r:= gtopic(r);
+          //r:= 'Topic for ' + cname + ' is ' + mess;
+
+       if (pos('TOPIC', r) > 0) then
+       r:= tmp + ' has changed the topic to: ' + mess;
+
+       fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
+
+       if (pos('332', tmp) > 0) or (pos('333', tmp) > 0) then
+          output(clPurple, r, n) else
+          output(clnone, r, n);
+       closefile(t);
+    end;     // TOPIC
+
     7: Begin // INVITE
        if (pos('#', mess) > 0) then // Spotchat puts the channel after : (colon)
           cname:= copy(mess, pos('#', mess), length(mess));
@@ -1918,14 +1952,13 @@ begin
                  }
                  //if assigned(m0[1]) then ShowMessage(tmp2);
 
-           end; // w length
-           // End word wrapping
 
               // Start formatting
               if (l > 0) then
                  tmp2:= lines[l];
                  //if assigned(m0[1]) then ShowMessage(tmp2);
 
+           // Start dragging attributes
            if tmp2 <> '' then begin
                  // Searching in prior line. Bold and hyperlinks
 
@@ -2007,6 +2040,10 @@ begin
                     end;
            end; // Formatting text
 
+           end; // w length
+           // End word wrapping
+
+
                     //if (pos(char(1)+char(1), tmp2) > 0) then ShowMessage('wr: ' + lines[l]);
                  //end;
 
@@ -2052,7 +2089,8 @@ var
 begin
      if first = '' then first:= lines[0];
 
-     if app then l:= Lines.Count-1;
+     if app then
+     if lines.Count > 2 then l:= lines.Count -3 else l:= Lines.Count-1;
      //if assigned(m0[1]) then ShowMessage(lines[0]);
      if co = clnone then f:= clblack;
 
@@ -2653,6 +2691,7 @@ begin
      // Edit box
      ed0[a]:= TEdit.Create(fmainc);
      ed0[a].Parent:= Notebook1.Page[i];
+     ed0[a].Color:= RGBToColor(255,251,240);
 
      //ed0[a].Name:= 'edChannel' + inttostr(a);
      ed0[a].Caption:= '';
@@ -2673,6 +2712,7 @@ begin
      lb0[a].Parent:= Notebook1.Page[i];
      //lb0[a].Left:= 783;
      lb0[a].Width:= 190;
+     //m0[a].Color:= RGBToColor(255,251,240);
      lb0[a].Font.Size:= 8;
      lb0[a].Style:= lbOwnerDrawFixed;
      lb0[a].OnMouseUp:=  @lbmouseup;
@@ -2700,7 +2740,8 @@ begin
      m0[a].lc:= 0; // Counting lines;
      m0[a].node:= a;
      m0[a].Cursor:= crHandPoint;
-     m0[a].Color:= RGBToColor(243,243,243);
+     //m0[a].Color:= RGBToColor(243,243,243);
+     m0[a].Color:= RGBToColor(255,251,240);
      m0[a].Gutter.Visible:= false;
      m0[a].RightGutter.Visible:= false;
      m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol] + [eoNoCaret] + [eoRightMouseMovesCursor];
@@ -2869,6 +2910,7 @@ begin
      ed0[a].Parent:= Notebook1.Page[i];
      ed0[a].Name:= 'edqry_' + inttostr(a);
      ed0[a].Caption:= '';
+     ed0[a].Color:= RGBToColor(255,251,240);
 
      ed0[a].Height:= 25;
      ed0[a].Width:= 768;
@@ -2892,7 +2934,8 @@ begin
      m0[a].Text:= '';
      m0[a].lc:= 0; // Counting lines;
      m0[a].node:= a;
-     m0[a].Color:= RGBToColor(243,243,243);
+     //m0[a].Color:= RGBToColor(243,243,243);
+     m0[a].Color:= RGBToColor(255,251,240);
      m0[a].Gutter.Visible:= false;
      m0[a].RightGutter.Visible:= false;
      m0[a].Options:= [eoHideRightMargin] + [eoScrollPastEol] + [eoNoCaret] + [eoRightMouseMovesCursor];
@@ -3291,13 +3334,13 @@ var n:    smallint = 0;
     p:    smallint = 1;  // Copy starting position
 begin
      s:= '~@%+';
-
      for m:= 0 to length(chanod)-1 do begin
                  n:= cnode(3,0,m, '');
                  //if (Assigned(lb0[n])) then lb0[n].Parent:= Notebook1.Page[m];
+           if (Assigned(lb0[n])) then lb0[n].Color:= RGBToColor(255,251,240);
+
            if (Assigned(lb0[n])) then
            while (a < lb0[n].items.Count) do begin
-
                  ni:= lb0[n].Items[a];
                  if (pos(ni[p], s) > 0) then begin
                     while (pos(ni[p], s) > 0) do inc(p);

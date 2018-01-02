@@ -81,11 +81,27 @@ begin
         r:= StringReplace(r, lowercase('j'), 'JOIN', [rfReplaceAll]);
      end;
 
-     {
+
      // Topic
-     if (pos(lowercase('topic'),r) = 1) then
-     r:= 'topic ' + chan + ' :Topic is: ' + char(2) + char(3) + '1,11 Bienvenidos al canal ' + char(3) +'0,13 #LC-Argentina' + char(15) + char(2) + char(3) + '1 Ahora podes chatear desde ' + char(15) + char(2) + char(3) + '1,3Kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + '1en ' + char(2) + char(3) + '12http://canalargentina.net/kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 y desde ' + char(15) + char(2) + char(3) + '4,14Mibbit' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 desde ' + char(15) + char(2) + char(3) + '12http://canalargentina.net/mibbit' + char(15);
-     }
+     if (pos(lowercase('topic'),r) = 1) then begin
+     //r:= 'topic ' + chan + ' :Topic is: ' + char(2) + char(3) + '1,11 Bienvenidos al canal ' + char(3) +'0,13 #LC-Argentina' + char(15) + char(2) + char(3) + '1 Ahora podes chatear desde ' + char(15) + char(2) + char(3) + '1,3Kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + '1en ' + char(2) + char(3) + '12http://canalargentina.net/kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 y desde ' + char(15) + char(2) + char(3) + '4,14Mibbit' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 desde ' + char(15) + char(2) + char(3) + '12http://canalargentina.net/mibbit' + char(15);
+     //r:= 'topic #nvz :' + char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
+
+     delete(r, 1, length('topic')+1);
+     if r[1] = '#' then delete(r, pos(':',r), length(r));
+
+     // Channel
+     if r[1] = '#' then chan:= copy(r, 1, pos(' ', r)-1) else
+        chan:= copy(r, pos(':', r)+1, length(r));
+
+     // Message
+     if r[1] = '#' then tmp:= copy(r, pos(' ',r)+1, length(r)) else
+        tmp:= copy(r, 1, pos(':',r)-1);
+
+     // r
+     r:= 'TOPIC ' + chan + ' :' + tmp;
+     end;
+
 
      // Notice
      if (pos('notice', lowercase(r)) = 1) then begin
