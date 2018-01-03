@@ -1694,7 +1694,7 @@ begin
          r:= 'Bienvenidos al canal Argentina!! DisfrutÃ¡ mejor de tu estancia en la sala con el nuevo webchat del canal, probalo acÃ¡: https://argentinachatea.com/';
          r:= 'Topic is: Bienvenidos al canal ' + char(3) + '1,11ARG' + char(3) + '1,00ENT' + char(3) +  '1,11INA' + char(15) + '-- Visitanos en www.argentinachatea.com  -- ' + char(3) + '11(Consultas y reclamos únicamente por privado)';
          r:= 'Topic is: ' + char(2) + char(3) + '4Merry xMas friends! :D - If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #help';
-     }
+
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1703,7 +1703,7 @@ begin
      r:= char(3) + '7Eure Mithilfe- jeder Report von euch hilft uns, unser Netzwerk noch besser zu machen. Bitte lese dir durch, wie du uns Helfen kannst. ' + char(3) + '4http://bit.ly/2yifuX1';
      //c:= clpurple;
      end;
-
+     }
 
      {
      // Sending to test file
@@ -1774,7 +1774,7 @@ begin
      fmainc.TreeView1.Refresh;
 
      r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
-     //m0[o].procstring(r);
+     m0[o].procstring(r);
 
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
