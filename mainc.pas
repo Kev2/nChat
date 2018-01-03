@@ -8,7 +8,7 @@ uses
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, ssl_openssl, ssl_openssl_lib,
     SynEdit, SynHighlighterPosition,
-    dateutils, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
+    dateutils, abform, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
 Type
@@ -51,6 +51,9 @@ Type
     chanm: TMenuItem;
     gopm: TMenuItem;
     clink: TMenuItem;
+    helpm: TMenuItem;
+    abm: TMenuItem;
+    optm: TMenuItem;
     opm: TMenuItem;
     poplm: TPopupMenu;
     topm: TMenuItem;
@@ -80,6 +83,7 @@ Type
     ToolButton2: TToolButton;
     TreeView1: TTreeView;
 
+    procedure abmClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormPaint(Sender: TObject);
@@ -475,6 +479,11 @@ begin
         gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' );
         gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
      end;
+end;
+
+procedure Tfmainc.abmClick(Sender: TObject);
+begin
+     abf.ShowModal;
 end;
 
 

@@ -70,7 +70,7 @@ end;
 
 procedure Tabf.emailClick(Sender: TObject);
 begin
-     OpenURL('mailto:nventafini@gmx.com?Subject=Beautiful Store');
+     OpenURL('mailto:nventafini@gmail.com?Subject=Lemon Chat');
 end;
 
 
