@@ -1416,6 +1416,7 @@ case s of
 
        fmainc.createlog(num, fmainc.TreeView1.Items[m].Text);
 
+       //writeln(t, mess);
        output(clgreen, '< ' + copy(r, 1, pos('!', r)-1) + ' > ' + mess, n);
        closefile(t);
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
@@ -1684,15 +1685,16 @@ begin
          r:= 'Bienvenidos al canal Argentina!! DisfrutÃ¡ mejor de tu estancia en la sala con el nuevo webchat del canal, probalo acÃ¡: https://argentinachatea.com/';
          r:= 'Topic is: Bienvenidos al canal ' + char(3) + '1,11ARG' + char(3) + '1,00ENT' + char(3) +  '1,11INA' + char(15) + '-- Visitanos en www.argentinachatea.com  -- ' + char(3) + '11(Consultas y reclamos únicamente por privado)';
          r:= 'Topic is: ' + char(2) + char(3) + '4Merry xMas friends! :D - If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #help';
-
+     }
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
-     r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
+     //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
      //r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
-     c:= clpurple;
+     r:= char(3) + '7Eure Mithilfe- jeder Report von euch hilft uns, unser Netzwerk noch besser zu machen. Bitte lese dir durch, wie du uns Helfen kannst. ' + char(3) + '4http://bit.ly/2yifuX1';
+     //c:= clpurple;
      end;
-     }
+
 
      {
      // Sending to test file
@@ -1763,7 +1765,7 @@ begin
      fmainc.TreeView1.Refresh;
 
      r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
-     m0[o].procstring(r);
+     //m0[o].procstring(r);
 
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
@@ -1835,7 +1837,6 @@ begin
               tmp:= k + tmp;
               //if k = '' then ShowMessage('col1 ' + k);
            end;
-
 
 
            // Getting hyperlink
@@ -2001,17 +2002,17 @@ begin
 
                              //while (pos(k, tmp2) > 0) do delete(tmp2, pos(k,tmp2), length(k));
                              k1:= copy(tmp2, c, 2);
-                             //ShowMessage('puta ' + k1);
+
                              //if (pos(',', k1) = 0) then delete(k1, 4, 2);
                              //k:= StringReplace(k, char(3) + char(2), char(3) + '1' + char(2), [rfReplaceAll]);
                              if (pos(char(3), k1) = 1) then
                              try
-     while (k1[length(k1)] in ['0'..'9']) or (k1[length(k1)] = ',') and (strtoint( copy(k1, 2, length(k1)) ) <= 15)
+     while (k1[length(k1)] in ['0'..'9']) or (k1[length(k1)] = ',')
                              do k1:= copy(tmp2, c, length(k1)+1);
                              if length(k1) > 1 then
                                 delete(k1, length(k1), 1);
                                 //k1:= StringReplace(k1, char(1), '', [rfReplaceAll]);
-                                //ShowMessage('k1 ' + k1 + ' ');
+                                //ShowMessage('k1 ' + k1);
                              except end;
                           end;
 
@@ -2019,6 +2020,7 @@ begin
                              co:= false;
                              b:= false;
                           end;
+
                  //end; // tmp length
 
                  //if ((l) < lines.Count-1) then begin
@@ -2034,7 +2036,7 @@ begin
                     // Removing end of hypertext at the beginning of line
                     if (pos(char(1) + char(1), lines[l+1]) >0) then begin
                        tmp3:= lines[l+1];
-                       ShowMessage('hey' + tmp3);
+                       //ShowMessage('hey' + tmp3);
                        delete(tmp3, 1,2);
                        lines[l+1]:= tmp3;
                     end;
@@ -2168,8 +2170,8 @@ begin
 
   // Processing colors
 
-        if (str[ch] = char(3)) then
-           if not (str[ch+1] in ['0'..'9']) then delete(str,ch,1);
+        //if (str[ch] = char(3)) then
+        //   if not (str[ch+1] in ['0'..'9']) then delete(str,ch,1);
 
         if (str[ch] = char(3)) then begin
            kc:= 2;
@@ -2184,7 +2186,7 @@ begin
               while (k[kc] in ['0'..'9']) or (k[kc] = ',') do inc(kc);
                     k:= copy(k, 1, kc);
                     if (pos(',',k) = 0) then k:= copy(k, 1, 3);
-                    while not (k[length(k)] in ['0'..'9']) do delete(k,length(k),1);
+                    while not (k[length(k)] in ['0'..'9']) and (length(k) >1) do delete(k,length(k),1);
                     if (pos(',',k) > 0) then begin
                        bk:= copy(k, pos(',',k)+1, length(k));
                        if (k[pos(',',k)+2] in ['0'..'9']) and (k[pos(',',k)+1] = '0') then bk:= copy(k,pos(',',k)+2,1) else bk:= copy(k,pos(',',k)+1,2);
@@ -2204,7 +2206,7 @@ begin
                  if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
                  bco:= colors(bk);
                  bk:= '';
-              end;
+              end else bco:= clnone;
 
               try
               // Fore
@@ -2217,7 +2219,7 @@ begin
                  if strtoint(fr) > 15 then delete(k, length(k), 1);
                  if strtoint(fr) > 15 then fr:= copy(k, 1, 1);
                  f:= colors(fr);
-              end;
+              end else f:= clBlack;
 
            if k <> '' then begin
 
@@ -2265,7 +2267,7 @@ begin
 
         //if (modi = false) then hl.AddToken(l, ch-chs, tkText);
         //if (str[ch] = char(2)) and (co <> clnone) then if (b = false) then hl.AddToken(l, ch-chs-1, Attr1);
-        if (c = true) then if (str[ch+1] = char(2)) then hl.AddToken(l, ch-chs, Attr1);
+        if (c = true) and not (k = '') then if (str[ch+1] = char(2)) then hl.AddToken(l, ch-chs, Attr1);
         if (str[ch] = char(2)) then if (b = false) then hl.AddToken(l, ch-chs, Attr2);
         //if (str[ch] = char(2)) then if (b1 = false) and (c = false) and (co= clnone) then hl.AddToken(l, ch-chs, tkText);
 
@@ -2295,8 +2297,8 @@ begin
         //if (hy = true) and (str[ch] = char(1)) then hl.AddToken(l, ch-chs+1, tkText);
         if (str[ch] = char(1)) then
            //if () then hl.AddToken(l, ch-chs, Attr3) else
-           if (hy = false) then hl.AddToken(l, ch-chs, Attr3) else
-           if (c1 = true) then hl.AddToken(l, ch-chs-1, Attr1) else
+           if (hy = false) then hl.AddToken(l, ch-chs+1, Attr3) else
+           if (c1 = true) then hl.AddToken(l, ch-chs, Attr1) else
               hl.AddToken(l, ch-chs-1, tkText);
 
         if (hy = true) and (ch = length(str)) then hl.AddToken(l, ch-chs, Attr3);
