@@ -53,8 +53,8 @@ Type
     clink: TMenuItem;
     helpm: TMenuItem;
     abm: TMenuItem;
+    hlpm: TMenuItem;
     optm: TMenuItem;
-    opm: TMenuItem;
     poplm: TPopupMenu;
     topm: TMenuItem;
     tvm: TMenuItem;
@@ -479,6 +479,8 @@ begin
         gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' );
         gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
      end;
+     {TreeView1.SelectionFontColor:= clblue;
+     TreeView1.Items[0].Selected:=true;}
 end;
 
 procedure Tfmainc.abmClick(Sender: TObject);
@@ -4029,10 +4031,10 @@ end;
 procedure Tfmainc.TreeView1CustomDraw(Sender: TCustomTreeView;
   const ARect: TRect; var DefaultDraw: Boolean);
 begin
-     //TreeView1.SelectionFontColor:= clWhite;
-     //TreeView1.SelectionColor:= clBlack;
+     TreeView1.SelectionFontColor:= clWhite;
+     TreeView1.SelectionColor:= clBlack;
      //TreeView1.Color:= clWhite;
-     //TreeView1.Font.Color:= clBlack;
+     TreeView1.Font.Color:= clBlack;
      TreeView1.BackgroundColor:= $EBEBEB;
 end;
 
