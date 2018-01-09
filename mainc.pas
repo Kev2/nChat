@@ -759,7 +759,7 @@ begin
 
            net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + s + #13#10);
 
-           net[ne].output(clnone, m0[n].nnick + ': ' + s, n);
+           net[ne].output(clnone, net[ne].nick + ': ' + s, n);
            CloseFile(t);
 
            //com[trm, l[trm]]:= s;
@@ -908,6 +908,7 @@ var ro: TextFile;
 begin
      if (r <> '') then m0[0].Lines.Add(r);
         AssignFile(ro, '/home/nor/lmc.txt');
+        Rewrite(ro);
      append(ro);
      if (r <> '') then writeln(ro, r);
      closefile(ro);
@@ -968,7 +969,7 @@ begin
 
      delete(r, 1, 1); // First colon
 
-     //if (pos('NICK', r) > 0) then ShowMessage(r);
+     //if (pos('331', r) > 0) or (pos('332', r) > 0) or (pos('333', r) > 0) then ShowMessage(r);
 
      {// Raw hispano
      if (not assigned(m0[1])) then begin
@@ -980,9 +981,12 @@ begin
      }
 
      // Getting Message
+     tmp:= r;
      if pos(':', r) > 0 then begin
         mess:= copy(r, pos(':', r)+1, length(r));
-         if (pos(':', r) > 0) and (pos('JOIN', r) = 0) then r:= copy(r, 1, pos(':', r)-1);
+         if (pos(':', r) > 0) then r:= copy(r, 1, pos(':', r)-1);
+         if (pos('TOPICLEN', tmp) = 0) then
+         if (pos('JOIN', tmp) > 0) then r:= tmp;
      end;
 
      // Getting Server and Channel
@@ -1007,8 +1011,8 @@ begin
      //if fmainc.TreeView1.Items[n].HasChildren then
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
-     if (pos('TOPIC #',r) > 0) or (pos('331', r) > 0) or (pos('332', r) > 0) or (pos('333', r) > 0) then s:= 6;
-     if (pos('INVITE',r) > 0) or (pos('341', r) > 0) then s:= 7;
+     if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 6;
+     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 7;
      if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 8;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1204,31 +1208,37 @@ case s of
        // Sollo!~Sollo@181.31.118.135 NICK :collo
 
              if (pos('nickname already in use', r) > 0) then output(clblack, r, n) else
+
+             if (mess = '') then mess:= copy(r, pos('NICK', r) + length('nick')+1, length(r));
+
              if (pos(nick, r) > 0) then
-                if (mess = '') then
-             cname:= 'You are now known as ' + copy(r, pos('NICK', r) + Length('nick') +1, length(r)) else
-             cname:= 'You are now known as ' + mess
+                cname:= 'You are now known as ' + mess
              else
-                 if (mess = '') then
-             cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + copy(r, pos('NICK', r) + Length('nick')+1, length(r)) else
-             cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + mess;
+                 cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + mess;
 
-
+             if (pos('You', cname) = 1) then net[n+1].nick:= mess;
        n:= 0;
+       m:= 0;
        while (fmainc.TreeView1.Items[n].Index < num) do
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
-             m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
-             inc(n);
 
-             net[n].nick:= mess;
+             if fmainc.TreeView1.Items[n].GetLastChild <> nil then
+                m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
 
              while (n <= m) do begin
                    s:= 0;
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
-                   if assigned(lb0[n]) then begin
 
-                      if (pos('You',cname) = 1) then m0[n].nnick:= mess;
+                   fmainc.createlog(num, copy(m0[n].chan,2,length(m0[n].chan)));
+
+                   if (pos('You',cname) >0) then begin
+                      m0[n].nnick:= mess;
+
+                      output(clBlack, cname, n);
+                   end;
+
+                   if assigned(lb0[n]) then begin
 
                    if (fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n)  = 'true') then begin
                    if mess <> '' then
@@ -1238,8 +1248,8 @@ case s of
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), mess, 2, n, num+1) else
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), copy(r, pos('NICK', r) + Length('nick')+1, length(r)), 2, n, num+1);
 
-                   fmainc.createlog(num, copy(m0[n].chan,2,length(m0[n].chan)));
-                   output(clBlack, cname, n);
+                   if pos('You',cname) = 0 then
+                      output(clBlack, cname, n);
                    CloseFile(t);
                    //m0[n].lines.LoadFromFile(log[n]);
 
@@ -1449,25 +1459,27 @@ case s of
     6: Begin // TOPIC
        n:= fmainc.cnode(2,0,0, cname);
        cname:= copy(cname, pos('#', cname), length(cname));
-       tmp:= copy(r, 1, pos('!', r)-1); // User
-             //ShowMessage('6: ' + r + ' m: ' + mess + ' n ' + inttostr(n));
+       r:= copy(r, 1, pos('!', tmp)-1); // User
 
-       if (pos('TOPIC', r)) = 0 then tmp:= r;
+       //ShowMessage('6: ' + tmp + ' /' + r + ' m: ' + mess + ' n ' + inttostr(n));
 
-       while (pos(':', r) > 0) do delete(r, 1, pos(':', r));
+       //if (pos('TOPIC', tmp) = 0) then tmp:= r;
+       //while (pos(':', r) > 0) do delete(r, 1, pos(':', r));
+
        //m0[0].Append(r+mess);
-       if (pos('331', r) > 0) then
+
+       if (pos('331', tmp) > 0) then
           r:= 'Topic for ' + cname + ' is not set' else
 
-       if (pos('332', r) > 0) then
+       if (pos('332', tmp) > 0) then
           r:= 'Topic for ' + cname + ' is ' + mess;
 
-       if (pos('333', r) > 0) then
-          r:= gtopic(r);
+       if (pos('333', tmp) > 0) then
+          r:= gtopic(tmp);
           //r:= 'Topic for ' + cname + ' is ' + mess;
 
-       if (pos('TOPIC', r) > 0) then
-       r:= tmp + ' has changed the topic to: ' + mess;
+       if (pos('TOPIC', tmp) > 0) then
+       r:= r + ' has changed the topic to: ' + mess;
 
        fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
 
@@ -1702,20 +1714,18 @@ begin
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
      //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
      //r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
-     r:= char(3) + '7Eure Mithilfe- jeder Report von euch hilft uns, unser Netzwerk noch besser zu machen. Bitte lese dir durch, wie du uns Helfen kannst. ' + char(3) + '4http://bit.ly/2yifuX1';
-     //c:= clpurple;
+     r:= char(3) + '4,15L' + char(3) + '3augh';
+     c:= clpurple;
      end;
      }
 
-     {
      // Sending to test file
-     if (pos('tube', lowercase(r)) > 0) then begin
+     if (pos('laugh', lowercase(r)) > 0) then begin
         assignfile(test, '/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/test.txt');
         rewrite(test);
         writeln(test, r);
         CloseFile(test);
      end;
-     }
 
      //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
@@ -1842,9 +1852,9 @@ begin
               k:= copy(BStrings[l1], 6, 2);
               //if assigned(m0[1]) then ShowMessage('col1 ' + k);
               if (pos(char(3), k) = 1) then
-              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') and (strtoint( copy(k, 2, length(k)) ) <= 15) do
+              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do
                     k:= copy(BStrings[l1], 6, length(k)+1);
-                    delete(k, length(k), 1);
+                    if length(k) > 1 then delete(k, length(k), 1);
               tmp:= k + tmp;
               //if k = '' then ShowMessage('col1 ' + k);
            end;
@@ -1886,7 +1896,7 @@ begin
            len:= length(tmp) - len;
 
            // Starting word wrapping
-           if (length(tmp) > w) then begin
+           if (len > w) then begin
 
            // Word wrapping for lines and hypertext
                  c:= w;
@@ -1931,6 +1941,7 @@ begin
 
                  // Cut
                  lines[l]:= copy(tmp, 1, c);
+                 len:= length(lines[l]);
 
                  if (l < lines.count+1) then begin //and (l+1 < lines.Count) then begin
                     lines.insert(l+1, copy(tmp, c+1, length(tmp)) );
@@ -2089,7 +2100,6 @@ var
   l:            smallint = 0;
   ch:           smallint = 1;
   chs:          smallint = 0;
-  kc:           smallint = 2;
   b:            boolean = false; // Is bold
   c:            boolean = false; // Is colored
   b1:           boolean = false;
@@ -2141,7 +2151,7 @@ begin
         str:= Lines[l];
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
-        //if (pos('online', lines[l]) > 0) then ShowMessage(str);
+        if (pos('Out Loud', lines[l]) > 0) then ShowMessage(str);
         //str:= 'hola ' + char(3) + 'no way no way no way';
         str:= StringReplace(str, char(1)+char(1), char(1), [rfReplaceAll]);
         str:= StringReplace(str, char(2)+char(2), char(2), [rfReplaceAll]);
@@ -2162,8 +2172,8 @@ begin
         end;
 
         if (str[ch] = char(3)) then begin
-           c:= true;
-           c1:= true;
+           if c = true then c:= false else c:= true;
+           if c = true then c1:= true;
         end;
 
         if (str[ch] = char(15)) or (ch = length(str)) //then begin
@@ -2185,76 +2195,76 @@ begin
         //   if not (str[ch+1] in ['0'..'9']) then delete(str,ch,1);
 
         if (str[ch] = char(3)) then begin
-           kc:= 2;
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
-           k:= copy(str, ch, 6);
+           k:= copy(str, ch, 2);
            //if (pos(',', k) = 0) then delete(k, 4, 2) else bk:= copy(k, pos(',', k)+1, 2);
 //        r:= 'Orbita ' + char(2) + char(3) +'1,0You' + char(3) +'0,4Tube' + char(15) + char(2) + char(3) +'1 Video publicado por :   MoryChristmas  ' +
 //            char(3) + '12 "Ella quiere su rumba Ella quiere su rumba Ella quiere su rumba PITBULL" ' + char(3) + '1 --  ' + char(3) +'4  4m';
 //r:= 'Brioso: ' + char(2) + char(3) + '01,00You' + char(3) + '00,04Tube' + char(3) + '04,99' + char(15) + char(3) + '14 Sopa_Man-->' + char(3) + '01' + char(2) + 'POR TENER TU AMOR ' + char(3) + '04[' + char(3) +  '016:36' + char(3) + '04] ' + char(15) + '-- 4.994.912 vistas';
 
-           if (k <> '') then begin
-              while (k[kc] in ['0'..'9']) or (k[kc] = ',') do inc(kc);
-                    k:= copy(k, 1, kc);
-                    if (pos(',',k) = 0) then k:= copy(k, 1, 3);
-                    while not (k[length(k)] in ['0'..'9']) and (length(k) >1) do delete(k,length(k),1);
+              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do k:= copy(str, ch, length(k)+1);
+                    if length(k) > 1 then begin
+                       delete(k, length(k), 1);
+                       //ShowMessage('hey ' + k);
+                       //if (strtoint(copy(k, 2, length(k))) > 15) then delete(k, length(k), 1);
+
+                    if (k[length(k)] = ',') then delete(k, length(k), 1);
+                    if (length(k) = 1) then str[ch]:= char(15); // o.O
+                    end;
+
+           if (length(k) > 1) then begin
+           try
                     if (pos(',',k) > 0) then begin
                        bk:= copy(k, pos(',',k)+1, length(k));
-                       if (k[pos(',',k)+2] in ['0'..'9']) and (k[pos(',',k)+1] = '0') then bk:= copy(k,pos(',',k)+2,1) else bk:= copy(k,pos(',',k)+1,2);
-                    {if (pos(',',k) > 0) then bk:= copy(k, pos(',',k)+1, length(k));
-                    if (k[pos(',',k)+1] = '0') and (length(k) > 5) then bk:= copy(k, pos(',',k)+1, length(k)); }
+                       if (bk[pos(',',bk)+2] in ['0'..'9']) and (bk[pos(',',bk)+1] = '0') then bk:= copy(k,pos(',',k)+2,1) else bk:= copy(k,pos(',',k)+1,2);
+                    if (pos(',',k) > 0) then bk:= copy(k, pos(',',k)+1, length(k));
+                    if (k[pos(',',k)+1] = '0') and (length(k) > 5) then bk:= copy(k, pos(',',k)+1, length(k));
                     end;
 
               //if (pos('orb', lines[l]) > 0) then ShowMessage('K1: ' + k);
-           end;
            //if not (k[2] in ['0'..'9']) then k:= char(3) + '1';
 
 
               // Back
               if bk <> '' then begin
                  //bk:= copy(k, pos(',',k)+1, length(k));
-                 while not (bk[length(bk)] in ['0'..'9']) and (length(bk) > 1) do delete(bk, length(bk), 1);
+                 if length(bk) = 2 then
                  if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
                  bco:= colors(bk);
-                 bk:= '';
-              end else bco:= clnone;
+              end;
 
-              try
               // Fore
               fr:= copy(k, 2, length(k));
-              if fr <> '' then begin
-                 if (pos(',', fr) > 0) then delete(fr, pos(',', fr), length(fr));
-                 //ShowMessage('f ' + fr);
-                 if (fr[1] = '0') and (length(fr) > 1) then fr:= fr[2] else fr:= copy(fr, 1,2);
-                 while not (fr[length(fr)] in ['0'..'9']) and (length(fr) > 1) do delete(fr, length(fr), 1);
-                 if strtoint(fr) > 15 then delete(k, length(k), 1);
-                 if strtoint(fr) > 15 then fr:= copy(k, 1, 1);
+              //ShowMessage('f ' + fr);
+              if fr <> '' then
+              if not (pos(',', fr) = 1) then begin
+                 delete(fr, pos(',', fr), length(fr));
+                 if (fr[1] = '0') and (length(fr) > 1) then fr:= fr[2];
+
+                 if (length(fr) =2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
                  f:= colors(fr);
-              end else f:= clBlack;
-
-           if k <> '' then begin
-
-           //if str[length(str)] = char(3) then ShowMessage(copy(str, ch-5, 10));
-           //if length(k) > 1 then //ShowMessage(copy(str, ch-6, 10));
-           //while not (k[length(k)] in ['0'..'9']) and (length(k) > 1) do delete(k, length(k), 1);
-           end;
-
+              end;
 
            k:= copy(k, 2, length(k));
            //if length(k) = 1 then k:= '1';
            //ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk);
-           fr:= '';
-           bk:= '';
-
               except
               ShowMessage('K is invalid: ' + k);
               end;
 
+           //if k <> '' then ShowMessage(k);
+           end; // Length > 1
+
+           {
+           if (k = '') then begin
+              bco:= clnone;
+              f:= clBlack;
+           end;
+           }
            delete(str, ch+1, length(k));
            Lines[l]:= str;
            Attr1:= hl.CreateTokenID('Attr1', f, bco, []);
-        end;
-            // End Processing colors
+        end; // End Processing colors
 
         if not co = clnone then f:= co;
            Attr3:= hl.CreateTokenID('Attr3', clFuchsia,clnone,[]);
@@ -2330,6 +2340,8 @@ begin
         //if hy = true then hy:= false else hy:= true;
         //if (ch = length(str)) then k:= ''; f:= clblack;
 
+  bk:= '';
+  fr:= '';
   inc(ch);
   end;
   modi:= false;
@@ -2351,7 +2363,6 @@ end;
 procedure TSyn.procstring(r: string);
 {This procedure deletes char(3) duplicates}
 var c:  smallint = 1;
-    x:  smallint = 1;
     k:  string;
 begin
      r:= StringReplace(r, char(2), '', [rfReplaceAll]);
@@ -2361,20 +2372,13 @@ begin
 
      // char(3) +'4  4m';
      if (pos(char(3), r) > 0) then
-     while (c < length(r)) do begin
-           x:= 2;
-           if (r[c] = char(3)) and (r[c+1] in ['0'..'9']) then begin
-              //while (r[c+1] in ['0'..'9']) or (r[c] = ',') do delete(r, c, 1);
-              k:= copy(r, c, 6);
-              //if (pos(',',k) = 0) then delete(k, 4, 2);
+     while (c <= length(r)) do begin
 
-              while (k[x] in ['0'..'9']) or (k[x] = ',') and (x <= length(k)) do inc(x);
-                 k:= copy(k, 1, x);
-                 while not (k[length(k)] in ['0'..'9']) do delete(k, length(k),1);
-                 if (pos(',',k) > 0) then
-                    x:= strtoint( copy(k, pos(',',k)+1, length(k)) ) else x:= strtoint( copy(k, 2, length(k)) );
-                 if x > 15 then delete(k, length(k),1);
-                 delete(r, c, length(k));
+           if (r[c] = char(3)) then begin
+              k:= copy(r, c, 1);
+
+              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do k:= copy(r, c, length(k)+1);
+              if (length(k) > 1) then delete(k, length(k), 1);
            end;
      inc(c);
      end;
@@ -2449,6 +2453,8 @@ begin
 
      // Getting string
      // Searching backwards from caret position to find a space or bracket
+     if not (str = '') then begin
+
      s:= x1;
      while (pos(str[s], chr) = 0) do begin
            if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
@@ -2500,6 +2506,8 @@ begin
      //if (x > s) and (x < e) then se.Cursor:= crHandPoint;
 
      end;
+
+     end; //str = ''
 end;
 
 procedure Tfmainc.tsynPaint(Sender: TObject; ACanvas: TCanvas);
