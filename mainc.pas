@@ -1714,28 +1714,30 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-
+     }
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
-     r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
+     //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
      //r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
-     //r:= char(3) + '4,15L' + char(3) + '3augh';
+     r:= char(3) + '4,15L' + char(3) + '3augh';
      //r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7aughs ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7ut ' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7oud' + char(3);
      //r:= char(3) + '7 ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
      //r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(3) + '6elcome ' + char(3) + '14'  + 'B' + char(3) + '6ack ' + char(3) + '6StrangerKev' + char(3);
-     r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
+     //r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
+     //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
+     //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
      //c:= clpurple;
      end;
-     }
 
-     // Sending to test file
+
+     {// Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
         assignfile(test, '/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/test.txt');
         Append(test);
         writeln(test, r);
         CloseFile(test);
-     //end;
+     //end;}
 
      //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
@@ -2187,7 +2189,7 @@ begin
         end;
 
         if (str[ch] = char(3)) then begin
-           if c = true then c:= false;
+           if c = false then c:= true;
            c1:= true;
         end;
 
@@ -2216,6 +2218,8 @@ begin
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
               f:= clBlack;
+              fr:= '';
+              bk:= '';
            end;
 
            //if (pos(',', k) = 0) then delete(k, 4, 2) else bk:= copy(k, pos(',', k)+1, 2);
@@ -2297,7 +2301,7 @@ begin
 
            if (co = clnone) then
            if ( (ch > 1 ) and (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
-              if (not modi) then hl.AddToken(l, ch-chs, tktext);
+              if (not modi) then hl.AddToken(l, ch-chs-1, tktext);
            modi:= true;
         end;
 
