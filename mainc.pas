@@ -1709,23 +1709,33 @@ begin
          r:= 'Topic is: Bienvenidos al canal ' + char(3) + '1,11ARG' + char(3) + '1,00ENT' + char(3) +  '1,11INA' + char(15) + '-- Visitanos en www.argentinachatea.com  -- ' + char(3) + '11(Consultas y reclamos únicamente por privado)';
          r:= 'Topic is: ' + char(2) + char(3) + '4Merry xMas friends! :D - If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #help';
 
+     // ICQ
+        r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7aughs ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7ut ' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7oud' + char(3);
+        r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
+        r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
+        r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
+
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
-     //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
+     r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
      //r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
-     r:= char(3) + '4,15L' + char(3) + '3augh';
-     c:= clpurple;
+     //r:= char(3) + '4,15L' + char(3) + '3augh';
+     //r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7aughs ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7ut ' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7oud' + char(3);
+     //r:= char(3) + '7 ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
+     //r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(3) + '6elcome ' + char(3) + '14'  + 'B' + char(3) + '6ack ' + char(3) + '6StrangerKev' + char(3);
+     r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
+     //c:= clpurple;
      end;
      }
 
      // Sending to test file
-     if (pos('laugh', lowercase(r)) > 0) then begin
+     //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
         assignfile(test, '/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/test.txt');
-        rewrite(test);
+        Append(test);
         writeln(test, r);
         CloseFile(test);
-     end;
+     //end;
 
      //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
@@ -1749,6 +1759,7 @@ begin
 
      if c = clnone then m0[o].BStrings.Add(r) else
         m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + r);
+
 
      if m0[o].lines.Count = 100 then begin
         l:= m0[o].TopLine;
@@ -1786,7 +1797,7 @@ begin
      fmainc.TreeView1.Refresh;
 
      r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
-     m0[o].procstring(r);
+     m0[o].procstring(r); // To file
 
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
@@ -2114,6 +2125,8 @@ begin
 
      if app then
      if lines.Count > 2 then l:= lines.Count -3 else l:= Lines.Count-1;
+     //l:= lines.Count-1;
+
      //if assigned(m0[1]) then ShowMessage(lines[0]);
      if co = clnone then f:= clblack;
 
@@ -2151,8 +2164,10 @@ begin
         str:= Lines[l];
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
-        if (pos('Out Loud', lines[l]) > 0) then ShowMessage(str);
+        //if (pos('Out Loud', lines[l]) > 0) then ShowMessage(str);
         //str:= 'hola ' + char(3) + 'no way no way no way';
+
+        //if (str[length(str)] = char(3)) then delete(str, length(str), 1);
         str:= StringReplace(str, char(1)+char(1), char(1), [rfReplaceAll]);
         str:= StringReplace(str, char(2)+char(2), char(2), [rfReplaceAll]);
         str:= StringReplace(str, char(3)+char(3), char(3), [rfReplaceAll]);
@@ -2172,8 +2187,8 @@ begin
         end;
 
         if (str[ch] = char(3)) then begin
-           if c = true then c:= false else c:= true;
-           if c = true then c1:= true;
+           if c = true then c:= false;
+           c1:= true;
         end;
 
         if (str[ch] = char(15)) or (ch = length(str)) //then begin
@@ -2197,39 +2212,43 @@ begin
         if (str[ch] = char(3)) then begin
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
            k:= copy(str, ch, 2);
+           if length(k) > 1 then
+           if not (k[2] in ['0'..'9']) then begin
+              bco:= clnone;
+              f:= clBlack;
+           end;
+
            //if (pos(',', k) = 0) then delete(k, 4, 2) else bk:= copy(k, pos(',', k)+1, 2);
 //        r:= 'Orbita ' + char(2) + char(3) +'1,0You' + char(3) +'0,4Tube' + char(15) + char(2) + char(3) +'1 Video publicado por :   MoryChristmas  ' +
 //            char(3) + '12 "Ella quiere su rumba Ella quiere su rumba Ella quiere su rumba PITBULL" ' + char(3) + '1 --  ' + char(3) +'4  4m';
 //r:= 'Brioso: ' + char(2) + char(3) + '01,00You' + char(3) + '00,04Tube' + char(3) + '04,99' + char(15) + char(3) + '14 Sopa_Man-->' + char(3) + '01' + char(2) + 'POR TENER TU AMOR ' + char(3) + '04[' + char(3) +  '016:36' + char(3) + '04] ' + char(15) + '-- 4.994.912 vistas';
 
+           if (length(k) > 1) then begin
+
               while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do k:= copy(str, ch, length(k)+1);
-                    if length(k) > 1 then begin
-                       delete(k, length(k), 1);
+                    if length(k) > 1 then
+                       delete(k, length(k), 1) else k:= '';
                        //ShowMessage('hey ' + k);
                        //if (strtoint(copy(k, 2, length(k))) > 15) then delete(k, length(k), 1);
 
+                    if not (k[1] = ',') then
                     if (k[length(k)] = ',') then delete(k, length(k), 1);
-                    if (length(k) = 1) then str[ch]:= char(15); // o.O
-                    end;
+                    //if (length(k) = 1) then str[ch]:= char(15); // o.O
 
-           if (length(k) > 1) then begin
            try
-                    if (pos(',',k) > 0) then begin
-                       bk:= copy(k, pos(',',k)+1, length(k));
-                       if (bk[pos(',',bk)+2] in ['0'..'9']) and (bk[pos(',',bk)+1] = '0') then bk:= copy(k,pos(',',k)+2,1) else bk:= copy(k,pos(',',k)+1,2);
-                    if (pos(',',k) > 0) then bk:= copy(k, pos(',',k)+1, length(k));
-                    if (k[pos(',',k)+1] = '0') and (length(k) > 5) then bk:= copy(k, pos(',',k)+1, length(k));
-                    end;
+              if (pos(',',k) > 0) then begin
+                 bk:= copy(k, pos(',',k)+1, length(k));
+              end;
 
               //if (pos('orb', lines[l]) > 0) then ShowMessage('K1: ' + k);
            //if not (k[2] in ['0'..'9']) then k:= char(3) + '1';
 
-
               // Back
               if bk <> '' then begin
                  //bk:= copy(k, pos(',',k)+1, length(k));
+                 if (length(bk) = 2) and (bk[1] = '0') then bk:= copy(bk, 2, 1);
                  if length(bk) = 2 then
-                 if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
+                    if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
                  bco:= colors(bk);
               end;
 
@@ -2241,28 +2260,24 @@ begin
                  delete(fr, pos(',', fr), length(fr));
                  if (fr[1] = '0') and (length(fr) > 1) then fr:= fr[2];
 
-                 if (length(fr) =2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
+                 if (length(fr)= 2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
                  f:= colors(fr);
               end;
 
            k:= copy(k, 2, length(k));
-           //if length(k) = 1 then k:= '1';
+           //if length(k) = 1 then k:= '';
            //ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk);
+
               except
               ShowMessage('K is invalid: ' + k);
               end;
 
-           //if k <> '' then ShowMessage(k);
+           if not (ch = length(str)) then
+              delete(str, ch+1, length(k));
            end; // Length > 1
 
-           {
-           if (k = '') then begin
-              bco:= clnone;
-              f:= clBlack;
-           end;
-           }
-           delete(str, ch+1, length(k));
            Lines[l]:= str;
+
            Attr1:= hl.CreateTokenID('Attr1', f, bco, []);
         end; // End Processing colors
 
@@ -2340,8 +2355,7 @@ begin
         //if hy = true then hy:= false else hy:= true;
         //if (ch = length(str)) then k:= ''; f:= clblack;
 
-  bk:= '';
-  fr:= '';
+  //if not (str[ch] = char(3)) then
   inc(ch);
   end;
   modi:= false;
@@ -2382,6 +2396,7 @@ begin
            end;
      inc(c);
      end;
+     r:= StringReplace(r, k, '', [rfReplaceAll]);
 
      if (r <> '') and (r <> #13) then
      writeln(t, FormatDateTime('MMM d hh:mm:ss', now) + '  ' + r);
@@ -4082,7 +4097,7 @@ begin
      end;
      }
 
-     if Notebook1.PageCount > 1 then
+     if Notebook1.PageCount > 0 then
         for arr:= 0 to length(chanod)-1 do begin
 
         n:= cnode(3,0,arr, '');
