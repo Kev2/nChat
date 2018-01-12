@@ -1714,8 +1714,8 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-     }
-     if (pos('orbita', r) > 0) then begin
+
+     if (pos('a', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
      //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
@@ -1727,10 +1727,11 @@ begin
      //r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
      //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
-     r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+     //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+     //r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3);
      //c:= clpurple;
      end;
-
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -2172,7 +2173,7 @@ begin
 
         //if (str[length(str)] = char(3)) then delete(str, length(str), 1);
         str:= StringReplace(str, char(1)+char(1), char(1), [rfReplaceAll]);
-        str:= StringReplace(str, char(2)+char(2), char(2), [rfReplaceAll]);
+        //str:= StringReplace(str, char(2)+char(2), char(2), [rfReplaceAll]);
         str:= StringReplace(str, char(3)+char(3), char(3), [rfReplaceAll]);
         str:= StringReplace(str, char(15)+char(15), char(15), [rfReplaceAll]);
         str:= StringReplace(str, char(13), '', [rfReplaceAll]);
