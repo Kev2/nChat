@@ -1714,7 +1714,7 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-
+     }
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1727,9 +1727,10 @@ begin
      //r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
      //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
+     r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
      //c:= clpurple;
      end;
-     }
+
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -2214,6 +2215,7 @@ begin
         if (str[ch] = char(3)) then begin
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
            k:= copy(str, ch, 2);
+           //ShowMessage('k ' + k);
            if length(k) > 1 then
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
@@ -2229,9 +2231,10 @@ begin
 
            if (length(k) > 1) then begin
 
-              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do k:= copy(str, ch, length(k)+1);
-                    if length(k) > 1 then
-                       delete(k, length(k), 1) else k:= '';
+              while ((k[length(k)] in ['0'..'9']) or (k[length(k)] = ',')) and ( (ch+length(k)) < length(lines[l]) ) do k:= copy(str, ch, length(k)+1);
+                    if (length(k) > 1) then
+                    if not (k[length(k)] in ['0'..'9']) then
+                          delete(k, length(k), 1);
                        //ShowMessage('hey ' + k);
                        //if (strtoint(copy(k, 2, length(k))) > 15) then delete(k, length(k), 1);
 
@@ -2270,18 +2273,18 @@ begin
 
            k:= copy(k, 2, length(k));
            //if length(k) = 1 then k:= '';
-           //ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk);
+           //ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk + ' / chr: ' + inttostr(ch));
 
               except
               ShowMessage('K is invalid: ' + k);
               end;
 
-           if not (ch = length(str)) then
-              delete(str, ch+1, length(k));
+           delete(str, ch+1, length(k));
+           //if ch >= length(lines[l]) then ShowMessage('hola');
            end; // Length > 1
 
            Lines[l]:= str;
-
+           //ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk + ' / chr: ' + inttostr(ch));
            Attr1:= hl.CreateTokenID('Attr1', f, bco, []);
         end; // End Processing colors
 
@@ -2301,7 +2304,7 @@ begin
 
            if (co = clnone) then
            if ( (ch > 1 ) and (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
-              if (not modi) then hl.AddToken(l, ch-chs-1, tktext);
+              if not (modi) then hl.AddToken(l, ch-chs-1, tktext);
            modi:= true;
         end;
 
@@ -2361,6 +2364,7 @@ begin
 
   //if not (str[ch] = char(3)) then
   inc(ch);
+  //if (pos('Olives', str) > 0) then ShowMessage('end: ' + inttostr(ch));
   end;
   modi:= false;
 
@@ -2370,6 +2374,7 @@ begin
   str:= StringReplace(str, char(15), '', [rfReplaceAll]);
   str:= StringReplace(str, char(31), '', [rfReplaceAll]);
   str:= StringReplace(str, char(13), '', [rfReplaceAll]);
+  //if (pos('Olives',str) > 0) then ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk + ' / chr: ' + inttostr(ch));
 
   Lines[l]:= str;
 
