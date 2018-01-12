@@ -1725,7 +1725,7 @@ begin
      //r:= char(3) + '7 ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
      //r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(3) + '6elcome ' + char(3) + '14'  + 'B' + char(3) + '6ack ' + char(3) + '6StrangerKev' + char(3);
      //r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
-     //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
+     r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
      //r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3);
@@ -2444,7 +2444,8 @@ end;
 
 
 procedure tfmainc.tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var x1,y1:   integer;
+var x1:      integer = 0;
+    y1:      integer = 0;
     s:       smallint = 0; // Start position
     e:       smallint = 0; // End position
     e1:      smallint = 0;
@@ -2462,24 +2463,28 @@ begin
 
      with m0[o] do begin
 
+
+     if button = mbRight then begin
+
+     x1:= m0[o].CaretX;
+     y1:= carety-1;
+
+        //CaretX:= x1;
+        //CaretY:= y1;
+
+
      x1:= (x div 7);
      y1:= (y div (LineHeight) + TopLine) -1;
 
-     {x1:= m0[o].CaretX;
-     y1:= carety-1;}
-
-     if button = mbRight then begin
-        //CaretX:= x1;
-        //CaretY:= y1;
-     end;
-
      str:= Lines[y1];
      tmp:= str;
+
 
      // Getting string
      // Searching backwards from caret position to find a space or bracket
      if not (str = '') then begin
 
+     if (x1 > length(lines[y1])) then x1:= length(lines[y1])-1;
      s:= x1;
      while (pos(str[s], chr) = 0) do begin
            if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
@@ -2489,6 +2494,7 @@ begin
            end;
      dec(s);
      end; // s = space
+     //ShowMessage(inttostr(x1) + ' ' + inttostr(y1) + ' t ' + str);
 
      // Getting string
      // Searching forward from caret position to find a space or bracket
@@ -2531,7 +2537,7 @@ begin
      //if (x > s) and (x < e) then se.Cursor:= crHandPoint;
 
      end;
-
+     end; // Right button
      end; //str = ''
 end;
 
