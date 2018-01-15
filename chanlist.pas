@@ -158,6 +158,7 @@ begin
 
                  // Parsing
                     Parse(ch1);
+                    StringGrid1.FixedRows:= 1;
 
                 // Sorting
                    StringGrid1.SortColRow(true, 0);
@@ -217,7 +218,7 @@ begin
 
 // Sending to grid
    l:= 0;
-   StringGrid1.Clean;
+   StringGrid1.Clear;
    StringGrid1.RowCount:= 1;
 
    while (l < length(txt)) do begin

@@ -1714,8 +1714,8 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-
-     if (pos('a', r) > 0) then begin
+     }
+     if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
      //r:= 'Topic is: Official Linux Mint Chat Channel | Channel Rules: https://goo.gl/mP1Rz1 - for http://support use #linuxmint-help | All languages are welcome. No politics. No religion. Safe For Work conversations only. Safe For Work conversations only. Safe For Work conversations only.';
@@ -1725,13 +1725,14 @@ begin
      //r:= char(3) + '7 ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
      //r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(3) + '6elcome ' + char(3) + '14'  + 'B' + char(3) + '6ack ' + char(3) + '6StrangerKev' + char(3);
      //r:= 'Jupiter8: ' + char(3) + '12,14 ' + char(3) + '4,0hey Sherbet ' + char(3) + '12,14:)' + char(3);
-     r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3);
+     //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3) + '155';
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
-     //r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3);
-     //c:= clpurple;
+     //r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3) + '155';
+     r:= 'magic_dragon: ' + char(3) + ',4laughing my ascii off EL_TURCO';
+     c:= clpurple;
      end;
-     }
+
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1862,14 +1863,26 @@ begin
            //if pos('topic', lowercase(tmp)) > 0 then ShowMessage('bkcol: ' + tmp);
            if (pos('bkcol', BStrings[l1]) > 0) then begin
               col:= true;
-              //tmp:= StringReplace(tmp, 'bkcol', '', [rfReplaceAll]);
-              //lines[l]:= StringReplace(lines[l], 'bkcol', '', [rfReplaceAll]);
-              k:= copy(BStrings[l1], 6, 2);
+
+              tmp2:= copy(BStrings[l1], 6, 6);
+              k:= copy(tmp2, 1, 1);
               //if assigned(m0[1]) then ShowMessage('col1 ' + k);
               if (pos(char(3), k) = 1) then
-              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do
-                    k:= copy(BStrings[l1], 6, length(k)+1);
-                    if length(k) > 1 then delete(k, length(k), 1);
+
+                  while ( (tmp2[length(k)+1] in ['0'..'9'])
+                        or (copy(BStrings[l1], 6, length(k)+1)[length(k)+1] = ',') ) and
+                        (length(k)+1 <= length(tmp2))
+                        do k:= copy(BStrings[l1], 6, length(k)+1);
+                        if k[length(k)] = ',' then delete(k, length(k), 1);
+                        //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
+
+                  if (pos(',',k) > 2) then
+                     while (strtoint(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, length(k), 1);
+                  if (pos(',',k) > 0) then
+                     while (strtoint(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
+                     if length(k) > 1 then
+                     while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+
               tmp:= k + tmp;
               //if k = '' then ShowMessage('col1 ' + k);
            end;
@@ -1905,7 +1918,7 @@ begin
            // Counting published characters
            len:= 0;
            while (c < length(tmp)) do begin
-                 if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) then inc(len);
+                 if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
            inc(c);
            end;
            len:= length(tmp) - len;
@@ -1956,7 +1969,7 @@ begin
 
                  // Cut
                  lines[l]:= copy(tmp, 1, c);
-                 len:= length(lines[l]);
+                 len:= length(lines[l]) - len - length(k);
 
                  if (l < lines.count+1) then begin //and (l+1 < lines.Count) then begin
                     lines.insert(l+1, copy(tmp, c+1, length(tmp)) );
@@ -2038,18 +2051,26 @@ begin
                              }
 
                              //while (pos(k, tmp2) > 0) do delete(tmp2, pos(k,tmp2), length(k));
-                             k1:= copy(tmp2, c, 2);
+                             k1:= copy(tmp2, c, 1);
 
                              //if (pos(',', k1) = 0) then delete(k1, 4, 2);
                              //k:= StringReplace(k, char(3) + char(2), char(3) + '1' + char(2), [rfReplaceAll]);
                              if (pos(char(3), k1) = 1) then
                              try
-     while (k1[length(k1)] in ['0'..'9']) or (k1[length(k1)] = ',')
-                             do k1:= copy(tmp2, c, length(k1)+1);
-                             if length(k1) > 1 then
-                                delete(k1, length(k1), 1);
-                                //k1:= StringReplace(k1, char(1), '', [rfReplaceAll]);
-                                //ShowMessage('k1 ' + k1);
+                             k1:= copy(tmp2, c, 1);
+                             while ( (tmp2[c+length(k1 )] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') ) and (c+length(k1) <= length(tmp2))
+                                   do k1:= copy(tmp2, c, length(k1)+1);
+                                   if k1[length(k1)] = ',' then delete(k1, length(k1), 1);
+                                   //if k1[2] = ',' then k1:= k1[1]  + '0' + copy(k1, 2, length(k1));
+
+                             if (pos(',',k1) > 2) then
+                                while (strtoint(copy(k1, 2, pos(',',k1)-2)) > 15) do delete(k1, length(k1), 1);
+                             if (pos(',',k1) > 0) then
+                                while (strtoint(copy(k1, pos(',',k1)+1, length(k1))) > 15) do (delete(k1, length(k1), 1)) else
+                                while (strtoint(copy(k1, 2, length(k1))) > 15) do (delete(k1, length(k1), 1));
+
+                             if k[length(k)] = ',' then delete(k, length(k), 1);
+
                              except end;
                           end;
 
@@ -2214,10 +2235,21 @@ begin
         //   if not (str[ch+1] in ['0'..'9']) then delete(str,ch,1);
 
         if (str[ch] = char(3)) then begin
+
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
-           k:= copy(str, ch, 2);
-           //ShowMessage('k ' + k);
-           if length(k) > 1 then
+           k:= copy(str, ch, 1);
+           while ( (str[ch+length(k )] in ['0'..'9'] ) or (str[ch+length(k)] = ',') ) and ((ch + length(k)) <= length(str))
+                 do k:= copy(str, ch, length(k)+1);
+                 if k[length(k)] = ',' then delete(k, length(k), 1);
+                 //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
+
+           if (pos(',',k) > 2) then
+              while (strtoint(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, pos(',',k), length(k));
+           if (pos(',',k) > 0) then
+              while (strtoint(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
+              if length(k) > 1 then
+              while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
               f:= clBlack;
@@ -2231,13 +2263,6 @@ begin
 //r:= 'Brioso: ' + char(2) + char(3) + '01,00You' + char(3) + '00,04Tube' + char(3) + '04,99' + char(15) + char(3) + '14 Sopa_Man-->' + char(3) + '01' + char(2) + 'POR TENER TU AMOR ' + char(3) + '04[' + char(3) +  '016:36' + char(3) + '04] ' + char(15) + '-- 4.994.912 vistas';
 
            if (length(k) > 1) then begin
-
-              while ((k[length(k)] in ['0'..'9']) or (k[length(k)] = ',')) and ( (ch+length(k)) < length(lines[l]) ) do k:= copy(str, ch, length(k)+1);
-                    if (length(k) > 1) then
-                    if not (k[length(k)] in ['0'..'9']) then
-                          delete(k, length(k), 1);
-                       //ShowMessage('hey ' + k);
-                       //if (strtoint(copy(k, 2, length(k))) > 15) then delete(k, length(k), 1);
 
                     if not (k[1] = ',') then
                     if (k[length(k)] = ',') then delete(k, length(k), 1);
@@ -2255,7 +2280,7 @@ begin
               if bk <> '' then begin
                  //bk:= copy(k, pos(',',k)+1, length(k));
                  if (length(bk) = 2) and (bk[1] = '0') then bk:= copy(bk, 2, 1);
-                 if length(bk) = 2 then
+                 if length(bk) > 2 then
                     if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
                  bco:= colors(bk);
               end;
@@ -2268,7 +2293,7 @@ begin
                  delete(fr, pos(',', fr), length(fr));
                  if (fr[1] = '0') and (length(fr) > 1) then fr:= fr[2];
 
-                 if (length(fr)= 2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
+                 if (length(fr) > 2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
                  f:= colors(fr);
               end;
 
@@ -2399,14 +2424,24 @@ begin
      while (c <= length(r)) do begin
 
            if (r[c] = char(3)) then begin
-              k:= copy(r, c, 1);
+               k:= copy(r, c, 1);
 
-              while (k[length(k)] in ['0'..'9']) or (k[length(k)] = ',') do k:= copy(r, c, length(k)+1);
-              if (length(k) > 1) then delete(k, length(k), 1);
+               while ( (r[c+length(k )] in ['0'..'9'] ) or (r[c+length(k)] = ',') ) and ((c + length(k)) <= length(r))
+                     do k:= copy(r, c, length(k)+1);
+                     if k[length(k)] = ',' then delete(k, length(k), 1);
+                     //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
+
+               if (pos(',',k) > 2) then
+                  while (StrToInt(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, length(k), 1);
+               if (pos(',',k) > 0) then
+                  while (StrToInt(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
+                  if length(k) > 2 then
+                  while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+
+              delete(r, c, length(k)); // Replace
            end;
      inc(c);
      end;
-     r:= StringReplace(r, k, '', [rfReplaceAll]);
 
      if (r <> '') and (r <> #13) then
      writeln(t, FormatDateTime('MMM d hh:mm:ss', now) + '  ' + r);
