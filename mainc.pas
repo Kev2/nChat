@@ -1714,7 +1714,7 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-     }
+
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1731,7 +1731,7 @@ begin
      r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3) + '155';
      c:= clpurple;
      end;
-
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1776,7 +1776,7 @@ begin
         m0[o].lc:= 0;
      end else begin
          m0[o].wr(true);
-         //m0[o].fcolors(true, c, '');
+         m0[o].fcolors(true, c, '');
      end;
 
      // Autoscroll
@@ -2437,7 +2437,7 @@ begin
                   if length(k) > 2 then
                   while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
 
-           if assigned(m0[1]) then ShowMessage(k);
+           //if assigned(m0[1]) then ShowMessage(k);
            delete(r, c, length(k)); // Replace
            end;
      if r[c] <> char(3) then inc(c);
