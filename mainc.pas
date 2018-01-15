@@ -1728,8 +1728,7 @@ begin
      //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3) + '155';
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
-     //r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3) + '155';
-     r:= 'magic_dragon: ' + char(3) + ',4laughing my ascii off EL_TURCO';
+     r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3) + '155';
      c:= clpurple;
      end;
 
@@ -1777,7 +1776,7 @@ begin
         m0[o].lc:= 0;
      end else begin
          m0[o].wr(true);
-         m0[o].fcolors(true, c, '');
+         //m0[o].fcolors(true, c, '');
      end;
 
      // Autoscroll
@@ -2438,9 +2437,10 @@ begin
                   if length(k) > 2 then
                   while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
 
-              delete(r, c, length(k)); // Replace
+           if assigned(m0[1]) then ShowMessage(k);
+           delete(r, c, length(k)); // Replace
            end;
-     inc(c);
+     if r[c] <> char(3) then inc(c);
      end;
 
      if (r <> '') and (r <> #13) then
