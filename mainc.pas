@@ -3141,7 +3141,7 @@ begin
           end; // Add
 
           1: Begin
-          while (n < length(chanod)) do begin
+          while (n < length(chanod)-1) do begin
                 if chanod[n].node = nod then
                    chanod[n]:= chanod[n+1];
                 if chanod[n].node >= nod then chanod[n].node:= chanod[n].node-1;
@@ -3914,8 +3914,9 @@ begin
      // Deleting components on deleted page
      conn:= cnode(5,rc,0, '');
      //ShowMessage(inttostr(conn));
+     freeandnil(lab0[conn]); freeandnil(gb0[conn]);
      freeandnil(lb0[conn]);
-     freeandnil(lab0[conn]); freeandnil(gb0[conn]); freeandnil(ed0[conn]);freeandnil(m0[conn]);
+     freeandnil(ed0[conn]);freeandnil(m0[conn]);
      freeandnil(splt[conn]);
 
      // Deleting chan and node
