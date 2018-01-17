@@ -3227,7 +3227,7 @@ begin
 
           //Delete last
           //ShowMessage('node: ' + inttostr(nod) + ' ' + inttostr(ord));
-          for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
+          //for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
 
           end; // 6
 
