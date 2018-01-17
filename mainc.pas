@@ -3125,7 +3125,7 @@ var
    conn:  string;
 begin
      case task of
-          0: Begin
+          0: Begin // Append
           for n:= 0 to length(chanod)-1 do begin
                 if chanod[n].node >= nod then begin
                    chanod[n].node:= chanod[n].node+1;
@@ -3140,21 +3140,22 @@ begin
           //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Add
 
-          1: Begin
+          1: Begin // Delete
           while (n < length(chanod)-1) do begin
                 if chanod[n].node = nod then
                    chanod[n]:= chanod[n+1];
-                if chanod[n].node >= nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
           inc(n);
           end;
 
+          for n:= 0 to length(chanod) do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
+
           SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Delete
 
-          2: begin // Search channel
+          2: begin // Search channel by name
           while (n < length(chanod)) do begin
                 //chanod[n].chan:= lowercase(chanod[n].chan);
                 if (lowercase(chanod[n].chan) = lowercase(chan)) then result:= chanod[n].arr;
