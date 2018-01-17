@@ -3141,17 +3141,15 @@ begin
           end; // Add
 
           1: Begin // Delete
-          while (n < length(chanod)-1) do begin
-                if chanod[n].node = nod then
-                   chanod[n]:= chanod[n+1];
+          while (n < length(chanod)) do begin
+                if chanod[n].node = nod then chanod[n].node:= -1;
+                if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
           inc(n);
           end;
-
-          for n:= 0 to length(chanod) do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
-
-          SetLength(chanod, length(chanod)-1);
+          //SetLength(chanod, length(chanod)-1);
+          //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
           //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Delete
 
@@ -3939,6 +3937,7 @@ begin
      inc(count);
      end; pages.Delete(rc);
 
+
      // Deleting Tree Node
      TreeView1.Items[rc].Delete;
      //TreeView1.Refresh;
@@ -4158,13 +4157,14 @@ begin
 
         //if m = 3 then m0[0].Append(inttostr(m));
 
+        if assigned(m0[n]) then
            if (m0[n].Lines <> nil) then
            s:= m0[n].Lines[m0[n].Lines.Count -1];
            //s:= tr.Lines[tr.Lines.Count -1];
 
            if assigned(m0[n]) then
 
-              if (m0[n].Modified) and not (Notebook1.Page[m].Visible) then
+              if (m0[n].Modified) and not (m = Notebook1.PageIndex) then
                  //ShowMessage(TNotebook(m0[n].Parent.Parent).Name);
               //then
 
@@ -4196,7 +4196,7 @@ begin
                   if (mess[m] = false) then
                   sender.Canvas.Font.Color:= clMaroon;
 
-              if (Notebook1.Page[m].Visible) then begin
+              if (m = Notebook1.PageIndex) then begin
                  blue[m]:= false;
                  mess[m]:= false;
                  m0[n].Modified:= false;
