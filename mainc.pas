@@ -3184,11 +3184,10 @@ begin
 
           6: Begin // Delete a connection. Delete nodes and update channels
 
-          repeat
-          while (n < length(chanod)) do begin
+          while n < length(chanod) do begin
               //ShowMessage('nod ' + inttostr(chanod[n+1].node));
               //if (n+1) < length(chanod) then
-              if (chanod[n].node <= ord) then begin
+              if (chanod[n].node >= nod) and (chanod[n].node <= ord) then begin
                                   //ShowMessage('epa ' + inttostr(chanod[n].node) + ' ' + chanod[n].chan);
                  for maxn:= n to length(chanod)-2 do begin
                      chanod[maxn]:= chanod[maxn+1];
@@ -3196,13 +3195,12 @@ begin
                      {com[n]:= com[n+1];
                      length(com):= length(com)-1;}
                  end;
+              dec(n);
               setlength(chanod, length(chanod)-1);
               end;
           //ShowMessage('length: ' + inttostr(length(chanod)) + ' n: ' + inttostr(n) + ' '  + (chanod[n].chan));
           inc(n);
           end;
-          inc(c);
-          until c = ord;
 
           // Deleting last
           c:= nod;
@@ -3229,7 +3227,7 @@ begin
 
           //Delete last
           //ShowMessage('node: ' + inttostr(nod) + ' ' + inttostr(ord));
-          //for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
+          for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
 
           end; // 6
 
