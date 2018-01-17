@@ -3142,13 +3142,13 @@ begin
 
           1: Begin // Delete
           while (n < length(chanod)) do begin
-                if chanod[n].node = nod then chanod[n].node:= -1;
+                if chanod[n].arr = cnode(5,nod,0,'') then chanod[n]:= chanod[n+1];
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
           inc(n);
           end;
-          //SetLength(chanod, length(chanod)-1);
+          SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
           //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Delete
@@ -3183,28 +3183,40 @@ begin
           end; // Search
 
           6: Begin // Delete a connection. Delete nodes and update channels
+
           repeat
-          for n:= 0 to length(chanod)-1 do begin
+          while (n < length(chanod)) do begin
               //ShowMessage('nod ' + inttostr(chanod[n+1].node));
-              if (n+1) < length(chanod) then
-                if (chanod[n].node <= ord) then chanod[n]:= chanod[n+1];
-                 //ShowMessage(inttostr(n) + ' '  + (chanod[0].chan));
-                   {com[n]:= com[n+1];
-                   length(com):= length(com)-1;}
+              //if (n+1) < length(chanod) then
+              if (chanod[n].node <= ord) then begin
+                                  //ShowMessage('epa ' + inttostr(chanod[n].node) + ' ' + chanod[n].chan);
+                 for maxn:= n to length(chanod)-2 do begin
+                     chanod[maxn]:= chanod[maxn+1];
+                     //ShowMessage(chanod[maxn].chan);
+                     {com[n]:= com[n+1];
+                     length(com):= length(com)-1;}
+                 end;
+              setlength(chanod, length(chanod)-1);
+              end;
+          //ShowMessage('length: ' + inttostr(length(chanod)) + ' n: ' + inttostr(n) + ' '  + (chanod[n].chan));
+          inc(n);
           end;
           inc(c);
+          until c = ord;
+
           // Deleting last
-          setlength(chanod, length(chanod)-1);
-          //ShowMessage('last ' + chanod[n].chan);
-          until c = ord+1;
+          c:= nod;
+          while c <= ord do begin
+          inc(c);
+          end;
 
           // Updating connection in channel names
           for n:= 0 to length(chanod)-1 do begin
-              chanod[n].node:= chanod[n].node - (ord+1);
+              chanod[n].node:= chanod[n].node - ((ord - nod) +1);
               c:= 1;
               conn:= chanod[n].chan;
               //ShowMessage('u ' + conn);
-              while conn[c] in ['0'..'9'] do inc(c); dec(c);
+              while (conn[c+1] in ['0'..'9']) and (c < length(chanod[n].chan)) do inc(c);
               conn:= copy(conn, 1, c);
 
           if strtoint(conn) > 0 then
@@ -3217,7 +3229,7 @@ begin
 
           //Delete last
           //ShowMessage('node: ' + inttostr(nod) + ' ' + inttostr(ord));
-          //for n:= 0 to length(chanod) -1 do ShowMessage(inttostr(chanod[n].arr) + inttostr(chanod[n].node) + chanod[n].chan);
+          //for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
 
           end; // 6
 
@@ -3970,7 +3982,7 @@ begin
      if (items[rc].HasChildren) then maxnode:= Items[rc].GetLastChild.AbsoluteIndex else maxnode:= rc;
 
 
-                                            //ShowMessage('');
+     //ShowMessage('mx ' +inttostr(maxnode));
      {
      n:= 0;
      while (n < Notebook1.PageCount-1) do  begin
