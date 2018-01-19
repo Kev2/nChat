@@ -58,6 +58,7 @@ type
     procedure adnClick(Sender: TObject);
     procedure delnClick(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
+    procedure listbox1click(Sender: TObject; User: boolean);
     procedure ListBox2Click(Sender: TObject);
     procedure newbClick(Sender: TObject);
 
@@ -193,7 +194,6 @@ end; // Tlistbox
 end;
 
 
-
 procedure Tfserv.FormClose(Sender: TObject);
 var
    n:   smallint = 1;
@@ -286,6 +286,7 @@ begin
      end;
      WriteXML(f, GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml');
      f.Free;
+     if Visible then hide;
 end;
 
 procedure Tfserv.adnClick(Sender: TObject);
@@ -362,8 +363,11 @@ begin
            end;}
 
            n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText) +1;
+           if n > 0 then
            if (sender = ListBox1) then ComboBox1.Caption:= ListBox1.items[n-1] else n:= ComboBox1.ItemIndex +1;
+           //ShowMessage('x');
 
+           if n > 0 then
            while (s < 10) do begin
                  if lserv[n].serv[s] <> '' then begin
 
@@ -394,6 +398,11 @@ begin
            if not (ComboBox1.Caption = '') then netw.Caption:= ComboBox1.Caption;
            if listbox2.Items.Count > 0 then ListBox2.ItemIndex:= 0;
            serv.Caption:= ListBox2.GetSelectedText;
+end;
+
+procedure Tfserv.listbox1click(Sender: TObject; User: boolean);
+begin
+
 end;
 
 procedure Tfserv.ListBox2Click(Sender: TObject);
@@ -452,7 +461,7 @@ begin
      inc(n);
      if assigned(m0[0]) then inc(n);
      end;
-     fserv.Close;
+     FormClose(connb);
      net[n]:= connex.create;
      net[n].connect(n-1, True);
      //inc(n);
