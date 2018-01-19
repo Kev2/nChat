@@ -188,7 +188,7 @@ begin
 end; // Tlistbox
      TabSheet1.PageControl.ActivePageIndex:= 0;
      gnick1.SetFocus;
-     ComboBox1.Caption:= ComboBox1.Items[1];
+     ComboBox1.Caption:= ComboBox1.Items[0];
 
      //ListBox1Click(nil);
 end;
