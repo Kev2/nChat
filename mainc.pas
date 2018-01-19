@@ -1784,7 +1784,7 @@ begin
      // Autoscroll
      with m0[o] do begin
      //if (o > 0) then ShowMessage(inttostr(font.Height));
-     l:= lines.count-1 - (m0[o].Height div (LineHeight)) +1;
+     l:= lines.count-1 - (m0[o].Height div (LineHeight)) ;
      //if o = 1 then m0[0].Append('Top ' + inttostr(TopLine) + ' L: ' + inttostr(l));
      if (m0[o].TopLine >= l) then TopLine:= lines.Count;
 
