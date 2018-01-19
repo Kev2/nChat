@@ -14,11 +14,14 @@ type
 
   Tfserv = class(TForm)
     adn: TButton;
+    ComboBox1: TComboBox;
     connb: TButton;
+    globalc: TCheckBox;
+    Image2: TImage;
+    serveb: TButton;
     ListBox1: TListBox;
     newb: TButton;
     Ads: TButton;
-    globalc: TCheckBox;
     deln: TButton;
     dels: TButton;
     ginfol1: TLabel;
@@ -38,13 +41,14 @@ type
     serv: TLabeledEdit;
     serv1l: TLabel;
     netw: TLabeledEdit;
-    servl: TLabel;
     PageControl1: TPageControl;
+    servl1: TLabel;
+    servl2: TLabel;
     sinfol: TLabel;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     userm: TLabeledEdit;
-    procedure connbClick(Sender: TObject);
+
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject);
 
@@ -56,6 +60,10 @@ type
     procedure ListBox1Click(Sender: TObject);
     procedure ListBox2Click(Sender: TObject);
     procedure newbClick(Sender: TObject);
+
+    procedure connb2Click(Sender: TObject);
+    procedure connbClick(Sender: TObject);
+
   private
     { private declarations }
   public
@@ -82,9 +90,9 @@ var
    c:      smallint = 0; // Servers
    tmp:    string;
 begin
-     if ListBox1.Items.Count > 0 then listbox1.ItemIndex:= 0;
+     TabSheet1.PageIndex:= 0;
 
-     if ListBox1.Items.Count = 0 then begin
+     if Listbox1.Items.Count = 0 then begin
 
      f:= TXMLDocument.Create;
      if FileExists(GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml') then
@@ -92,6 +100,23 @@ begin
 
      n1:= f.FindNode('Networks');
      n1:= n1.FirstChild;
+     for c:= 0 to n1.ChildNodes.Count-1 do begin
+         if (n1.ChildNodes.Item[c].NodeName = 'n1') then
+            gnick1.Caption:= n1.ChildNodes.Item[c].TextContent;
+         if (n1.ChildNodes.Item[c].NodeName = 'n2') then
+            gnick2.Caption:= n1.ChildNodes.Item[c].TextContent;
+         if (n1.ChildNodes.Item[c].NodeName = 'n3') then
+            gnick3.Caption:= n1.ChildNodes.Item[c].TextContent;
+         if (n1.ChildNodes.Item[c].NodeName = 'u') then
+            guser.Caption:= n1.ChildNodes.Item[c].TextContent;
+         if (n1.ChildNodes.Item[c].NodeName = 'rn') then
+            grname.Caption:= n1.ChildNodes.Item[c].TextContent;
+     end;
+     c:= 0;
+
+     n1:= f.FindNode('Networks');
+     n1:= n1.FirstChild;
+     n1:= n1.NextSibling;
      while assigned(n1) do begin
 
            if n1.HasChildNodes then
@@ -134,7 +159,7 @@ begin
                     lserv[n].rn:= n1.ChildNodes.Item[c].TextContent;
                  end;
 
-                 if n = 1 then begin
+                 if n = 2 then begin
                     nick1.Caption:= lserv[n].n1;
                     nick2.Caption:= lserv[n].n2;
                     nick3.Caption:= lserv[n].n3;
@@ -146,8 +171,10 @@ begin
            c:= 0;
 
      lserv[n].netw:= n1.NodeName;
-     ListBox1.items.Add(n1.NodeName);
-     listbox1.ItemIndex:= 0;
+     Listbox1.items.Add(n1.NodeName);
+     Listbox1.ItemIndex:= 0;
+
+     ComboBox1.items.Add(n1.NodeName);
      if n = 1 then begin
      netw.Caption:= n1.NodeName;
      serv.Caption:= copy(n1.FirstChild.TextContent, 1, pos('/', n1.FirstChild.TextContent)-1);
@@ -158,10 +185,11 @@ begin
      end;
      f.Free;
 end; // Tlistbox
-     nick1.SetFocus;
+     TabSheet1.PageControl.ActivePageIndex:= 0;
+     gnick1.SetFocus;
+     ComboBox1.Caption:= ComboBox1.Items[1];
 
-     ListBox1.Selected[listbox1.Items.Count-1]:= true;
-     ListBox1Click(nil);
+     //ListBox1Click(nil);
 end;
 
 
@@ -181,14 +209,42 @@ begin
      f.AppendChild(n1);
      n1:= f.FindNode('Networks');
 
+     // Saving Global Info
+     a:= f.CreateElement('axxGlobal');
+         n1.AppendChild(a);
+         n1:= n1.FirstChild;
+
+         a:= f.CreateElement('n1');
+         b:= f.CreateTextNode(gnick1.Caption);
+         a.AppendChild(b);
+         n1.AppendChild(a);
+         a:= f.CreateElement('n2');
+         b:= f.CreateTextNode(gnick2.Caption);
+         a.AppendChild(b);
+         n1.AppendChild(a);
+         a:= f.CreateElement('n3');
+         b:= f.CreateTextNode(gnick3.Caption);
+         a.AppendChild(b);
+         n1.AppendChild(a);
+         a:= f.CreateElement('u');
+         b:= f.CreateTextNode(guser.Caption);
+         a.AppendChild(b);
+         n1.AppendChild(a);
+         a:= f.CreateElement('rn');
+         b:= f.CreateTextNode(grname.Caption);
+         a.AppendChild(b);
+         n1.AppendChild(a);
+       //
+
+     n1:= f.FindNode('Networks');
+     n1:= n1.FirstChild;
      while (lserv[n].netw <> '') and (n < 100) do begin
            b:= f.FindNode('Networks');
            a:= (f.CreateElement(lserv[n].netw));
            b.AppendChild(a);
 
-           if n = 1 then
-                        n1:= n1.FirstChild else
-                        n1:= n1.NextSibling;
+           n1:= n1.NextSibling;
+           //if n = 1 then n1:= n1.FirstChild else n1:= n1.NextSibling;
 
            c:= 1;
            while (lserv[n].serv[c] <> '') //and (c < length(lserv[n].serv)) do begin
@@ -244,9 +300,9 @@ begin
            //if (lserv[i].netw <> netw.Caption) and (i < ListBox1.Items.Count) then inc(i);
            if i > 100 then ShowMessage('It is not possible adding more servers') else
 
-           if (i > ListBox1.Items.Count) then
+           if (i > Listbox1.Items.Count) then
            //if listbox1.Items[i-1] <> netw.Caption then
-           ListBox1.Items.Add(netw.Caption);
+           Listbox1.Items.Add(netw.Caption);
 
                 lserv[i].netw:= netw.Caption;
                 lserv[i].n1:=   nick1.Caption;
@@ -280,16 +336,16 @@ end;
 procedure Tfserv.delnClick(Sender: TObject);
 var n:    smallint = 0;
 begin
-     n:= ListBox1.Items.IndexOf(ListBox1.GetSelectedText);
-     if n <= ListBox1.Items.Count -1 then inc(n);
-     while (n <= ListBox1.Items.Count -1) do begin
+     n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText);
+     if n <= Listbox1.Items.Count -1 then inc(n);
+     while (n <= Listbox1.Items.Count -1) do begin
            if length(lserv) >= n+1 then lserv[n]:= lserv[n+1];
      inc(n);
      end;
 
      lserv[n].netw:= '';
-     if ListBox1.Items.Count > 0 then
-     ListBox1.Items.Delete(ListBox1.Items.IndexOf(ListBox1.GetSelectedText));
+     if Listbox1.Items.Count > 0 then
+     Listbox1.Items.Delete(Listbox1.Items.IndexOf(Listbox1.GetSelectedText));
 end;
 
 procedure Tfserv.ListBox1Click(Sender: TObject);
@@ -299,13 +355,14 @@ var n:      smallint = 0;
 begin
 
            listbox2.Clear;
-           while n < fserv.ComponentCount do begin
+           {while n < fserv.ComponentCount do begin
                  if fserv.Components[n] is TLabeledEdit then
                  TLabeledEdit(fserv.Components[n]).Clear;
            inc(n);
-           end;
+           end;}
 
-           n:= ListBox1.Items.IndexOf(listbox1.GetSelectedText) +1;
+           n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText) +1;
+           if (sender = ListBox1) then ComboBox1.Caption:= ListBox1.items[n-1] else n:= ComboBox1.ItemIndex +1;
 
            while (s < 10) do begin
                  if lserv[n].serv[s] <> '' then begin
@@ -327,15 +384,14 @@ begin
            inc(s);
            end;
 
-           if not globalc.Checked then begin
            nick1.Caption:= lserv[n].n1;
            nick2.Caption:= lserv[n].n2;
            nick3.Caption:= lserv[n].n3;
            userm.Caption:= lserv[n].user;
            rname.Caption:= lserv[n].rn;
-           end;
 
-           netw.Caption:= ListBox1.GetSelectedText;
+           netw.Caption:= Listbox1.GetSelectedText;
+           if not (ComboBox1.Caption = '') then netw.Caption:= ComboBox1.Caption;
            if listbox2.Items.Count > 0 then ListBox2.ItemIndex:= 0;
            serv.Caption:= ListBox2.GetSelectedText;
 end;
@@ -344,7 +400,7 @@ procedure Tfserv.ListBox2Click(Sender: TObject);
 var a:     string;
 begin
      serv.Caption:= ListBox2.GetSelectedText;
-     a:= lserv[listbox1.ItemIndex+1].serv[listbox2.ItemIndex+1];
+     a:= lserv[Listbox1.ItemIndex+1].serv[listbox2.ItemIndex+1];
      a:= copy(a, pos('/', a)+1, length(a));
      port.Caption:= a;
 end;
@@ -355,7 +411,7 @@ var
 begin
      listbox2.Clear;
 
-     if listbox1.Items.Count > 0 then
+     if Listbox1.Items.Count > 0 then
      while n < fserv.ComponentCount -1 do begin
            if fserv.Components[n] is TLabeledEdit then
            TLabeledEdit(fserv.Components[n]).Clear;
@@ -375,10 +431,17 @@ begin
      ListBox2.Items.Delete(listbox2.Items.IndexOf(listbox2.GetSelectedText));
 
         while (ListBox2.Items.Count > 0) and (n < ListBox2.Items.Count) do begin
-              lserv[ListBox1.ItemIndex +1].serv[n+1]:= ListBox2.Items[n];
+              lserv[Listbox1.ItemIndex +1].serv[n+1]:= ListBox2.Items[n];
         inc(n);
         end;
 end;
+
+
+procedure Tfserv.connb2Click(Sender: TObject);
+begin
+     TabSheet1.PageControl.ActivePageIndex:= 1;
+end;
+
 
 procedure Tfserv.connbClick(Sender: TObject);
 var n:  smallint = 0;
