@@ -51,6 +51,7 @@ type
 
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject);
+    procedure save;
 
     procedure AdsClick(Sender: TObject);
     procedure delsClick(Sender: TObject);
@@ -58,12 +59,11 @@ type
     procedure adnClick(Sender: TObject);
     procedure delnClick(Sender: TObject);
     procedure ListBox1Click(Sender: TObject);
-    procedure listbox1click(Sender: TObject; User: boolean);
     procedure ListBox2Click(Sender: TObject);
     procedure newbClick(Sender: TObject);
 
-    procedure connb2Click(Sender: TObject);
     procedure connbClick(Sender: TObject);
+    procedure connb2Click(Sender: TObject);
 
   private
     { private declarations }
@@ -121,14 +121,14 @@ begin
      while assigned(n1) do begin
 
            if n1.HasChildNodes then
-
            while (c < n1.ChildNodes.Count) do begin
                  if n1.ChildNodes.Item[c].HasAttributes then
                  //showmessage(n1.ChildNodes.Item[n].Attributes.Item[0].NodeValue);
                  if (n1.ChildNodes.Item[c].Attributes.Item[0].NodeValue = 'server') then begin
-                 if n=1 then begin
+                 if n = 1 then begin
 
                     tmp:= n1.ChildNodes.Item[c].TextContent;
+                    if (pos('/', tmp) > 0) then
                     tmp:= copy( tmp, 1, pos('/', tmp)-1);
                  listbox2.Items.Add(tmp);
 
@@ -136,6 +136,7 @@ begin
                  tmp:= copy( tmp, pos('/', tmp)+1, length(tmp) );
 
                  if c = 0 then
+                 if (pos('6',tmp) > 0) or (pos('9',tmp) > 0) then
                  Port.Caption:= tmp;
 
                  end;
@@ -172,10 +173,13 @@ begin
            c:= 0;
 
      lserv[n].netw:= n1.NodeName;
-     Listbox1.items.Add(n1.NodeName);
+
+     if n > 0 then begin
+        Listbox1.items.Add(n1.NodeName);
+        ComboBox1.items.Add(n1.NodeName);
+     end;
      Listbox1.ItemIndex:= 0;
 
-     ComboBox1.items.Add(n1.NodeName);
      if n = 1 then begin
      netw.Caption:= n1.NodeName;
      serv.Caption:= copy(n1.FirstChild.TextContent, 1, pos('/', n1.FirstChild.TextContent)-1);
@@ -189,12 +193,16 @@ end; // Tlistbox
      TabSheet1.PageControl.ActivePageIndex:= 0;
      gnick1.SetFocus;
      ComboBox1.Caption:= ComboBox1.Items[0];
-
+     //ShowMessage(ListBox1.Items[0] + sLineBreak + combobox1.items[0]);
      //ListBox1Click(nil);
 end;
 
-
 procedure Tfserv.FormClose(Sender: TObject);
+begin
+     save;
+end;
+
+procedure Tfserv.save;
 var
    n:   smallint = 1;
    c:   smallint = 1;
@@ -286,7 +294,6 @@ begin
      end;
      WriteXML(f, GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml');
      f.Free;
-     if Visible then hide;
 end;
 
 procedure Tfserv.adnClick(Sender: TObject);
@@ -304,6 +311,7 @@ begin
            if (i > Listbox1.Items.Count) then
            //if listbox1.Items[i-1] <> netw.Caption then
            Listbox1.Items.Add(netw.Caption);
+           ComboBox1.Items.Add(netw.Caption);
 
                 lserv[i].netw:= netw.Caption;
                 lserv[i].n1:=   nick1.Caption;
@@ -331,22 +339,40 @@ begin
                 end;
 
            //end; // Do
-     FormClose(adn);
+     save;
 end;
 
 procedure Tfserv.delnClick(Sender: TObject);
 var n:    smallint = 0;
 begin
-     n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText);
-     if n <= Listbox1.Items.Count -1 then inc(n);
-     while (n <= Listbox1.Items.Count -1) do begin
-           if length(lserv) >= n+1 then lserv[n]:= lserv[n+1];
+     n:= ComboBox1.ItemIndex;
+     if n <= Listbox1.Items.Count then inc(n);
+     while (n < Listbox1.Items.Count) do begin
+           lserv[n]:= lserv[n+1];
      inc(n);
      end;
 
      lserv[n].netw:= '';
-     if Listbox1.Items.Count > 0 then
-     Listbox1.Items.Delete(Listbox1.Items.IndexOf(Listbox1.GetSelectedText));
+     if Listbox1.Items.Count > 1 then begin
+        n:= ComboBox1.ItemIndex;
+        //ShowMessage(listbox1.Items[n] + sLineBreak + combobox1.Items[n]);
+        Listbox1.Items.Delete(n);
+        ComboBox1.Items.Delete(n);
+     end;
+
+     if ListBox1.Items.Count > 1 then begin
+        Listbox1.ItemIndex:= n-1;
+        ComboBox1.ItemIndex:= n-1;
+     end;
+     ListBox2.Clear;
+
+     n:= 0;
+     while n < fserv.ComponentCount -1 do begin
+           if fserv.Components[n] is TLabeledEdit then
+           TLabeledEdit(fserv.Components[n]).Clear;
+     inc(n);
+     end;
+     save;
 end;
 
 procedure Tfserv.ListBox1Click(Sender: TObject);
@@ -362,16 +388,18 @@ begin
            inc(n);
            end;}
 
-           n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText) +1;
+           n:= Listbox1.Items.IndexOf(Listbox1.GetSelectedText)+1;
+           //ShowMessage(ListBox1.items[n]);
            if n > 0 then
            if (sender = ListBox1) then ComboBox1.Caption:= ListBox1.items[n-1] else n:= ComboBox1.ItemIndex +1;
-           //ShowMessage('x');
+           //ShowMessage(combobox1.Items[n]);
 
            if n > 0 then
            while (s < 10) do begin
                  if lserv[n].serv[s] <> '' then begin
 
                  tmp:= lserv[n].serv[s];
+                 if (pos('/', tmp) > 0) then
                  tmp:= copy( tmp, 1, pos('/', tmp)-1);
 
                  listbox2.Items.Add(tmp);
@@ -380,6 +408,7 @@ begin
                  tmp:= copy( tmp, pos('/', tmp)+1, length(tmp) );
 
                  if s = 1 then
+                 if (pos('6',tmp) > 0) or (pos('9',tmp) > 0) then
                  Port.Caption:= tmp;
 
               //lserv[n].serv[s+1]:= n1.ChildNodes.Item[s].TextContent;
@@ -400,11 +429,6 @@ begin
            serv.Caption:= ListBox2.GetSelectedText;
 end;
 
-procedure Tfserv.listbox1click(Sender: TObject; User: boolean);
-begin
-
-end;
-
 procedure Tfserv.ListBox2Click(Sender: TObject);
 var a:     string;
 begin
@@ -418,7 +442,9 @@ procedure Tfserv.newbClick(Sender: TObject);
 var
    n: smallint = 0;
 begin
+     ListBox1.ItemIndex:= -1;
      listbox2.Clear;
+     ComboBox1.Caption:= '';
 
      if Listbox1.Items.Count > 0 then
      while n < fserv.ComponentCount -1 do begin
@@ -461,7 +487,7 @@ begin
      inc(n);
      if assigned(m0[0]) then inc(n);
      end;
-     FormClose(connb);
+     close;
      net[n]:= connex.create;
      net[n].connect(n-1, True);
      //inc(n);

@@ -263,7 +263,7 @@ begin
      num:= co; // Connection number
 
      if createnode = true then begin
-        if not fserv.globalc.Checked then
+        //if not fserv.globalc.Checked then
            server:= fserv.netw.Caption;
            servadd:= fserv.serv.Caption;
            if fmainc.TreeView1.items[0].Text[1] <> '(' then
@@ -1714,7 +1714,7 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-
+     }
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1729,9 +1729,11 @@ begin
      //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
      r:= 'Rita: irts still there where i put it LadyPaper in the box ' + char(2) + char(3) + '6,0L' + char(2) +  char(3) + '12aughing ' + char(2) + char(3) + '6,0M' + char(2) + char(3) + '12y ' + char(2) + char(3) + '6,0' + char(2) + char(2) + char(3) + '12' + char(3) + '6,0A' + char(2) + char(3) + '12scii ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ff' + char(3) + '155';
+     r:= '< Global > ' + char(2) + '[Logon News' + char(2) + ' - Apr 30 20:43:22 2017 BST] We support SSL/TLS connections on ports 6697,9999. Due to complications with getting a 2600.net certificate years ago, we use *.scuttled.net certificate from Comodo until October 2017. Please read https://scuttled.net/content/ssl.php for more information. Thanks for using ~2600net';
+     //r:= '< Global > [' + char(2) + 'Logon News' + char(2) + ' - Apr 30 20:20:56 2017 BST] We''ve upgraded to ircd-hybrid.org release v8.2.22 - security updates, and feature updates. Thank you ircd-hybrid team, and Michael for the great support and hosting. ~2600net';
      c:= clpurple;
      end;
-     }
+
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1845,7 +1847,7 @@ begin
      if app then l:= Lines.Count-1;
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
-     w:=   Width div (font.Height div 2) - 22; // Nimbus
+     w:=   Width div (font.Height div 2) - 25; // Nimbus
      //if lines.Count > 1 then
 
      while (l < Lines.Count) do begin
@@ -1869,23 +1871,29 @@ begin
               if (pos(char(3), k) = 1) then
 
                   while ( (tmp2[length(k)+1] in ['0'..'9'])
-                        or (copy(BStrings[l1], 6, length(k)+1)[length(k)+1] = ',') ) and
-                        (length(k)+1 <= length(tmp2))
+                        or (copy(BStrings[l1], 6, length(k)+1)[length(k)+1] = ',') )
+                        and (length(k)+1 <= length(tmp2))
                         do k:= copy(BStrings[l1], 6, length(k)+1);
                         if k[length(k)] = ',' then delete(k, length(k), 1);
                         //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
+                  //ShowMessage(k);
 
-                  if (pos(',',k) > 2) then
-                     while (strtoint(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, length(k), 1);
-                  if (pos(',',k) > 0) then
-                     while (strtoint(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
-                     if length(k) > 1 then
-                     while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+                        if (pos(',',k) > 0) then begin
+                           tmp3:= copy(k, pos(',',k)+1, length(k));
+                           k:= copy(k, 1, pos(',',k)-1);
+                        end;
 
+                        if tmp3 <> '' then
+                           while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
+                        if strtoint(copy(k, 2, length(k))) > 15 then tmp3:= '';
+                        while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                        if tmp3 <> '' then
+                           k:= k + ',' + tmp3;
+
+                  //ShowMessage('col' + k);
               tmp:= k + tmp;
               //if k = '' then ShowMessage('col1 ' + k);
            end;
-
 
            // Getting hyperlink
               // hola http://hole.net hey no way http://no.way
@@ -1900,7 +1908,8 @@ begin
                     if (pos('http://',tmp2) > 0) or (pos('https://',tmp2) > 0) then begin
                     tmp2:= '';
                     while (pos(tmp[c],nd) = 0) and (c <= length(tmp)) do inc(c);
-                    if not (tmp[c-1] = char(1)) then
+                    //ShowMessage(inttostr(c) + ' ' + inttostr(length(tmp)));
+                    if (tmp[c-1] <> char(1)) then
                     tmp:= copy(tmp,1, c-1) + char(1) + copy(tmp, c, length(tmp));
                     end;
            inc(c);
@@ -1923,7 +1932,7 @@ begin
            len:= length(tmp) - len;
 
            // Starting word wrapping
-           if (len > w) then begin
+           if (length(tmp) > w) then begin
 
            // Word wrapping for lines and hypertext
                  c:= w;
@@ -1968,14 +1977,15 @@ begin
 
                  // Cut
                  lines[l]:= copy(tmp, 1, c);
-                 len:= length(lines[l]) - len - length(k);
+                 //len:= len - length(lines[l]) - length(k);
+                 len:= c;
 
-                 if (l < lines.count+1) then begin //and (l+1 < lines.Count) then begin
+                 if (l < lines.count-1) then begin //and (l+1 < lines.Count) then begin
                     lines.insert(l+1, copy(tmp, c+1, length(tmp)) );
                     //inc(l);
                  end else
                     lines.add(copy(tmp, c+1, length(tmp)) );
-
+                                //ShowMessage(inttostr(len));
                  {
                  // Adding color;
                  if (pos(k, tmp) > 0) then col:= true;
@@ -2030,7 +2040,7 @@ begin
                  // Searching in prior line. Color
                  c:= Length(tmp2);
                  //ShowMessage('tmp2: ' + tmp2);
-                 while (tmp2[c] <> char(3)) and (tmp2[c] <> char(15)) and (c > 0) do dec(c);
+                 while (tmp2[c] <> char(3)) and (tmp2[c] <> char(15)) and (c > 1) do dec(c);
 
                           //if tmp2[c] = char(2) then if b = false then b:= true else b:= false;
 
@@ -2055,22 +2065,28 @@ begin
                              //if (pos(',', k1) = 0) then delete(k1, 4, 2);
                              //k:= StringReplace(k, char(3) + char(2), char(3) + '1' + char(2), [rfReplaceAll]);
                              if (pos(char(3), k1) = 1) then
-                             try
+                             //try
+
                              k1:= copy(tmp2, c, 1);
-                             while ( (tmp2[c+length(k1 )] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') ) and (c+length(k1) <= length(tmp2))
+                             while ( (tmp2[c+length(k1 )] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') )
+                                   and (c+length(k1) < length(tmp2))
                                    do k1:= copy(tmp2, c, length(k1)+1);
-                                   if k1[length(k1)] = ',' then delete(k1, length(k1), 1);
-                                   //if k1[2] = ',' then k1:= k1[1]  + '0' + copy(k1, 2, length(k1));
 
-                             if (pos(',',k1) > 2) then
-                                while (strtoint(copy(k1, 2, pos(',',k1)-2)) > 15) do delete(k1, length(k1), 1);
-                             if (pos(',',k1) > 0) then
-                                while (strtoint(copy(k1, pos(',',k1)+1, length(k1))) > 15) do (delete(k1, length(k1), 1)) else
-                                while (strtoint(copy(k1, 2, length(k1))) > 15) do (delete(k1, length(k1), 1));
+                             if (pos(',',k1) > 0) then begin
+                                tmp3:= copy(k1, pos(',',k1)+1, length(k1));
+                                k1:= copy(k1, 1, pos(',',k1)-1);
+                             end;
 
-                             if k[length(k)] = ',' then delete(k, length(k), 1);
+                             if tmp3 <> '' then
+                                while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
+                             if strtoint(copy(k1, 2, length(k1))) > 15 then tmp3:= '';
+                             while (strtoint(copy(k1, 2, length(k1))) > 15) do delete(k1, length(k1), 1);
+                             if tmp3 <> '' then
+                                k1:= k1 + ',' + tmp3;
+                             //ShowMessage(k1);
+                             //if k[length(k)] = ',' then delete(k, length(k), 1);
+                             //except ShowMessage('puta ' + k1); end;
 
-                             except end;
                           end;
 
                           if (tmp2[c] = char(15)) then begin
@@ -2081,16 +2097,17 @@ begin
                  //end; // tmp length
 
                  //if ((l) < lines.Count-1) then begin
-                    if l < lines.Count -1 then begin
+                    if (l+1) < lines.Count then begin
 
                        if b = true then lines[l+1]:= char(2) + lines[l+1];
                        if (hy = true) then lines[l+1]:= char(1) + lines[l+1];
-                       if (co = true) then lines[l+1]:= k + k1 + lines[l+1];
+                       if (co = true) then lines[l+1]:= k + k1 +lines[l+1];
                        //if (col = true) then ShowMessage('yay ' + lines[l+1]);
 
                     end;
 
                     // Removing end of hypertext at the beginning of line
+                    if (l+1) < lines.Count then
                     if (pos(char(1) + char(1), lines[l+1]) >0) then begin
                        tmp3:= lines[l+1];
                        //ShowMessage('hey' + tmp3);
@@ -2140,7 +2157,7 @@ var
   b1:           boolean = false;
   c1:           boolean = false;
   hy:           boolean = false; // Is hyperlink
-  k:            string;
+  k,tmp:        string;
   f:            TColor;
   bco:          TColor = clnone;
   fr, bk:       string;
@@ -2242,12 +2259,17 @@ begin
                  if k[length(k)] = ',' then delete(k, length(k), 1);
                  //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
 
-           if (pos(',',k) > 2) then
-              while (strtoint(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, pos(',',k), length(k));
-           if (pos(',',k) > 0) then
-              while (strtoint(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
-              if length(k) > 1 then
-              while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+                 if (pos(',',k) > 0) then begin
+                    tmp:= copy(k, pos(',',k)+1, length(k));
+                    k:= copy(k, 1, pos(',',k)-1);
+                 end;
+
+                 if tmp <> '' then
+                    while (strtoint(tmp) > 15) do delete(tmp, length(tmp), 1);
+                 if strtoint(copy(k, 2, length(k))) > 15 then tmp:= '';
+                 while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                 if tmp <> '' then
+                    k:= k + ',' + tmp;
 
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
