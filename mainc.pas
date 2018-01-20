@@ -965,7 +965,7 @@ begin
         closefile(t);
      end;
      }
-     //if (pos('McClane', r) > 0) then ShowMessage(r);
+     //if (pos('NOTICE', r) > 0) then ShowMessage(r);
 
      delete(r, 1, 1); // First colon
 
@@ -984,7 +984,7 @@ begin
      tmp:= r;
      if pos(':', r) > 0 then begin
         mess:= copy(r, pos(':', r)+1, length(r));
-         if (pos(':', r) > 0) then r:= copy(r, 1, pos(':', r)-1);
+         if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
          if (pos('TOPICLEN', tmp) = 0) then
          if (pos('JOIN', tmp) > 0) then r:= tmp;
      end;
@@ -1414,6 +1414,8 @@ case s of
 
        // Using cname as sender
        cname:= copy(r, 1, pos('!',r)-1); // Author
+       if (pos('::', mess) > 0) then
+          while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess));
 
        // num is Connection number/name. Searching Parent for connexion in the tree
        n:= 0;
@@ -1438,7 +1440,7 @@ case s of
        fmainc.createlog(num, fmainc.TreeView1.Items[m].Text);
 
        //writeln(t, mess);
-       output(clgreen, '< ' + copy(r, 1, pos('!', r)-1) + ' > ' + mess, n);
+       output(clgreen, '< ' + cname + ' > ' + mess, n);
        closefile(t);
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
     end;
@@ -1858,7 +1860,6 @@ begin
      l1:= BStrings.Count-1;
      while (pos(copy(tmp,6, length(tmp)), BStrings[l1]) = 0) and (l1 > 0) do dec(l1);
 
-           //if (pos('bkcol',BStrings[l1]) > 0) then ShowMessage(lines[l]);
            //if l = lines.Count-1 then lines[l]:= lines[l] + char(15);
            //BStrings[BStrings.Count-1]:= BStrings[BStrings.Count-1] + char(15);
            //if pos('topic', lowercase(tmp)) > 0 then ShowMessage('bkcol: ' + tmp);
@@ -1872,8 +1873,9 @@ begin
 
                   while ( (tmp2[length(k)+1] in ['0'..'9'])
                         or (copy(BStrings[l1], 6, length(k)+1)[length(k)+1] = ',') )
-                        and (length(k)+1 <= length(tmp2))
+                        and (length(k)+1 < length(tmp2))
                         do k:= copy(BStrings[l1], 6, length(k)+1);
+
                         if k[length(k)] = ',' then delete(k, length(k), 1);
                         //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
                   //ShowMessage(k);
@@ -1885,11 +1887,13 @@ begin
 
                         if tmp3 <> '' then
                            while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
-                        if strtoint(copy(k, 2, length(k))) > 15 then tmp3:= '';
-                        while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
-                        if tmp3 <> '' then
-                           k:= k + ',' + tmp3;
 
+                        if length(k) > 1 then begin
+                           if strtoint(copy(k, 2, length(k))) > 15 then tmp3:= '';
+                           while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                           if tmp3 <> '' then
+                              k:= k + ',' + tmp3;
+                        end;
                   //ShowMessage('col' + k);
               tmp:= k + tmp;
               //if k = '' then ShowMessage('col1 ' + k);
@@ -2079,15 +2083,19 @@ begin
 
                              if tmp3 <> '' then
                                 while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
-                             if strtoint(copy(k1, 2, length(k1))) > 15 then tmp3:= '';
-                             while (strtoint(copy(k1, 2, length(k1))) > 15) do delete(k1, length(k1), 1);
-                             if tmp3 <> '' then
-                                k1:= k1 + ',' + tmp3;
+
+                             if length(k1) > 1 then begin
+                                if strtoint(copy(k1, 2, length(k1))) > 15 then tmp3:= '';
+                                   while (strtoint(copy(k1, 2, length(k1))) > 15) do delete(k1, length(k1), 1);
+                                if tmp3 <> '' then
+                                   k1:= k1 + ',' + tmp3;
+                             end;
+                             end;
+
                              //ShowMessage(k1);
                              //if k[length(k)] = ',' then delete(k, length(k), 1);
                              //except ShowMessage('puta ' + k1); end;
 
-                          end;
 
                           if (tmp2[c] = char(15)) then begin
                              co:= false;
@@ -2103,7 +2111,7 @@ begin
                        if (hy = true) then lines[l+1]:= char(1) + lines[l+1];
                        if (co = true) then lines[l+1]:= k + k1 +lines[l+1];
                        //if (col = true) then ShowMessage('yay ' + lines[l+1]);
-
+                    end;
                     end;
 
                     // Removing end of hypertext at the beginning of line
@@ -2116,7 +2124,7 @@ begin
                     end;
            end; // Formatting text
 
-           end; // w length
+           //end; // w length
            // End word wrapping
 
 
@@ -2266,10 +2274,13 @@ begin
 
                  if tmp <> '' then
                     while (strtoint(tmp) > 15) do delete(tmp, length(tmp), 1);
-                 if strtoint(copy(k, 2, length(k))) > 15 then tmp:= '';
-                 while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
-                 if tmp <> '' then
-                    k:= k + ',' + tmp;
+
+                 if length(k) > 1 then begin
+                    if strtoint(copy(k, 2, length(k))) > 15 then tmp:= '';
+                       while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                    if tmp <> '' then
+                       k:= k + ',' + tmp;
+                 end;
 
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
