@@ -191,7 +191,7 @@ Type
 
   end;
 
-  TSyn = class(bsynedit)
+  TSyn = class(csynedit)
   //property Cursor: TCursor write SetCursor default crNo;
   public
   var
@@ -1719,7 +1719,7 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
         r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
-     }
+
      if (pos('orbita', r) > 0) then begin
      //r:= char(2) + char(3)+'3mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/';
      //r:= 'mcclane https://duckduckgo.com/ and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/) hola';
@@ -1738,7 +1738,7 @@ begin
      //r:= '< Global > [' + char(2) + 'Logon News' + char(2) + ' - Apr 30 20:20:56 2017 BST] We''ve upgraded to ircd-hybrid.org release v8.2.22 - security updates, and feature updates. Thank you ircd-hybrid team, and Michael for the great support and hosting. ~2600net';
      c:= clpurple;
      end;
-
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -2622,8 +2622,10 @@ with TSyn(Sender) do begin
 
      l:= TopLine;
      //Append('l: ' + inttostr(l) + ' T: '+inttostr(l));
-     l:= (lines.count - l); // Last visible line
+     l:= (lines.count - l); // Last line
+     //if (pos('hey', lines[lines.Count-1]) > 0) then ShowMessage('hey');
      if (last > 0) then begin
+        //if (pos('hey', lines[lines.Count-1]) > 0) then ShowMessage('hey');
      //if (TSyn(Sender).last div TSyn(Sender).LineHeight - tsyn(sender).TopLine) > TSyn(Sender).TopLine then begin
         Canvas.Pen.Color:= clred;
         y:= (last+1 - TopLine) * LineHeight;
@@ -3074,6 +3076,7 @@ begin
      m0[a].OnKeyUp:= @Memo1KeyUp;
      m0[a].OnMouseMove:= @tsynMouseMove;
      m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+     m0[a].OnPaint:= @tsynPaint;
 
      // RichMemo Font Attribues
      //      // spanish iso8859-1
