@@ -49,6 +49,7 @@ type
     TabSheet2: TTabSheet;
     userm: TLabeledEdit;
 
+    procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject);
     procedure save;
@@ -84,6 +85,11 @@ uses mainc;
 {$R *.lfm}
 
 { Tfserv }
+
+procedure Tfserv.FormCreate(Sender: TObject);
+begin
+     fserv.Left:= fmainc.Left;
+end;
 
 procedure Tfserv.FormActivate(Sender: TObject);
 var

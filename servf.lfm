@@ -11,7 +11,8 @@ object fserv: Tfserv
   Font.Name = 'Sans'
   OnActivate = FormActivate
   OnClose = FormClose
-  Position = poMainFormCenter
+  OnCreate = FormCreate
+  Position = poDefault
   ShowInTaskBar = stNever
   LCLVersion = '1.6.4.0'
   object PageControl1: TPageControl

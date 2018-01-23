@@ -1048,7 +1048,6 @@ case s of
                         fmainc.Timer1.Interval:= 2000;
 
         if (r <> '') and (mess <> '') then begin
-           //if (pos('hola', mess) > 0) then ShowMessage(mess);
 
         fmainc.createlog(num, server); //file open on connect
 
@@ -1056,7 +1055,7 @@ case s of
               if mess = '' then begin
                  mess:= r;
 
-              r:= copy(r, pos(nick, r) + length(nick)+1, pos(':', r)-1);
+              r:= copy(r, pos(nick, r) + length(nick)+2, pos(':', r)-1);
               if r <> ' ' then begin // space
                  mess:= copy(mess, pos(':', mess)+1, length(r));
                  mess:= r + mess;
@@ -1080,15 +1079,19 @@ case s of
               r:= copy(r, pos(nick, r)+length(nick), length(r)) else
               r:= '';
               r:= StringReplace(r, char(3), '', [rfReplaceAll]);
+              if (pos(':',r) > 0) then delete(r, pos(':',r), length(r));
 
            //delete(r, pos(mess, r)-1, length(r));
-           //if pos('31,', mess) > 0 then ShowMessage(r + mess);
            //writeln(t, r + mess);
-           output(clnone, r+mess, n);
+           {if r = copy(mess, 2, length(mess)) then ShowMessage(r);
+              if not ( pos(':', r) =2 ) then
+                 output(clnone, r+mess, n) else}
+                 output(clnone, r+mess, n);
            //m0[1].Lines.LoadFromFile(log[0]);
         end;
            if (pos('End of', mess) > 0) then fmainc.Timer1.Interval:= 2000;
            closefile(t);
+           //if pos('Thank you,', r) > 0 then ShowMessage(r + mess);
         end;
      end;
 
