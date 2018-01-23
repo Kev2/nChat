@@ -1892,7 +1892,7 @@ begin
                            if strtoint(copy(k, 2, length(k))) > 15 then tmp3:= '';
                            while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
                            if tmp3 <> '' then
-                              k:= k + ',' + tmp3;
+                              k:= k + ',' + tmp3; tmp3:= '';
                         end;
                   //ShowMessage('col' + k);
               tmp:= k + tmp;
@@ -2089,6 +2089,7 @@ begin
                                    while (strtoint(copy(k1, 2, length(k1))) > 15) do delete(k1, length(k1), 1);
                                 if tmp3 <> '' then
                                    k1:= k1 + ',' + tmp3;
+                                tmp3:= '';
                              end;
                              end;
 
@@ -2135,7 +2136,7 @@ begin
 
      // Resetting variables
      if r1 = true then r1:= false;
-     co:= false; b:= false; k:= '';
+     co:= false; b:= false; k:= ''; tmp3:= '';
 
      inc(l);
      end; // Lines count
@@ -2280,6 +2281,7 @@ begin
                        while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
                     if tmp <> '' then
                        k:= k + ',' + tmp;
+                       tmp:= '';
                  end;
 
            if not (k[2] in ['0'..'9']) then begin
