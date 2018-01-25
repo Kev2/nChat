@@ -3,7 +3,7 @@ object fserv: Tfserv
   Height = 505
   Top = 195
   Width = 281
-  BorderStyle = bsDialog
+  BorderStyle = bsSingle
   Caption = 'Servers'
   ClientHeight = 505
   ClientWidth = 281
