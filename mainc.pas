@@ -3172,8 +3172,8 @@ begin
           end; // Add
 
           1: Begin // Delete
-          while (n < length(chanod)) do begin
-                if chanod[n].arr = cnode(5,nod,0,'') then chanod[n]:= chanod[n+1];
+          while (n < length(chanod)-1) do begin
+                if chanod[n].node > nod then chanod[n]:= chanod[n+1];
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
