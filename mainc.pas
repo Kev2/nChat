@@ -285,7 +285,7 @@ begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
+           //if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
@@ -3780,7 +3780,7 @@ begin
      while (n < lb0[a].Items.Count -1) do begin
            item1:= lowercase(lb0[a].Items[n]);
            while (pos(item1[p], e) > 0) do inc(p);
-           if (p > 0) and (p < 4) then inc(op);
+           if (p > 0) and (p < 5) then inc(op);
            item1:= copy(item1, p, length(item1));
            p:= 1;
 //ShowMessage('sort: ' + item1);

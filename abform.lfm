@@ -9,7 +9,7 @@ object abf: Tabf
   Caption = 'About Lemon Chat'
   ClientHeight = 351
   ClientWidth = 444
-  Color = clWhite
+  Color = clCream
   OnActivate = FormActivate
   OnClose = FormClose
   Position = poMainFormCenter
@@ -25,7 +25,7 @@ object abf: Tabf
     Height = 331
     Top = 10
     Width = 424
-    PageIndex = 1
+    PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 10
     TabOrder = 0
