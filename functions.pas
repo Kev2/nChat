@@ -30,8 +30,6 @@ type
    //OnMouseUp:= tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   end;
 
-  bsynedit = class(csynedit)
-  end;
 
 function replce(r: string): string;
 function colors(c: string): TColor;
@@ -77,22 +75,25 @@ begin
      chan:= copy(r, pos(':', r)+1, length(r));
 
      // Join
-     if (pos(lowercase('j'), r) = 1) or (pos('J', r) = 1) then begin
-        r:= StringReplace(r, lowercase('j'), 'JOIN', [rfReplaceAll]);
+     if (pos('j', r) = 1) or (pos('J', r) = 1) then begin
+        if (pos('j', r) = 1) then r:= StringReplace(r, 'j', 'JOIN', [rfReplaceAll]) else
+        r:= StringReplace(r, 'J', 'JOIN', [rfReplaceAll]);
      end;
 
 
      // Topic
      if (pos(lowercase('topic'),r) = 1) then begin
      //r:= 'topic ' + chan + ' :Topic is: ' + char(2) + char(3) + '1,11 Bienvenidos al canal ' + char(3) +'0,13 #LC-Argentina' + char(15) + char(2) + char(3) + '1 Ahora podes chatear desde ' + char(15) + char(2) + char(3) + '1,3Kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + '1en ' + char(2) + char(3) + '12http://canalargentina.net/kiwi ' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 y desde ' + char(15) + char(2) + char(3) + '4,14Mibbit' + char(15) + char(3) + char(2) + char(2) + char(3) + char(2) + char(3) + '1 desde ' + char(15) + char(2) + char(3) + '12http://canalargentina.net/mibbit' + char(15);
-     //r:= 'topic #nvz :' + char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
+     //r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome :D :p to #help' + ':' + '#nvz';
 
      delete(r, 1, length('topic')+1);
      if r[1] = '#' then delete(r, pos(':',r), length(r));
 
      // Channel
-     if r[1] = '#' then chan:= copy(r, 1, pos(' ', r)-1) else
-        chan:= copy(r, pos(':', r)+1, length(r));
+     if r[1] = '#' then chan:= copy(r, 1, pos(' ', r)-1) else begin
+        chan:= r;
+        while (pos(':', chan) > 0) do delete(chan, 1, pos(':', chan));
+     end;
 
      // Message
      if r[1] = '#' then tmp:= copy(r, pos(' ',r)+1, length(r)) else
@@ -124,7 +125,7 @@ begin
         r:= 'You have invited ' + copy(r, 1, pos(' ' , r)) + copy(r, pos('#', r), length(r));
      end;
 
-     // /me
+     // /me              /me dances~sollo
      if (pos('me', lowercase(r)) = 1) or (pos('me', lowercase(r)) = 2) then begin
         if pos('me', lowercase(r)) = 1 then tmp:= '1';
         r:= StringReplace(r, ' me', '', [rfReplaceAll]);
@@ -133,12 +134,12 @@ begin
         //delete(r, pos(':', r), 1);
         if tmp = '1' then begin
            // Show local
-           r:= '* ' + copy(r, pos(':', r)+1, length(r)) + copy(r, 1, pos(':', r)-1);
+           r:= '* ' + copy(r, pos('~', r)+1, length(r)) + copy(r, 1, pos('~', r)-1);
            tmp:= 'no13';
         end else
         // Send to server
-           r:= char(1) + 'ACTION' +r + char(1);
-           delete(r, pos(':', r), Length(r));
+           r:= char(1) + 'ACTION' + r + char(1);
+           delete(r, pos('~', r), Length(r));
      end;
 
      // Query: example /query hola no way
@@ -196,8 +197,10 @@ begin
 end;
 
 function arstat(newnick: string): string;
+{arstat stands for arrange statuses
+Sorts statuses in this order ~@%+}
 var
-   stat:   string = '~@%+';
+   stat:   string = '!~@%+';
    n:      smallint = 1;
    tmp:    string = '';
    t:      char;

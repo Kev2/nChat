@@ -60,7 +60,7 @@ end;
 
 procedure Tabf.httpClick(Sender: TObject);
 begin
-    OpenURL('http://ncvsoft.net16.net');
+    OpenURL('http://posmith.imgur.com');
 end;
 
 procedure Tabf.licbClick(Sender: TObject);

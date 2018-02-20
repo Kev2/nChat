@@ -1,7 +1,7 @@
 object abf: Tabf
-  Left = 890
+  Left = 900
   Height = 351
-  Top = 350
+  Top = 353
   Width = 444
   ActiveControl = Notebook1
   BorderIcons = []
@@ -9,7 +9,7 @@ object abf: Tabf
   Caption = 'About Lemon Chat'
   ClientHeight = 351
   ClientWidth = 444
-  Color = clCream
+  Color = clWhite
   OnActivate = FormActivate
   OnClose = FormClose
   Position = poMainFormCenter
@@ -25,7 +25,7 @@ object abf: Tabf
     Height = 331
     Top = 10
     Width = 424
-    PageIndex = 0
+    PageIndex = 1
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Around = 10
     TabOrder = 0
@@ -41,7 +41,7 @@ object abf: Tabf
         Width = 88
         BorderSpacing.Top = 10
         Caption = 'Lemon Chat'
-        Font.Color = 4022129
+        Font.Color = 6805332
         Font.Height = -13
         Font.Name = 'Sans'
         Font.Style = [fsBold]
@@ -3229,7 +3229,7 @@ object abf: Tabf
         Width = 23
         BorderSpacing.Top = 20
         Caption = '1.0'
-        Font.Color = 4022129
+        Font.Color = 6805332
         Font.Height = -13
         Font.Name = 'Sans'
         Font.Style = [fsBold]
@@ -3242,13 +3242,13 @@ object abf: Tabf
         AnchorSideTop.Control = abImage
         AnchorSideTop.Side = asrBottom
         Cursor = crHandPoint
-        Left = 107
+        Left = 85
         Height = 14
         Top = 177
-        Width = 211
+        Width = 255
         BorderSpacing.Top = 20
-        Caption = 'visit website: http://ncvsoft.net16.net'
-        Font.Color = 4022129
+        Caption = 'Visit the website at http://posmith.imgur.com'
+        Font.Color = clMaroon
         Font.Height = -11
         Font.Name = 'Sans'
         ParentColor = False
@@ -3267,7 +3267,7 @@ object abf: Tabf
         Width = 126
         BorderSpacing.Top = 10
         Caption = 'nventafini@gmail.com'
-        Font.Color = clBlack
+        Font.Color = clGray
         Font.Height = -11
         Font.Name = 'Sans'
         ParentColor = False
@@ -3289,7 +3289,7 @@ object abf: Tabf
         BorderSpacing.Top = 10
         BorderSpacing.Around = 10
         BorderStyle = bsNone
-        Color = clCream
+        Color = clWhite
         Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Sans'

@@ -228,7 +228,7 @@ var
   splt:     array[1..20] of TSplitter;
   //com:      array of array of string;
   rc:       smallint; // right click treenode or nick / Send origin
-  gr:       array[1..4] of TPortableNetworkGraphic;
+  gr:       array[1..5] of TPortableNetworkGraphic;
   str:      string; // Hyperlink in clipboard
 
 implementation
@@ -420,7 +420,10 @@ begin
            TreeView1.Items[n].Text:= '(' + TreeView1.Items[n].Text + ')';
            m0[n].Append('Disconnected');
            end;
-           if assigned(lb0[n]) then lb0[n].Clear;
+           if assigned(lb0[n]) then begin
+              lb0[n].Clear;
+              lab0[n].Caption:= '';
+           end;
      inc(n);
      if (n < TreeView1.Items.Count) then
         if (TreeView1.Items[n].Parent = nil) then n:= TreeView1.Items.Count;
@@ -470,17 +473,21 @@ begin
      if not assigned(m0[0]) then begin
         fserv.Show;
 
-        for n:= 1 to 4 do begin
+        for n:= 1 to 5 do begin
             gr[n]:= TPortableNetworkGraphic.Create;
         end;
 
-        gr[1].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'vio.png' );
-        gr[2].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'blue.png' );
-        gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' );
-        gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
+        gr[1].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'ircop.png' );
+        gr[2].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'vio.png' );
+        gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'blue.png' );
+        gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' );
+        gr[5].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
      end;
-     {TreeView1.SelectionFontColor:= clblue;
-     TreeView1.Items[0].Selected:=true;}
+     {red    = IRCop
+      Violet = owner
+      blue   = op
+      green  = half op
+      voice  = orange}
 end;
 
 procedure Tfmainc.abmClick(Sender: TObject);
@@ -502,7 +509,7 @@ begin
            CloseFile(t);
      inc(i);
      end;
-     for i:= 1 to 4 do gr[i].Free;
+     for i:= 1 to 5 do gr[i].Free;
 end;
 
 
@@ -745,7 +752,7 @@ begin
               m0[n].com[length(m0[n].com)-1]:= s;
               //inc(m0[n].comn);
 
-              if (pos('/me', lowercase(TEdit(sender).Caption)) = 1) then net[ne].output(clPurple, replce(s + ':'+m0[n].nnick), n);
+              if (pos('/me', lowercase(TEdit(sender).Caption)) = 1) then net[ne].output(clPurple, replce(s + '~'+m0[n].nnick), n);
            end else begin
 
            rc:= n;
@@ -1637,11 +1644,9 @@ var //r: string;
     s: string;
 begin
      //while r = '' do r:= conn.RecvString(200);
-     if (pos('!', r) > 0) then begin
         delete (r, 1, pos('#', r) -1);
         delete (r, 1, pos(' ', r));
-     s:= copy(r, 1, pos('!', r)-1);
-     end;
+     s:= copy(r, 1, pos(' ', r)-1);
 
      while (pos(' ', r) > 0) do
            delete(r, 1, pos(' ', r));
@@ -1724,7 +1729,7 @@ begin
 
      if (pos('orbita', r) > 0) then begin
      r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
-
+     r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
      //c:= clpurple;
      end;
      }
@@ -2067,6 +2072,8 @@ begin
                              while ( (tmp2[c+length(k1 )] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') )
                                    and (c+length(k1) < length(tmp2))
                                    do k1:= copy(tmp2, c, length(k1)+1);
+
+                             if k1[length(k1)] = ',' then delete(k1, length(k1), 1);
 
                              if (pos(',',k1) > 0) then begin
                                 tmp3:= copy(k1, pos(',',k1)+1, length(k1));
@@ -3460,7 +3467,7 @@ var n:    smallint = 0;
     l:    smallint = 1;  // s position
     p:    smallint = 1;  // Copy starting position
 begin
-     s:= '~@%+';
+     s:= '!~@%+';
      for m:= 0 to length(chanod)-1 do begin
                  n:= cnode(3,0,m, '');
                  //if (Assigned(lb0[n])) then lb0[n].Parent:= Notebook1.Page[m];
@@ -3490,6 +3497,10 @@ begin
 
                  if l=4 then
                  lb0[n].Canvas.Draw(0, lb0[n].ItemRect(a).Top+3, gr[4]);
+
+                 if l=5 then
+                 lb0[n].Canvas.Draw(0, lb0[n].ItemRect(a).Top+3, gr[5]);
+
 
            if (l > 0) then
            lb0[n].Canvas.TextOut(15, lb0[n].ItemRect(a).Top+3, copy(ni, 2, length(ni))) else
@@ -3756,7 +3767,7 @@ var
    s:              integer = 1000;
    t:              integer = 1000;
 begin
-     e:= '~@%+';
+     e:= '!~@%+';
 
      // If there's only one user
      item1:= lowercase(lb0[a].Items[0]);
@@ -4212,7 +4223,7 @@ begin
               if node.AbsoluteIndex = m then
 
               if (pos(lowercase(m0[n].nnick), lowercase(s)) > 0)
-                 // or (blue[m] = true)
+                 or (blue[m] = true)
                  then begin
                  sender.Canvas.Font.Color:= clBlue;
                  blue[m]:= true;
@@ -4220,6 +4231,7 @@ begin
                  TrayIcon1.Icon:= i;
               end else
 
+              if (blue[m] = false ) then
               if (pos('quit', lowercase(s)) = 0) and (pos('quit:', lowercase(s)) = 0)
                  and (pos('part', lowercase(s)) = 0)
                  and (pos('has joined #', lowercase(s)) = 0)
@@ -4229,7 +4241,7 @@ begin
               then begin
                    mess[m]:= true;
                    sender.Canvas.Font.Color:= clred;
-                   if blue[m] = false then
+                   //if blue[m] = false then
                       i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
                    TrayIcon1.Icon:= i;
               end else
