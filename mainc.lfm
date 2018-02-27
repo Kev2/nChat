@@ -1,7 +1,7 @@
 object fmainc: Tfmainc
   Left = 241
   Height = 594
-  Top = 108
+  Top = 110
   Width = 1103
   HorzScrollBar.Page = 129
   HorzScrollBar.Range = 129
@@ -7251,7 +7251,7 @@ object fmainc: Tfmainc
     Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
-    OnChangeBounds = Splitter1Moved
+    OnMoved = Splitter1Moved
     ResizeAnchor = akRight
   end
   object MainMenu1: TMainMenu

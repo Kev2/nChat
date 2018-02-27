@@ -3865,7 +3865,7 @@ function tfmainc.nicktab(ch: smallint; test: String):string;
 const f:     boolean = false;
       last:  string = '';
       i:     smallint = 0;
-      stat:  string = '~@%+';
+      stat:  string = '!~@%+';
       p:     smallint = 1;
 begin
      if (last <> test) or (i >= lb0[ch].Items.Count) then begin
