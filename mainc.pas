@@ -83,13 +83,13 @@ Type
     ToolButton2: TToolButton;
     TreeView1: TTreeView;
 
-    procedure abmClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormPaint(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure Splitter1Moved(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+    procedure abmClick(Sender: TObject);
     procedure quitmClick(Sender: TObject);
 
     function dconmClick(Sender: TObject): smallint;
@@ -709,7 +709,9 @@ begin
            s:= TEdit(sender).Caption;
 
                if not (TreeView1.Items[ne-1].HasChildren) then
-               if (pos('/nick ', s) = 1) then net[ne].nick:= copy(s, pos(' ',s)+1, length(s));
+               if (pos('/nick ', s) = 1) then
+                  if (pos(':',s) = 0)  then net[ne].nick:= copy(s, pos(' ',s)+1, length(s)) else
+                  net[ne].nick:= copy(s, pos(' ',s)+1, pos(':',s) - pos(' ',s)-1);
 
            if (pos(lowercase('/list'), lowercase(s)) = 1) then fclist.getchannels(ne, net[ne].nick) else
 
@@ -1021,15 +1023,22 @@ begin
      if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 8;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
-     if (pos('#', r) > 0) and (pos('=#',r) = 0) then begin
-        cname:= r; cname:= StringReplace(cname, ':', ' ', [rfReplaceAll]);
-        while pos('#', cname) > 1 do delete(cname, 1, pos(' ', cname));
+     if (pos('#', r) > 0) then begin
+     //if (pos('#', r) < pos(':', r)) then
+        if (pos(':', r) > 0) then
+           cname:= copy(r, 1, pos(':', r)-1) else
+           cname:= r;
+        //if (assigned(m0[0])) then ShowMessage('cname: ' + cname);
+           cname:= StringReplace(cname, ':', ' ', [rfReplaceAll]);
+        while (pos('#', cname) > 1) and not (pos('#', cname) = length(cname)) do delete(cname, 1, pos(' ', cname));
 
      if cname <> '' then
      delete(cname, pos(' ', cname), length(cname));
      cname:= inttostr(num) + cname;
      end;
+
      if cname = '' then cname:= inttostr(num) + server;
+     if (pos('JOIN',r) > 0) then ShowMessage(cname);
      //if pos('topic is set', mess) > 0 then ShowMessage('mess ' + r);
 
      {
@@ -1271,7 +1280,7 @@ case s of
 
     3: Begin // PRIVMSG
     //ShowMessage('r: ' + r + ' mess: ' + mess);
-          if (pos('#', r) = 0) then
+          if (pos('#', r) = 0) or (pos('#', r) > pos(':', r)) then
              cname:= copy(r, 1, pos('!', r)-1); // else
 
 
