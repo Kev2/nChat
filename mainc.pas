@@ -990,6 +990,7 @@ begin
      // Getting Message
      tmp:= r;
      if pos(':', r) > 0 then begin
+        //if (pos('JOIN', r) > 0) then ShowMessage('J ' + r);
         mess:= copy(r, pos(':', r)+1, length(r));
          if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
          if (pos('TOPICLEN', tmp) = 0) then
@@ -1025,10 +1026,9 @@ begin
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
      //if (pos('#', r) < pos(':', r)) then
-        if (pos(':', r) > 0) then
-           cname:= copy(r, 1, pos(':', r)-1) else
+        //if (pos(':', r) > 0) then
+        //   cname:= copy(r, pos(':', r)+1, length(r)) else
            cname:= r;
-        //if (assigned(m0[0])) then ShowMessage('cname: ' + cname);
            cname:= StringReplace(cname, ':', ' ', [rfReplaceAll]);
         while (pos('#', cname) > 1) and not (pos('#', cname) = length(cname)) do delete(cname, 1, pos(' ', cname));
 
@@ -1038,7 +1038,7 @@ begin
      end;
 
      if cname = '' then cname:= inttostr(num) + server;
-     if (pos('JOIN',r) > 0) then ShowMessage(cname);
+     //if (pos('JOIN',r) > 0) then ShowMessage(cname);
      //if pos('topic is set', mess) > 0 then ShowMessage('mess ' + r);
 
      {
@@ -1280,9 +1280,17 @@ case s of
 
     3: Begin // PRIVMSG
     //ShowMessage('r: ' + r + ' mess: ' + mess);
+    // priv McClane!~JMcClane@17-122-17-190.fibertel.com.ar PRIVMSG #nvz :hola
+    // Getting channel
+       cname:= r;
+       if (pos('#', cname) > 0) then begin
+          delete(cname, 1, pos('#', cname)-1);
+          delete(cname, pos(' ',cname), length(cname));
+       end;
+    // Getting channel
+
           if (pos('#', r) = 0) or (pos('#', r) > pos(':', r)) then
              cname:= copy(r, 1, pos('!', r)-1); // else
-
 
           //ShowMessage('3 priv: ' + cname);
           {
@@ -1319,7 +1327,7 @@ case s of
 
       //ShowMessage('cname: ' + cname + ' chan: ' + m0[n].chan);
 
-      if (pos('#',cname) = 0) then
+      //if (pos('#',cname) = 0) then
          cname:= inttostr(num) + cname;
 
       // Getting the right memo
@@ -1366,6 +1374,7 @@ case s of
 
     4: Begin // JOIN PART QUIT
        n:= 0;
+       //ShowMessage(cname);
 
        if (pos('QUIT',r) = 0) then
        if cname <> '' then n:= fmainc.cnode(2,0,0, cname);
@@ -1653,9 +1662,12 @@ var //r: string;
     s: string;
 begin
      //while r = '' do r:= conn.RecvString(200);
+     //orwell.freenode.net 333 Sollo #nvz McClane!~JMcClane@17-122-17-190.fibertel.com.ar 1521126049
+
         delete (r, 1, pos('#', r) -1);
         delete (r, 1, pos(' ', r));
-     s:= copy(r, 1, pos(' ', r)-1);
+     if (pos('!', r) = 0) then
+        s:= copy(r, 1, pos(' ', r)-1) else s:= copy(r, 1, pos('!', r)-1);
 
      while (pos(' ', r) > 0) do
            delete(r, 1, pos(' ', r));
