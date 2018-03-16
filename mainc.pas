@@ -957,9 +957,9 @@ begin
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
      if (pos(nick, r) > 0) and (pos('PART', r) > 0) then begin
+        ShowMessage(r + ' n ' + inttostr(n) + nick);
         if (pos('enough param', r) = 0) then
-        r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You left ' + copy(r, pos('#',r), length(r));
-        //ShowMessage(r + ' n ' + inttostr(n) + nick);
+        //r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You have left channel ' + copy(r, pos('#',r), length(r));
      end;
 
      if (pos('PING', r) > 0) then begin
@@ -1015,7 +1015,7 @@ begin
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG', r) > 0) and (pos('@', r) > 0) and (pos('MODE', r) = 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
-     if (pos('You left', mess) > 0) and (pos('PART', r) > 0) or (pos('461', r) > 0) then s:= 4 else
+     if ( (pos(nick, r) > 0) and (pos('PART', r) > 0) ) or (pos('461', r) > 0) then s:= 4 else
      if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
         (pos('QUITLEN',r) = 0) then s:= 5;
      if (pos('NOTICE ' + nick, r) > 0) then s:= 6;
@@ -1380,7 +1380,7 @@ case s of
     4: Begin // I PART
        //ShowMessage('4 ' + r + ' :' + mess);
        fmainc.createlog(num, cname);
-       output(clnone, 'Part: ' + mess, n);
+       output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
 
        if (pos('#', r) > 0) then
        while (m < fmainc.TreeView1.Items.Count) do begin
