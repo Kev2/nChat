@@ -735,6 +735,7 @@ begin
               end else
 
               if (pos(lowercase('/topic'), lowercase(s)) = 1) or
+                 (pos(lowercase('/part'), lowercase(s)) = 1) or
                  (pos(lowercase('/op'),lowercase(s)) = 1) or (pos(lowercase('/deop'),lowercase(s)) = 1) or
                  (pos(lowercase('/voice'),lowercase(s)) = 1) or (pos(lowercase('/devoice'),lowercase(s)) = 1) or
                  (pos(lowercase('/ban'),lowercase(s)) = 1) or (pos(lowercase('/unban'),lowercase(s)) = 1) or
@@ -955,8 +956,9 @@ begin
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
      if (pos(nick, r) > 0) and (pos('PART', r) > 0) then begin
-        r:= 'PART :You left ' + copy(r, pos('#',r), length(r));
-        //ShowMessage(r + ' n ' + inttostr(n));
+        if (pos('enough param', r) = 0) then
+        r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You left ' + copy(r, pos('#',r), length(r));
+        //ShowMessage(r + ' n ' + inttostr(n) + nick);
      end;
 
      if (pos('PING', r) > 0) then begin
@@ -995,6 +997,7 @@ begin
          if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
          if (pos('TOPICLEN', tmp) = 0) then
          if (pos('JOIN', tmp) > 0) then r:= tmp;
+         //if (pos('You', mess) > 0) then ShowMessage(r);
      end;
 
      // Getting Server and Channel
@@ -1011,17 +1014,18 @@ begin
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG', r) > 0) and (pos('@', r) > 0) and (pos('MODE', r) = 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
+     if (pos('You left', mess) > 0) and (pos('PART', r) > 0) or (pos('461', r) > 0) then s:= 4 else
      if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
-        (pos('QUITLEN',r) = 0) then s:= 4;
-     if (pos('NOTICE ' + nick, r) > 0) then s:= 5;
+        (pos('QUITLEN',r) = 0) then s:= 5;
+     if (pos('NOTICE ' + nick, r) > 0) then s:= 6;
      //if (pos('@', r) > 0) and (pos('!', r) > 0) and (pos('JOIN', r) = 0) then s:= 6; // Whois
      //if (pos('QUERY', r) > 0) and (pos('coccco', r) > 0) then s:= 7;
      //if fmainc.TreeView1.Items[n].HasChildren then
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
-     if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 6;
-     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 7;
-     if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 8;
+     if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 7;
+     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 8;
+     if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 9;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1052,7 +1056,7 @@ begin
         n:= fmainc.cnode(2,0,0, inttostr(num) + server);
      end;
 
-     //if (mess <> '') then ShowMessage(r);
+     //if (mess = 'You left') then ShowMessage(mess);
      //if cname <> '' then while (not assigned(m0[n])) do inc(n);
 
 case s of
@@ -1111,7 +1115,7 @@ case s of
 
      1: Begin // Join
        // Create room tab
-       //ShowMessage('J: '+ cname);
+       //ShowMessage('J: '+ nick);
 
        // Searching for created room
        //if num > 0 then
@@ -1308,7 +1312,7 @@ case s of
           }
           mess:= copy(r, 1, pos('!', r) -1) + ': '  + mess; // nick: message
 
-          if (pos('#', cname) = 0) then begin
+          if (pos('#', cname) > 0) then begin
           s:= 0;
           if fmainc.TreeView1.Items.Count > 1 then
           while (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) and (s < fmainc.TreeView1.Items.Count-1) do inc(s);
@@ -1372,9 +1376,25 @@ case s of
 
     end; // 3
 
-    4: Begin // JOIN PART QUIT
+    4: Begin // I PART
+       //ShowMessage('4 ' + r + ' :' + mess);
+       fmainc.createlog(num, cname);
+       output(clnone, 'Part: ' + mess, n);
+
+       if (pos('#', r) > 0) then
+       while (m < fmainc.TreeView1.Items.Count) do begin
+             if (fmainc.TreeView1.Items[m].Text = copy(cname, 2, length(cname))) then fmainc.TreeView1.Items[m].Text:=
+                '(' + fmainc.TreeView1.Items[m].Text + ')';
+       inc(m);
+       end;
+       if assigned(lb0[m-1]) then begin
+          lb0[m-1].Clear;
+          lab0[m-1].Caption:= '';
+       end;
+    end;
+
+    5: Begin // JOIN PART QUIT
        n:= 0;
-       //ShowMessage(cname);
 
        if (pos('QUIT',r) = 0) then
        if cname <> '' then n:= fmainc.cnode(2,0,0, cname);
@@ -1436,7 +1456,7 @@ case s of
     n:= 1;
     end; // 4
 
-    5: Begin // NOTICE
+    6: Begin // NOTICE
 
        // Using cname as sender
        cname:= copy(r, 1, pos('!',r)-1); // Author
@@ -1484,7 +1504,7 @@ case s of
     end;
     }
 
-    6: Begin // TOPIC
+    7: Begin // TOPIC
        n:= fmainc.cnode(2,0,0, cname);
        cname:= copy(cname, pos('#', cname), length(cname));
        r:= copy(r, 1, pos('!', tmp)-1); // User
@@ -1517,7 +1537,7 @@ case s of
        closefile(t);
     end;     // TOPIC
 
-    7: Begin // INVITE
+    8: Begin // INVITE
        if (pos('#', mess) > 0) then // Spotchat puts the channel after : (colon)
           cname:= copy(mess, pos('#', mess), length(mess));
 
@@ -1538,7 +1558,7 @@ case s of
     end;
 
 
-    8: Begin // MODE
+    9: Begin // MODE
        fmainc.Timer1.Interval:= 50;
 
        // Getting user
