@@ -941,6 +941,7 @@ var
           cname: string = ''; // Channel name
           mess:  string;      // Message
           tmp:   string;
+          i:     TIcon;
 begin
         // Getting connection in the tree where num = connection number starting with 0
         //if (num = 0) then ShowMessage('zero');
@@ -1458,6 +1459,9 @@ case s of
 
     6: Begin // NOTICE
 
+       i:= ticon.Create;
+       i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
+
        // Using cname as sender
        cname:= copy(r, 1, pos('!',r)-1); // Author
        if (pos('::', mess) > 0) then
@@ -1488,6 +1492,7 @@ case s of
        //writeln(t, mess);
        output(clgreen, '< ' + cname + ' > ' + mess, n);
        closefile(t);
+       fmainc.TrayIcon1.Icon:= i;
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
     end;
 
@@ -3710,7 +3715,7 @@ var
    l:     smallint = 1; // s position
 begin
      timer1.Enabled:= false;
-     s:= '~@%+';
+     s:= '!~@%+';
 
      {
      //l:= TreeView1.Selected.AbsoluteIndex;
@@ -3812,7 +3817,7 @@ begin
 
      // If there's only one user
      item1:= lowercase(lb0[a].Items[0]);
-     if (pos(item1[1], e) > 0) and (pos(item1[1], e) < 4) then inc(op);
+     if (pos(item1[1], e) > 0) and (pos(item1[1], e) < 5) then inc(op);
 
      // Sorting all
      repeat
@@ -3851,7 +3856,7 @@ begin
             //if (pos(lb0[a].Items[n],e) > 0) then begin
                s:= pos(lb0[a].Items[n][1], e);   if s=0 then s:= 1000;
                t:= pos(lb0[a].Items[n+1][1], e); if t=0 then t:= 1000;
-               if (s > 0) and (s < 4) then inc(op);
+               if (s > 0) and (s < 5) then inc(op);
             //end;
                 if (t < s ) then begin
                 ch:= true;
