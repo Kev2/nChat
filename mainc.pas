@@ -957,7 +957,7 @@ begin
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
      if (pos(nick, r) > 0) and (pos('PART', r) > 0) then begin
-        ShowMessage(r + ' n ' + inttostr(n) + nick);
+        //ShowMessage(r + ' n ' + inttostr(n) + nick);
         if (pos('enough param', r) = 0) then
         //r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You have left channel ' + copy(r, pos('#',r), length(r));
      end;
