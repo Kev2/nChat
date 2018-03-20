@@ -1026,6 +1026,7 @@ begin
      //if assigned(m0[1]) then ShowMessage(r);
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 7;
      if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 8;
+     if (pos(nick,r) > 0) and (pos('MODE', r) > 0) then s:= 9;
      if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 9;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1584,22 +1585,30 @@ case s of
           delete(tmp, 1, pos(' ', tmp)); // User
           if tmp[length(tmp)] = ' ' then
              delete(tmp, pos(' ', tmp), Length(tmp));
-
-
-          r:= copy(r, 1, pos('!' ,r)-1); // Kicker
-
-          cname:= tmp + ' has been kicked from ' + copy(cname, 2, length(cname)) + ' by ' + r;
-          delete(mess, 1, pos(':', mess));
-
-          cname:= cname + ' (' + mess + ')';
-          if (pos(nick, r) = 1) then cname:= StringReplace(cname, r, 'You', [rfReplaceAll]);
+          delete(tmp, pos(':',tmp)-1, length(tmp));
 
           r:= copy(r, 1, pos('!' ,r)-1); // Kicker
 
-          output(clred, cname, n);
+          mess:= tmp + ' has been kicked from ' + copy(cname, 2, length(cname)) + ' by ' + r + ' (' + mess + ')';
+
+          if (pos(nick, tmp) = 1) then begin
+             mess:= StringReplace(mess, tmp, 'You', [rfReplaceAll]);
+             //if (pos('#', r) > 0) then
+             while (m < fmainc.TreeView1.Items.Count) do begin
+                   if (fmainc.TreeView1.Items[m].Text = copy(cname, 2, length(cname))) then fmainc.TreeView1.Items[m].Text:=
+                      '(' + fmainc.TreeView1.Items[m].Text + ')';
+             inc(m);
+             end;
+          end;
+
+          r:= copy(r, 1, pos('!' ,r)-1); // Kicker
+
+          output(clred, mess, n);
 
           // Updating nick list
-          fmainc.lbchange(tmp, tmp, 1, n, num+1);
+          if not (tmp = nick) then
+             fmainc.lbchange(tmp, tmp, 1, n, num+1) else
+             lb0[n].Clear;
        end else
 
        // Channel limit
@@ -1666,12 +1675,13 @@ case s of
 
        // Updating nick list
        //if pos('@',r) = 0 then
-       if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 3, n, num+1);
-       //if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then gnicks(copy(cname, 2, length(cname)));
-       if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 4, n, num+1);
 
-       if (pos('gives',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 3, n, num+1);
-       if (pos('removes',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 4, n, num+1);
+       if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+'+tmp, 3, n, num+1);
+       //if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then gnicks(copy(cname, 2, length(cname)));
+       if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, tmp, 4, n, num+1);
+
+       if (pos('gives',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@'+tmp, 3, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, tmp, 4, n, num+1);
 
        CloseFile(t);
        end;
@@ -3798,7 +3808,7 @@ Case task of
 
      4: begin // Remove status
               //ShowMessage('rs: ' + lb0[a].Items[p]);
-              lb0[a].Items[p]:= StringReplace(lb0[a].Items[p], newnick, '', [rfReplaceAll]);
+              lb0[a].Items[p]:= StringReplace(lb0[a].Items[p], st, '', [rfReplaceAll]);
      end;     // Remove status
 end; // Task
 
