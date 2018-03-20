@@ -1269,6 +1269,7 @@ case s of
 
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), mess, 2, n, num+1) else
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), copy(r, pos('NICK', r) + Length('nick')+1, length(r)), 2, n, num+1);
+                   //ShowMessage(gnicks(fmainc.TreeView1.Items[1].Text));
 
                    if pos('You',cname) = 0 then
                       output(clBlack, cname, n);
@@ -1772,10 +1773,11 @@ begin
         //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3) + '155';
         //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+        r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
+        r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
 
      if (pos('orbita', r) > 0) then begin
-     r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
-     r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
+     r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //c:= clpurple;
      end;
      }
@@ -3658,9 +3660,10 @@ end;
 function connex.gnicks(ch: string): string;
 var r: string;
 begin
-     conn.SendString('NAMES ' + ch + #13#10);
-     while (pos('=',r) = 0) do begin
+     conn.SendString('NAMES ' + ch + ' ' + #13#10);
+     while (pos('/NAMES', r) = 0) do begin
      r:= conn.RecvString(200);
+     ShowMessage(r);
      end;
      {
      if (pos('JOIN',r) > 0) or (pos('PART',r) > 0) or (pos('PRIVMSG',r) > 0) or
@@ -3683,7 +3686,7 @@ begin
      }
 
          if (pos('=', r) > 0) then
-         //fmainc.fillnames(r, ch);
+         fmainc.fillnames(r, 0);
          r:= '';
          while (r = '') do r:= conn.RecvString(100);
      end;
@@ -3757,10 +3760,10 @@ end;
 
 procedure tfmainc.lbchange(nick1, newnick: string; task, a, con: smallint);
 var
-   s:    string = '1';
+   st:   string = '1';
    it:   string;
    p:    smallint = 0;  // Position from srchnick function
-   e:    string = '~@%+';
+   e:    string = '!~@%+';
    stat: boolean = false;
 begin
      {Tasks
@@ -3772,6 +3775,7 @@ begin
      }
 
      p:= strtoint(srchnick(nick1, 1, a)); // a is lb0 array number
+     st:= srchnick(nick1, 2, a);
 
 Case task of
      0: Begin // append
@@ -3783,13 +3787,13 @@ Case task of
      end;     // 1 Remove
 
      2: Begin // Change
-              lb0[a].Items.Insert(p+1, arstat(newnick));
+              lb0[a].Items.Insert(p+1, st + newnick);
               lb0[a].Items.Delete(p);
 
      end;     // Change
 
      3: Begin // Add status
-              lb0[a].Items[p]:= arstat(newnick + lb0[a].Items[p]);
+              lb0[a].Items[p]:= st + newnick;
      end;     // Add Status
 
      4: begin // Remove status
@@ -3876,7 +3880,8 @@ end;
 function tfmainc.srchnick(nick: string; task, ch: smallint): string;
 var n:    smallint = 0;
     tmp:  string;
-    stat: string = '~@%+';
+    st:   string;
+    stat: string = '!~@%+';
     p:    smallint = 1;
     f:    boolean = false;
 begin
@@ -3884,6 +3889,7 @@ begin
 
            tmp:= lowercase(lb0[ch].Items[n]);
            while (pos(tmp[p], stat) > 0) do inc(p);
+           st:= copy(tmp, 1, p-1);
            tmp:= copy(tmp, p, length(tmp));
 
            if (lowercase(nick) = tmp) then begin
@@ -3904,6 +3910,11 @@ begin
           1: Begin    // Position
              result:= inttostr(p);
           end;
+
+          2: Begin    // Status
+             result:= st;
+          end;
+
      end;
 end;
 
