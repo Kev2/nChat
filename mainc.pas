@@ -1026,8 +1026,7 @@ begin
      //if assigned(m0[1]) then ShowMessage(r);
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 7;
      if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 8;
-     if (pos(nick,r) > 0) and (pos('MODE', r) > 0) then s:= 9;
-     if (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) then s:= 9;
+     if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 9;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1608,7 +1607,7 @@ case s of
           // Updating nick list
           if not (tmp = nick) then
              fmainc.lbchange(tmp, tmp, 1, n, num+1) else
-             lb0[n].Clear;
+             if assigned(lb0[n]) then lb0[n].Clear;
        end else
 
        // Channel limit
@@ -1676,12 +1675,12 @@ case s of
        // Updating nick list
        //if pos('@',r) = 0 then
 
-       if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+'+tmp, 3, n, num+1);
+       if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 3, n, num+1);
        //if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then gnicks(copy(cname, 2, length(cname)));
-       if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, tmp, 4, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 4, n, num+1);
 
-       if (pos('gives',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@'+tmp, 3, n, num+1);
-       if (pos('removes',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, tmp, 4, n, num+1);
+       if (pos('gives',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 3, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 4, n, num+1);
 
        CloseFile(t);
        end;
@@ -1787,7 +1786,9 @@ begin
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
 
      if (pos('orbita', r) > 0) then begin
-     r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
+     //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
+     r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     r:= 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //c:= clpurple;
      end;
      }
@@ -2614,7 +2615,7 @@ begin
 
      if (x1 > length(lines[y1])) then x1:= length(lines[y1])-1;
      s:= x1;
-     while (pos(str[s], chr) = 0) do begin
+     while (pos(str[s], chr) = 0) and (s > 0) do begin
            if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
               dec(y1);
               str:= lines[y1] + str;
@@ -2628,7 +2629,7 @@ begin
      // Searching forward from caret position to find a space or bracket
      e:= x1+1;
      //y1:= CaretY;
-     while (pos(str[e], chr) = 0) and (str[e] <> ':') and (str[e] <> '*') do begin
+     while (pos(str[e], chr) = 0) and (str[e] <> '*') do begin
            if (str[e] = '/') then e1:= s+e;
            //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
            if (pos(str[e], chr) = 0) and (e = length(str)) and (str[e] = '/') or (str[e] = '%')
@@ -3770,7 +3771,7 @@ end;
 
 procedure tfmainc.lbchange(nick1, newnick: string; task, a, con: smallint);
 var
-   st:   string = '1';
+   st:   string;
    it:   string;
    p:    smallint = 0;  // Position from srchnick function
    e:    string = '!~@%+';
@@ -3786,6 +3787,9 @@ begin
 
      p:= strtoint(srchnick(nick1, 1, a)); // a is lb0 array number
      st:= srchnick(nick1, 2, a);
+     //newnick:= st + newnick;
+     //ShowMessage('ch ' + srchnick(nick1, 2, a));
+     //ShowMessage('new ' + st);
 
 Case task of
      0: Begin // append
@@ -3797,18 +3801,18 @@ Case task of
      end;     // 1 Remove
 
      2: Begin // Change
-              lb0[a].Items.Insert(p+1, st + newnick);
+              lb0[a].Items.Insert(p+1, arstat(st) + newnick);
               lb0[a].Items.Delete(p);
 
      end;     // Change
 
      3: Begin // Add status
-              lb0[a].Items[p]:= st + newnick;
+              lb0[a].Items[p]:= arstat(st + newnick + nick1);
      end;     // Add Status
 
      4: begin // Remove status
               //ShowMessage('rs: ' + lb0[a].Items[p]);
-              lb0[a].Items[p]:= StringReplace(lb0[a].Items[p], st, '', [rfReplaceAll]);
+              lb0[a].Items[p]:= StringReplace(lb0[a].Items[p], newnick, '', [rfReplaceAll]);
      end;     // Remove status
 end; // Task
 
@@ -3898,11 +3902,13 @@ begin
      while (n < lb0[ch].Count) do begin
 
            tmp:= lowercase(lb0[ch].Items[n]);
-           while (pos(tmp[p], stat) > 0) do inc(p);
-           st:= copy(tmp, 1, p-1);
-           tmp:= copy(tmp, p, length(tmp));
+           while (pos(tmp[p], stat) > 0) and (p < length(stat)) do inc(p);
+
+                 tmp:= copy(tmp, p, length(tmp));
 
            if (lowercase(nick) = tmp) then begin
+              st:= st + copy(lowercase(lb0[ch].Items[n]), 1, p-1);
+              //ShowMessage('st ' + st);
               f:= true;
               p:= n;
               n:= lb0[ch].Count-1;

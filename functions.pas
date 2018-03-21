@@ -80,6 +80,22 @@ begin
         r:= StringReplace(r, 'J', 'JOIN', [rfReplaceAll]);
      end;
 
+     // PART
+     if (pos(lowercase('part'), lowercase(r)) = 1) then begin
+        r:= StringReplace(r, 'part', 'PART', [rfReplaceAll]);
+        tmp:= r;
+        delete(tmp, 1, pos(' ', tmp));
+        if (pos('#', tmp) = 1) then begin
+           chan:= copy(tmp, 1, pos(':', tmp)-1);
+           delete(chan, pos(' ',chan), length(chan));
+           delete(tmp, 1, pos(' ',tmp));
+        end;
+        delete(tmp, pos(':', tmp), length(tmp));
+        //part #nvz
+        if (tmp = '') or (tmp = 'PART') or (tmp = chan) then tmp:= 'Leaving';
+        //if (pos('#', chan) > 0) then
+           r:= 'PART ' + chan + ' :' + tmp;
+     end;
 
      // Topic
      if (pos(lowercase('topic'),r) = 1) then begin
@@ -208,8 +224,8 @@ var
 begin
      //newnick:= '+@~hola';
      // Adding stat to tmp
-     while (pos(newnick[n], stat) > 0) and (n <= length(newnick)) do begin
-           tmp:= tmp + newnick[n];
+     while (n < length(newnick)) do begin
+           if (pos(newnick[n], stat) > 0) then tmp:= newnick[n] + tmp;
      inc(n);
      end;
 
