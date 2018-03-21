@@ -285,7 +285,7 @@ begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           //if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
+           if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
