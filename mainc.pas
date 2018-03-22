@@ -1787,8 +1787,9 @@ begin
 
      if (pos('orbita', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
-     r:= 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
+     r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //c:= clpurple;
      end;
      }
@@ -1867,7 +1868,7 @@ begin
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
 
      {
-     if pos('hola',r) > 0 then begin
+     if (pos('hola', r) > 0) then begin
      if lines.Count < 99 then begin
         m0[1].Clear;
         for l:= 1 to 99 do begin
@@ -2194,7 +2195,7 @@ begin
 
      // Resetting variables
      if r1 = true then r1:= false;
-     co:= false; b:= false; k:= ''; tmp3:= '';
+     co:= false; b:= false; k:= ''; k1:= ''; tmp3:= '';
 
      inc(l);
      end; // Lines count
@@ -2217,6 +2218,7 @@ var
   Attr1, Attr2, Attr3: TtkTokenKind; // Attr1 = color, Attr2 = bold, Attr3 = Hypertext
   str:          string;
   l:            smallint = 0;
+  bl:           smallint = 0;
   ch:           smallint = 1;
   chs:          smallint = 0;
   b:            boolean = false; // Is bold
@@ -2233,7 +2235,6 @@ begin
 
      if app then
      if lines.Count > 2 then l:= lines.Count -3 else l:= Lines.Count-1;
-     //l:= lines.Count-1;
 
      //if assigned(m0[1]) then ShowMessage(lines[0]);
      if co = clnone then f:= clblack;
@@ -2256,25 +2257,34 @@ begin
 
      // Multiline
      //if (assigned(m0[1])) and (BStrings.Count > 1) then ShowMessage(lines[l] + char(13) + BStrings[BStrings.Count-1]);
-     if app = true then
+     //if app = true then
 
-     if (BStrings.Count > 1) then
-     if (pos('bkcol', BStrings[BStrings.Count-1]) = 1) then
-        while (pos(lines[l], copy(BStrings[BStrings.Count-1], 6, length(lines[l]))) <> 1) and (l > 0) do dec(l) else
-        while (pos(lines[l], copy(BStrings[BStrings.Count-1], 1, length(lines[l]))) <> 1) and (l > 0) do dec(l);
+
      //if assigned(m0[1]) then ShowMessage(inttostr(l) + #13 + lines[l]);
 
      if app = false then hl.ClearAllTokens;
 
      //if (not app) then hl.ClearAllTokens;
   while (l < Lines.Count) do begin
+        //if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
+
+        // Searching master line in BStrings. If it is a new line: empty background color
+        if (BStrings.Count > 1) then begin
+           bl:= 0;
+           while (pos(lines[l], copy(BStrings[bl], 1, length(lines[l]))) <> 1) and (bl < BStrings.Count-1) do inc(bl);
+
+                 if (pos(copy(lines[l], 1, length(lines[l])),
+                    copy(BStrings[bl], 1, length(lines[l]))) = 1) then begin
+                    bco:= clnone; bk:= '';
+                    end;
+        end;
         if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
         str:= Lines[l];
+
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
         //if (pos('Out Loud', lines[l]) > 0) then ShowMessage(str);
         //str:= 'hola ' + char(3) + 'no way no way no way';
-
         //if (str[length(str)] = char(3)) then delete(str, length(str), 1);
         str:= StringReplace(str, char(1)+char(1), char(1), [rfReplaceAll]);
         //str:= StringReplace(str, char(2)+char(2), char(2), [rfReplaceAll]);
@@ -2406,6 +2416,7 @@ begin
         end; // End Processing colors
 
         if not co = clnone then f:= co;
+
            Attr3:= hl.CreateTokenID('Attr3', clFuchsia,clnone,[]);
         if //( not b = c ) and
            (b1 = true) and (c1 = true)
@@ -2469,9 +2480,7 @@ begin
            if c1 = true then c:= false;
            b1:= false;
            c1:= false;
-        end;
-        if (str[ch] = char(15)) then begin
-           f:= clblack; bco:= clnone;
+           f:= clblack;
         end;
 
         if (str[ch] = char(2)) then begin
@@ -2496,7 +2505,6 @@ begin
   //if (pos('Olives',str) > 0) then ShowMessage('k: ' + k + ' / fr: ' + fr + ' / bk: ' + bk + ' / chr: ' + inttostr(ch));
 
   Lines[l]:= str;
-
   inc(l);
   end; // Lines count
 
@@ -2639,7 +2647,7 @@ begin
            end;
      inc(e);
      end;
-     if str[e] = '.' then dec(e);
+     if (str[e] = '.') or (str[e] = ')') then dec(e);
      //ShowMessage('_'+str[e]+'_');
 
      str:= copy(str, s+1, e-s); // copying from s+1 to e-1 -> resulting link
