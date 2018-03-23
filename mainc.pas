@@ -1790,8 +1790,8 @@ begin
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     r:= 'hola';
-     c:= clpurple;
+     r:= '(http://hola.net)';
+     c:= clBlue;
      end;
      }
 
@@ -1971,6 +1971,7 @@ begin
                     tmp2:= '';
                     while (pos(tmp[c],nd) = 0) and (c <= length(tmp)) do inc(c);
                     //ShowMessage(inttostr(c) + ' ' + inttostr(length(tmp)));
+                    if tmp[c] <> ' ' then dec(c);
                     if (tmp[c-1] <> char(1)) then
                     tmp:= copy(tmp,1, c-1) + char(1) + copy(tmp, c, length(tmp));
                     end;
@@ -2420,7 +2421,7 @@ begin
 
         if not co = clnone then f:= co;
 
-           Attr3:= hl.CreateTokenID('Attr3', clFuchsia,clnone,[]);
+           Attr3:= hl.CreateTokenID('Attr3', clFuchsia,clnone,[]); // Hyperlinks
         if //( not b = c ) and
            (b1 = true) and (c1 = true)
            then begin
@@ -2470,10 +2471,9 @@ begin
         // Coloring hyperlinks with purple
         //if (hy = true) and (str[ch] = char(1)) then hl.AddToken(l, ch-chs+1, tkText);
         if (str[ch] = char(1)) then
-           //if () then hl.AddToken(l, ch-chs, Attr3) else
-           if (hy = false) then hl.AddToken(l, ch-chs+1, Attr3) else
-           if (c1 = true) then hl.AddToken(l, ch-chs, Attr1) else
-              hl.AddToken(l, ch-chs-1, tkText);
+              if (hy = false) then hl.AddToken(l, ch-chs+1, Attr3) else
+                 if (c1 = true) then hl.AddToken(l, ch-chs, Attr1) else
+                    hl.AddToken(l, ch-chs-1, tkText);
 
         if (hy = true) and (ch = length(str)) then hl.AddToken(l, ch-chs, Attr3);
 
@@ -2650,7 +2650,8 @@ begin
            end;
      inc(e);
      end;
-     if (str[e] = '.') or (str[e] = ')') then dec(e);
+     dec(e);
+     //if (str[e] <> ' ') then dec(e);
      //ShowMessage('_'+str[e]+'_');
 
      str:= copy(str, s+1, e-s); // copying from s+1 to e-1 -> resulting link
