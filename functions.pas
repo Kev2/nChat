@@ -216,7 +216,7 @@ function arstat(newnick: string): string;
 {arstat stands for arrange statuses
 Sorts statuses in this order ~@%+}
 var
-   stat:   string = '!~@%+';
+   stat:   string = '!~&@%+';
    n:      smallint = 1;
    tmp:    string = '';
    t:      char;

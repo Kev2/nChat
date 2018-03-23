@@ -228,7 +228,7 @@ var
   splt:     array[1..20] of TSplitter;
   //com:      array of array of string;
   rc:       smallint; // right click treenode or nick / Send origin
-  gr:       array[1..5] of TPortableNetworkGraphic;
+  gr:       array[1..6] of TPortableNetworkGraphic;
   str:      string; // Hyperlink in clipboard
 
 implementation
@@ -473,15 +473,16 @@ begin
      if not assigned(m0[0]) then begin
         fserv.Show;
 
-        for n:= 1 to 5 do begin
+        for n:= 1 to 6 do begin
             gr[n]:= TPortableNetworkGraphic.Create;
         end;
 
         gr[1].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'ircop.png' );
-        gr[2].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'vio.png' );
-        gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'blue.png' );
-        gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' );
-        gr[5].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
+        gr[2].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'vio.png' );   //owner
+        gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'admin.png' ); // &
+        gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'blue.png' );  // op
+        gr[5].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' ); // half op
+        gr[6].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
      end;
      {red    = IRCop
       Violet = owner
@@ -509,7 +510,7 @@ begin
            CloseFile(t);
      inc(i);
      end;
-     for i:= 1 to 5 do gr[i].Free;
+     for i:= 1 to 6 do gr[i].Free;
 end;
 
 
@@ -1626,7 +1627,12 @@ case s of
        end else            // Op / Voice
 
        if (pos('+o',r) > 0) or (pos('-o', r) > 0) or
-          (pos('+v',r) > 0) or (pos('-v', r) > 0) then begin
+          (pos('+v',r) > 0) or (pos('-v', r) > 0) or
+          (pos('+h',r) > 0) or (pos('-h', r) > 0) or
+          (pos('+q',r) > 0) or (pos('-q', r) > 0) or
+          (pos('+a',r) > 0) or (pos('-a', r) > 0)
+
+          then begin
 
           if (pos('+', r) > 0) then
              mess:= ' gives ' else mess:= ' removes ';
@@ -1635,6 +1641,21 @@ case s of
              if mess = ' removes ' then
                 mess:= mess + 'channel operator status from ' else
                    mess:= mess + 'channel operator status to ';
+
+          if (pos('+h', r) > 0) or (pos('-h', r) > 0) then
+             if mess = ' removes ' then
+                mess:= mess + 'channel half operator status from ' else
+                      mess:= mess + 'channel half operator status to ';
+
+          if (pos('+q', r) > 0) or (pos('-q', r) > 0) then
+             if mess = ' removes ' then
+                mess:= mess + 'channel owner status from ' else
+                       mess:= mess + 'channel owner status to ';
+
+          if (pos('+a', r) > 0) or (pos('-a', r) > 0) then
+             if mess = ' removes ' then
+                mess:= mess + 'channel admin operator status from ' else
+                       mess:= mess + 'channel admin operator status to ';
 
           if (pos('+v', r) > 0) or (pos('-v', r) > 0) then
              if mess = ' removes ' then
@@ -1662,8 +1683,12 @@ case s of
        end else               // Any channel mode
 
        if (pos('+',r) > 0) or (pos('-',r) > 0) then begin
+          mess:= r;
+          delete(mess, 1, pos('#',mess));
+          delete(mess, 1, pos(' ',mess));
+          delete(mess, pos(' ',mess), length(mess));
 
-             mess:= ' sets mode ' + tmp;
+             mess:= ' sets mode ' + mess + ' to ' + tmp;
 
              r:= copy(r, 1, pos('!' ,r)-1); // Kicker
              mess:= r + mess;
@@ -1674,13 +1699,29 @@ case s of
 
        // Updating nick list
        //if pos('@',r) = 0 then
-
+                               //ShowMessage(r + sLineBreak + tmp);
        if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 3, n, num+1);
        //if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then gnicks(copy(cname, 2, length(cname)));
        if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 4, n, num+1);
 
-       if (pos('gives',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 3, n, num+1);
-       if (pos('removes',mess) > 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 4, n, num+1);
+       if (pos('gives',mess) > 0) and (pos('half', mess) = 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 3, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('half', mess) = 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 4, n, num+1);
+
+       if (pos('gives',mess) > 0) and (pos('half operator',mess) > 0) then fmainc.lbchange(tmp, '%', 3, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('half operator',mess) > 0) then fmainc.lbchange(tmp, '%', 4, n, num+1);
+
+       // Channel owner
+       if (pos('+q',mess) > 0) then fmainc.lbchange(tmp, '~', 3, n, num+1);
+       if (pos('-q',mess) > 0) then fmainc.lbchange(tmp, '~', 4, n, num+1);
+
+       // Half operator
+       if (pos('+h',mess) > 0) then fmainc.lbchange(tmp, '%', 3, n, num+1);
+       if (pos('-h',mess) > 0) then fmainc.lbchange(tmp, '%', 4, n, num+1);
+
+       // Channel Admin
+       if (pos('+a',mess) > 0) then fmainc.lbchange(tmp, '&', 3, n, num+1);
+       if (pos('-a',mess) > 0) then fmainc.lbchange(tmp, '&', 4, n, num+1);
+
 
        CloseFile(t);
        end;
@@ -1790,7 +1831,7 @@ begin
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     r:= '(http://hola.net)';
+     r:= 'http://hola.net';
      c:= clBlue;
      end;
      }
@@ -2627,7 +2668,7 @@ begin
      if (x1 > length(lines[y1])) then x1:= length(lines[y1])-1;
      s:= x1;
      while (pos(str[s], chr) = 0) and (s > 0) do begin
-           if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
+           if (pos(str[s],chr ) = 0) and (lowercase(str[s]) <> 'h') and (s = 1) and (y1 >= 0) then begin
               dec(y1);
               str:= lines[y1] + str;
               s:= length(lines[y1]);
@@ -3538,7 +3579,7 @@ var n:    smallint = 0;
     l:    smallint = 1;  // s position
     p:    smallint = 1;  // Copy starting position
 begin
-     s:= '!~@%+';
+     s:= '!~&@%+';
      for m:= 0 to length(chanod)-1 do begin
                  n:= cnode(3,0,m, '');
                  //if (Assigned(lb0[n])) then lb0[n].Parent:= Notebook1.Page[m];
@@ -3571,6 +3612,9 @@ begin
 
                  if l=5 then
                  lb0[n].Canvas.Draw(0, lb0[n].ItemRect(a).Top+3, gr[5]);
+
+                 if l=6 then
+                 lb0[n].Canvas.Draw(0, lb0[n].ItemRect(a).Top+3, gr[6]);
 
 
            if (l > 0) then
@@ -3741,7 +3785,7 @@ var
    l:     smallint = 1; // s position
 begin
      timer1.Enabled:= false;
-     s:= '!~@%+';
+     s:= '!~&@%+';
 
      {
      //l:= TreeView1.Selected.AbsoluteIndex;
@@ -3786,7 +3830,7 @@ var
    st:   string;
    it:   string;
    p:    smallint = 0;  // Position from srchnick function
-   e:    string = '!~@%+';
+   e:    string = '!~&@%+';
    stat: boolean = false;
 begin
      {Tasks
@@ -3843,7 +3887,7 @@ var
    s:              integer = 1000;
    t:              integer = 1000;
 begin
-     e:= '!~@%+';
+     e:= '!~&@%+';
 
      // If there's only one user
      item1:= lowercase(lb0[a].Items[0]);
@@ -3907,7 +3951,7 @@ function tfmainc.srchnick(nick: string; task, ch: smallint): string;
 var n:    smallint = 0;
     tmp:  string;
     st:   string;
-    stat: string = '!~@%+';
+    stat: string = '!~&@%+';
     p:    smallint = 1;
     f:    boolean = false;
 begin
@@ -3950,7 +3994,7 @@ function tfmainc.nicktab(ch: smallint; test: String):string;
 const f:     boolean = false;
       last:  string = '';
       i:     smallint = 0;
-      stat:  string = '!~@%+';
+      stat:  string = '!~&@%+';
       p:     smallint = 1;
 begin
      if (last <> test) or (i >= lb0[ch].Items.Count) then begin
