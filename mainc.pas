@@ -1784,7 +1784,7 @@ begin
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
-     }
+
      if (pos('orb', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -1793,7 +1793,7 @@ begin
      r:= 'hola';
      c:= clpurple;
      end;
-
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1868,6 +1868,7 @@ begin
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
 
+     {
      //if (pos('hola', r) > 0) then begin
      if (assigned(m0[1])) and (lines.Count < 99) then begin
         m0[1].Clear;
@@ -1879,7 +1880,7 @@ begin
      m0[0].Append(inttostr(m0[1].TopLine));
      end;
      //end;
-
+     }
      end; // m0[o]
 end;
 
