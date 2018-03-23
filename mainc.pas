@@ -1784,15 +1784,16 @@ begin
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
-
-     if (pos('orbita', r) > 0) then begin
+     }
+     if (pos('orb', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
-     r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     //c:= clpurple;
+     //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
+     r:= 'hola';
+     c:= clpurple;
      end;
-     }
+
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1867,9 +1868,8 @@ begin
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
 
-     {
-     if (pos('hola', r) > 0) then begin
-     if lines.Count < 99 then begin
+     //if (pos('hola', r) > 0) then begin
+     if (assigned(m0[1])) and (lines.Count < 99) then begin
         m0[1].Clear;
         for l:= 1 to 99 do begin
             lines.Add(inttostr(l));
@@ -1878,8 +1878,8 @@ begin
      CaretY:= lines.Count;
      m0[0].Append(inttostr(m0[1].TopLine));
      end;
-     end;
-     }
+     //end;
+
      end; // m0[o]
 end;
 
@@ -2234,7 +2234,7 @@ begin
      if first = '' then first:= lines[0];
 
      if app then
-     if lines.Count > 2 then l:= lines.Count -3 else l:= Lines.Count-1;
+     if lines.Count > 2 then l:= lines.Count -3;
 
      //if assigned(m0[1]) then ShowMessage(lines[0]);
      if co = clnone then f:= clblack;
@@ -2252,11 +2252,12 @@ begin
 
         lines[l]:= k + lines[l];
         while (pos(copy(lines[l],1, length(lines[l])), BStrings[BStrings.Count-1]) <> 1) and (l > 0) do dec(l);
-        if app then l:= lines.Count-1;
+        //if app then l:= lines.Count-1;
      end;
 
      // Multiline
      //if (assigned(m0[1])) and (BStrings.Count > 1) then ShowMessage(lines[l] + char(13) + BStrings[BStrings.Count-1]);
+
      //if app = true then
 
 
@@ -2266,6 +2267,7 @@ begin
 
      //if (not app) then hl.ClearAllTokens;
   while (l < Lines.Count) do begin
+        //if not app then ShowMessage(inttostr(l));
         //if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
 
         // Searching master line in BStrings. If it is a new line: empty background color
@@ -2278,7 +2280,7 @@ begin
                     bco:= clnone; bk:= '';
                     end;
         end;
-        if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
+        lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
         str:= Lines[l];
 
         //if (pos(char(3), str) = 1) then ShowMessage(str);
