@@ -738,6 +738,7 @@ begin
               if (pos(lowercase('/topic'), lowercase(s)) = 1) or
                  (pos(lowercase('/part'), lowercase(s)) = 1) or
                  (pos(lowercase('/op'),lowercase(s)) = 1) or (pos(lowercase('/deop'),lowercase(s)) = 1) or
+                 (pos(lowercase('/h'),lowercase(s)) = 1) or (pos(lowercase('/deh'),lowercase(s)) = 1) or
                  (pos(lowercase('/voice'),lowercase(s)) = 1) or (pos(lowercase('/devoice'),lowercase(s)) = 1) or
                  (pos(lowercase('/ban'),lowercase(s)) = 1) or (pos(lowercase('/unban'),lowercase(s)) = 1) or
                  (pos(lowercase('/kick'),lowercase(s)) = 1) or (pos(lowercase('/invite'),lowercase(s)) = 1)
@@ -1644,8 +1645,8 @@ case s of
 
           if (pos('+h', r) > 0) or (pos('-h', r) > 0) then
              if mess = ' removes ' then
-                mess:= mess + 'channel half operator status from ' else
-                      mess:= mess + 'channel half operator status to ';
+                mess:= mess + 'channel half-operator status from ' else
+                      mess:= mess + 'channel half-operator status to ';
 
           if (pos('+q', r) > 0) or (pos('-q', r) > 0) then
              if mess = ' removes ' then
@@ -1707,8 +1708,8 @@ case s of
        if (pos('gives',mess) > 0) and (pos('half', mess) = 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 3, n, num+1);
        if (pos('removes',mess) > 0) and (pos('half', mess) = 0) and (pos('operator',mess) > 0) then fmainc.lbchange(tmp, '@', 4, n, num+1);
 
-       if (pos('gives',mess) > 0) and (pos('half operator',mess) > 0) then fmainc.lbchange(tmp, '%', 3, n, num+1);
-       if (pos('removes',mess) > 0) and (pos('half operator',mess) > 0) then fmainc.lbchange(tmp, '%', 4, n, num+1);
+       if (pos('gives',mess) > 0) and (pos('half-operator',mess) > 0) then fmainc.lbchange(tmp, '%', 3, n, num+1);
+       if (pos('removes',mess) > 0) and (pos('half-operator',mess) > 0) then fmainc.lbchange(tmp, '%', 4, n, num+1);
 
        // Channel owner
        if (pos('+q',mess) > 0) then fmainc.lbchange(tmp, '~', 3, n, num+1);
@@ -3864,6 +3865,7 @@ Case task of
 
      3: Begin // Add status
               lb0[a].Items[p]:= arstat(st + newnick + nick1);
+              //ShowMessage(arstat(st + newnick + nick1));
      end;     // Add Status
 
      4: begin // Remove status

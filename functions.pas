@@ -188,6 +188,19 @@ begin
         delete(r, pos(':',r), length(r));
      end;
 
+     // HOP // Gives/Removes half op status
+     if (pos(lowercase('hop'), r) = 1) then begin
+        r:= StringReplace(r, 'hop', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +h', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+     end;
+     if (pos(lowercase('dehop'), r) = 1) then begin
+        r:= StringReplace(r, 'dehop', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -h', [rfReplaceAll]);
+        ///MODE #nvx:/op Sol Sollo
+        delete(r, pos(':',r), length(r));
+     end;
+
+
      // KICK
      if (pos(lowercase('kick'), r) = 1) then begin
         r:= StringReplace(r, 'kick', 'KICK ' + copy(r, pos('#',r), pos(':',r)-1), [rfReplaceAll]);
@@ -224,7 +237,7 @@ var
 begin
      //newnick:= '+@~hola';
      // Adding stat to tmp
-     while (n < length(newnick)) do begin
+     while (n < length(stat)) do begin
            if (pos(newnick[n], stat) > 0) then tmp:= newnick[n] + tmp;
      inc(n);
      end;
@@ -238,13 +251,20 @@ begin
            //ShowMessage(inttostr(ord(tmp[n+1])) + ' n: ' + inttostr(ord(tmp[n])));
            if ( ord(tmp[n+1]) > ord(tmp[n]) ) then begin
               t:= tmp[n];
-              tmp[n]:= tmp[n+1];
-              tmp[n+1]:= t;
-              ch:= true;
+              if not (tmp[n+1] = '+') then begin
+                 tmp[n]:= tmp[n+1];
+                 tmp[n+1]:= t;
+                 ch:= true;
+              end;
            end;
      inc(n);
      end;
      until ch = false;
+     {The ascii code of + is higher than %, so let's move it to the end}
+     if (pos('+', tmp) > 0) then begin
+        tmp:= StringReplace(tmp, '+', '', [rfReplaceAll]);
+        tmp:= tmp + '+';
+     end;
 
      result:= tmp + copy(newnick, length(tmp)+1, length(newnick));
 end;
