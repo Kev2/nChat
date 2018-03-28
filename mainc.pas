@@ -1271,6 +1271,7 @@ case s of
 
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), mess, 2, n, num+1) else
                    fmainc.lbchange(copy(r, 1, pos('!', r)-1), copy(r, pos('NICK', r) + Length('nick')+1, length(r)), 2, n, num+1);
+
                    //ShowMessage(gnicks(fmainc.TreeView1.Items[1].Text));
 
                    if pos('You',cname) = 0 then
@@ -1833,7 +1834,8 @@ begin
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      r:= 'http://hola.net';
-     c:= clBlue;
+     r:= 'Chrissy: ' + char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06augh ' +char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06t ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud'+char(3) + ' if it was alcohol it would  ' + char(2) +char(3) + '00,06L ' +char(2) +char(3) + '00,06augh ' + char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06ut ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud' + char(3);
+     //c:= clBlue;
      end;
      }
 
@@ -2378,7 +2380,7 @@ begin
 
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
            k:= copy(str, ch, 1);
-           while ( (str[ch+length(k )] in ['0'..'9'] ) or (str[ch+length(k)] = ',') ) and ((ch + length(k)) <= length(str))
+           while ( (str[ch+length(k )] in ['0'..'9'] ) or (str[ch+length(k)] = ',') ) and ((ch + length(k)) < length(str))
                  do k:= copy(str, ch, length(k)+1);
                  if k[length(k)] = ',' then delete(k, length(k), 1);
                  //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
@@ -3845,7 +3847,7 @@ begin
      p:= strtoint(srchnick(nick1, 1, a)); // a is lb0 array number
      st:= srchnick(nick1, 2, a);
      //newnick:= st + newnick;
-     //ShowMessage('ch ' + srchnick(nick1, 2, a));
+     //ShowMessage('ch ' + newnick);
      //ShowMessage('new ' + st);
 
 Case task of

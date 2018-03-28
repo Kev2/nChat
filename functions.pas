@@ -237,7 +237,7 @@ var
 begin
      //newnick:= '+@~hola';
      // Adding stat to tmp
-     while (n < length(stat)) do begin
+     while (n < length(newnick)) do begin
            if (pos(newnick[n], stat) > 0) then tmp:= newnick[n] + tmp;
      inc(n);
      end;
@@ -249,13 +249,11 @@ begin
        n:= 1;
      while (n < length(tmp)) do begin
            //ShowMessage(inttostr(ord(tmp[n+1])) + ' n: ' + inttostr(ord(tmp[n])));
-           if ( ord(tmp[n+1]) > ord(tmp[n]) ) then begin
+           if ( ord(tmp[n+1]) > ord(tmp[n]) ) or ( (ord(tmp[n+1]) < (ord(tmp[n]))) and (tmp[n] <> '+') ) then begin
               t:= tmp[n];
-              if not (tmp[n+1] = '+') then begin
                  tmp[n]:= tmp[n+1];
                  tmp[n+1]:= t;
                  ch:= true;
-              end;
            end;
      inc(n);
      end;
