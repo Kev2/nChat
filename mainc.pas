@@ -1020,7 +1020,7 @@ begin
      if ( (pos(nick, r) > 0) and (pos('PART', r) > 0) ) or (pos('461', r) > 0) then s:= 4 else
      if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
         (pos('QUITLEN',r) = 0) then s:= 5;
-     if (pos('311', r) > 0) then s:= 6; // Whois
+     if (pos(nick, r) > 0) and ( (pos('311', r) > 0) or (pos('352', r) > 0) ) then s:= 6; // Whois
      if (pos('NOTICE ' + nick, r) > 0) then s:= 7;
 
      //if (pos('QUERY', r) > 0) and (pos('coccco', r) > 0) then s:= 7;
@@ -1465,6 +1465,37 @@ case s of
     6: Begin // WHOIS
        n:= fmainc.cnode(5, n, 0, '');
 
+       if (pos('352',r) > 0) then
+       while (pos('WHO',r) = 0) and (r <> '') do begin
+             cname:= r + mess;
+             for m:= 1 to 4 do delete(cname, 1, pos(' ' , cname));
+
+             for m:= 1 to 5 do begin
+                 if (m = 5) then begin
+                    delete(cname, 1, pos(' ' , cname));
+                    delete(cname, 1, pos(' ' , cname));
+                 end;
+                 tmp:= cname;
+
+                 if m=1 then tmp:= 'Ident: ' + copy(cname, 1, pos(' ' , cname)-1);
+                 if m=2 then tmp:= 'IP: ' + copy(cname, 1, pos(' ' , cname)-1);
+                 if m=3 then tmp:= 'Server: ' + copy(cname, 1, pos(' ' , cname)-1);
+                 if m=4 then tmp:= 'Nick: ' + copy(cname, 1, pos(' ' , cname)-1);
+                 if m=5 then tmp:= 'Real name: ' + copy(cname, 1, length(cname));
+
+                 // File and output
+                 fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+                 if (tmp <> '') then output(clnone, tmp, n);
+                 tmp:= '';
+                 closefile(t);
+             delete(cname, 1, pos(' ' , cname));
+
+             end;
+
+             while (pos('WHO', r) = 0) do r:= conn.RecvString(100);
+       end;
+
+       if (pos('311',r) > 0) then
        while (pos('WHOIS',r) = 0) and (r <> '') do begin
              cname:= r;
 
@@ -1494,8 +1525,8 @@ case s of
              if (cname <> '') then output(clnone, cname, n);
              closefile(t);
 
-             cname:= '';
-             r:= conn.RecvString(100); if r <> '' then delete(r, 1, 1);
+             cname:= ''; r:= '';
+             while (r = '') do r:= conn.RecvString(100); if r <> '' then delete(r, 1, 1);
              mess:= copy(r, pos(':', r)+1, length(r));
        end;
     end;
