@@ -146,7 +146,7 @@ Type
     procedure infmClick(Sender: TObject);
     procedure privmClick(Sender: TObject);
 
-    function nickinfo(nick: string): string;
+    function nickinfo(task: boolean; nick: string): string;
     procedure bans(com, chan: string; con: smallint);
     procedure nickrclick(sender: TMenuItem);
 
@@ -1020,15 +1020,16 @@ begin
      if ( (pos(nick, r) > 0) and (pos('PART', r) > 0) ) or (pos('461', r) > 0) then s:= 4 else
      if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
         (pos('QUITLEN',r) = 0) then s:= 5;
-     if (pos('NOTICE ' + nick, r) > 0) then s:= 6;
-     //if (pos('@', r) > 0) and (pos('!', r) > 0) and (pos('JOIN', r) = 0) then s:= 6; // Whois
+     if (pos('311', r) > 0) then s:= 6; // Whois
+     if (pos('NOTICE ' + nick, r) > 0) then s:= 7;
+
      //if (pos('QUERY', r) > 0) and (pos('coccco', r) > 0) then s:= 7;
      //if fmainc.TreeView1.Items[n].HasChildren then
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
-     if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 7;
-     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 8;
-     if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 9;
+     if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
+     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 9;
+     if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 10;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1091,7 +1092,7 @@ case s of
               r:= r + ' sets mode ' + mess;
 
               //writeln(t, r);
-              output(clnone, r, n);
+              if r <> '' then output(clnone, r, n);
               //m0[n].SelStart:= length(m0[n].Text);
 
            end else begin
@@ -1107,7 +1108,7 @@ case s of
            {if r = copy(mess, 2, length(mess)) then ShowMessage(r);
               if not ( pos(':', r) =2 ) then
                  output(clnone, r+mess, n) else}
-                 output(clnone, r+mess, n);
+              if r <> '' then output(clnone, r+mess, n);
            //m0[1].Lines.LoadFromFile(log[0]);
         end;
            if (pos('End of', mess) > 0) then fmainc.Timer1.Interval:= 2000;
@@ -1461,7 +1462,46 @@ case s of
     n:= 1;
     end; // 4
 
-    6: Begin // NOTICE
+    6: Begin // WHOIS
+       n:= fmainc.cnode(5, n, 0, '');
+
+       while (pos('WHOIS',r) = 0) and (r <> '') do begin
+             cname:= r;
+
+             for m:= 0 to 2 do delete(cname, 1, pos(' ',cname));
+             tmp:= '[' + copy(cname, 1, pos(' ', cname)-1) + '] ';
+             if (pos(':', cname) > 0) then delete(cname, pos(':', cname), length(cname));
+             if (pos('330', r) = 0) then delete(cname, 1, pos(' ', cname));
+
+             if (pos('311',r) > 0) then
+                cname:= tmp + cname + 'Real name: ' + mess else
+             if (pos('319',r) > 0) then
+                cname:= tmp + 'channels: ' + mess;
+             if (pos('312',r) > 0) then
+                cname:= tmp + 'server: ' + cname + mess;
+             if (pos('378',r) > 0) then
+                cname:= tmp + mess;
+             if (pos('317',r) > 0) and (cname <> '') then begin
+                //delete(cname, 1, pos(' ' ,cname));
+                delete(cname, pos(':',cname)-1, length(cname));
+                cname:= tmp + 'seconds idle: ' + copy(cname, 1, pos(' ',cname)) + 'signon time: ' + DateTimeToStr( UnixToDateTime( StrToInt( copy(cname, pos(' ',cname)+1, length(cname)-pos(' ',cname)-1) )));
+             end;
+             if (pos('330',r) > 0) then
+                cname:= tmp + mess + ' ' + copy(cname, pos(' ',cname)+1, length(cname));
+
+             // File and output
+             fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+             if (cname <> '') then output(clnone, cname, n);
+             closefile(t);
+
+             cname:= '';
+             r:= conn.RecvString(100); if r <> '' then delete(r, 1, 1);
+             mess:= copy(r, pos(':', r)+1, length(r));
+       end;
+    end;
+
+
+    7: Begin // NOTICE
 
        i:= ticon.Create;
        i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
@@ -1500,20 +1540,8 @@ case s of
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
     end;
 
-    {
-    6: Begin // WHOIS
-       while pos('/WHOIS', r) = 0 do begin
-       ShowMessage('w');
-       r:= conn.RecvString(100);
-       for n:= 1 to 3 do
-       delete(r, 1, pos(' ', r));
-       mess:= copy(r, pos(' ', r) +1, length(r));
-       output('[' + copy(r, 1, pos(' ', r)-1) + '] ' + mess, m0[1]);
-       end;
-    end;
-    }
 
-    7: Begin // TOPIC
+    8: Begin // TOPIC
        n:= fmainc.cnode(2,0,0, cname);
        cname:= copy(cname, pos('#', cname), length(cname));
        r:= copy(r, 1, pos('!', tmp)-1); // User
@@ -1546,7 +1574,7 @@ case s of
        closefile(t);
     end;     // TOPIC
 
-    8: Begin // INVITE
+    9: Begin // INVITE
        if (pos('#', mess) > 0) then // Spotchat puts the channel after : (colon)
           cname:= copy(mess, pos('#', mess), length(mess));
 
@@ -1567,7 +1595,7 @@ case s of
     end;
 
 
-    9: Begin // MODE
+    10: Begin // MODE
        fmainc.Timer1.Interval:= 50;
 
        // Getting user
@@ -3403,13 +3431,14 @@ begin
      if Button = mbRight then begin
       rc:= TListBox(sender).GetIndexAtXY(x, y);
       if rc > -1 then begin
-         nickinfo(TListBox(sender).Items[rc]);
+         nickinfo(true, TListBox(sender).Items[rc]);
          nickpop.PopUp;
          end;
       end;
 end;
 
-function Tfmainc.nickinfo(nick: string): string;
+function Tfmainc.nickinfo(task: boolean; nick: string): string;
+{task = true means right click in the nicks list}
 var
     a:      string;
     ident:  string;
@@ -3420,11 +3449,11 @@ var
     l:      string;
     tmp:    string = '';
 begin
-     a:= '~@%+';
+     a:= '!~&@%+';
 
      // Processing nick. Removing ~@%+
      while (s < length(nick)) do begin
-           for p:= 1 to 4 do
+           for p:= 1 to 6 do // length(a)
                if (pos(a[p], nick) > 0) then delete(nick, 1, 1);
      inc(s);
      end;
@@ -3437,9 +3466,9 @@ begin
 
 
      // Querying who
-     net[s].conn.SendString('WHO ' + nick + #13#10);
+     if (task = true) then net[s].conn.SendString('WHO ' + nick + #13#10);
 
-     while a = '' do a:= net[s].conn.RecvString(100);
+     if (task = true) then while a = '' do a:= net[s].conn.RecvString(100);
      while tmp = '' do tmp:= net[s].conn.RecvString(200);
      //m0[1].Append(a);
 
@@ -3467,10 +3496,13 @@ begin
      }
      m:= nickpop.Items[0].Items[0];
 
+
      // Querying whois
-     net[s].conn.SendString('WHOIS ' + nick + #13#10);
+     if (task = true) then
+        net[s].conn.SendString('WHOIS ' + nick + #13#10);
      //a:= ''; while (a = '') do a:= net[s].conn.RecvString(100);
      a:= ''; tmp:= '';
+
      while (pos('whois', lowercase(a))) = 0 do begin
          a:= ''; tmp:= '';
          while a = '' do a:= net[s].conn.RecvString(100); //while(tmp = '') do tmp:= net[s].conn.RecvString(50); tmp:= '';
@@ -3526,6 +3558,7 @@ begin
 
          inc(p);
          if l = '' then l:= a else if a <> '' then l:= l + sLineBreak + a;
+
      end;
      p:= 0;
      end;
