@@ -90,7 +90,7 @@ begin
            delete(chan, pos(' ',chan), length(chan));
            delete(tmp, 1, pos(' ',tmp));
         end;
-        delete(tmp, pos(':', tmp), length(tmp));
+        delete(tmp, pos(':', tmp)-1, length(tmp));
         //part #nvz
         if (tmp = '') or (tmp = 'PART') or (tmp = chan) then tmp:= 'Leaving';
         //if (pos('#', chan) > 0) then
@@ -200,11 +200,10 @@ begin
         delete(r, pos(':',r), length(r));
      end;
 
-
      // KICK
      if (pos(lowercase('kick'), r) = 1) then begin
         r:= StringReplace(r, 'kick', 'KICK ' + copy(r, pos('#',r), pos(':',r)-1), [rfReplaceAll]);
-        delete(r, pos(':',r), length(r));
+        delete(r, pos(':',r)-1, length(r));
         chan:= r;
         delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan));
         chan:= chan;

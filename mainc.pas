@@ -998,6 +998,7 @@ begin
      if pos(':', r) > 0 then begin
         //if (pos('JOIN', r) > 0) then ShowMessage('J ' + r);
         mess:= copy(r, pos(':', r)+1, length(r));
+
          if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
          if (pos('TOPICLEN', tmp) = 0) then
             if (pos('JOIN', tmp) > 0) then r:= tmp;
@@ -1030,7 +1031,7 @@ begin
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
      if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 9;
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 10;
-     if (pos('367', r) > 0) then s:= 11;
+     if (pos(nick, r) > 0) and (pos('367', r) > 0) then s:= 11;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1799,8 +1800,8 @@ case s of
             while (pos(copy(cname, 2, length(cname)), r) > 0) do delete(r, 1, pos(' ', r));
             tmp:= r; while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
             delete(r, pos(tmp, r), length(tmp));
-            tmp:= DateTimeToStr( UnixToDateTime(strtoint(tmp)) );
-            output(clnone, r + tmp ,n);
+            tmp:= FormatDateTime('mmm ddd d YYYY hh:mm:ss', UnixToDateTime(strtoint(tmp)) );
+            output(clnone, tmp + ' ' + r ,n);
          end;
 
         r:= '';
