@@ -1030,6 +1030,7 @@ begin
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
      if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 9;
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 10;
+     if (pos('367', r) > 0) then s:= 11;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1056,13 +1057,15 @@ begin
         if (pos('JOIN',r) = 0) then
            n:= fmainc.cnode(2,0,0, cname);
       }
+     {
      if (pos('You left', mess) > 0) then begin
         ShowMessage(inttostr(num) + server);
         n:= fmainc.cnode(2,0,0, inttostr(num) + server);
      end;
-
+     }
      //if (mess = 'You left') then ShowMessage(mess);
      //if cname <> '' then while (not assigned(m0[n])) do inc(n);
+     //if (assigned(m0[1])) and (r <> '') then ShowMessage(r);
 
 case s of
      0: Begin // MOTD
@@ -1220,7 +1223,7 @@ case s of
         end;
 
         end; // Empty
-        until (r = '');
+        until (pos('/NAMES', r) > 0);
         output(clnone, #13, n);
 
         fmainc.timer1.Enabled:= true;
@@ -1788,6 +1791,25 @@ case s of
 
        CloseFile(t);
        end;
+
+    11: Begin // Banlist
+        output(clnone, copy(cname, 2, length(cname)) + ' Banlist' ,n);
+        repeat
+         if not (r = '') then begin
+            while (pos(copy(cname, 2, length(cname)), r) > 0) do delete(r, 1, pos(' ', r));
+            tmp:= r; while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
+            delete(r, pos(tmp, r)-1, length(tmp));
+            tmp:= DateTimeToStr( UnixToDateTime(strtoint(tmp)) );
+            output(clnone, r + ' ' + tmp ,n);
+         end;
+
+        r:= '';
+        r:= conn.recvstring(500);
+        until pos('368',r) > 0;
+        output(clnone, 'End of ' + copy(cname, 2, length(cname)) + ' Banlist' ,n);
+    end;
+
+
 
  end; // Case
 
@@ -3721,14 +3743,20 @@ var
 begin
      // Processing commands
 
-        delete(com, 1, 1);
+        delete(com, 1,1);
         tmp:= com;
+        delete(tmp, 1, pos(' ', tmp));
+
         delete(com, pos(' ', com), length(com));   // Command
 
-        delete(tmp, 1, pos(' ', tmp));
-        typ:= copy(tmp, 1, pos(' ', tmp)-1);       // Ban Type
+        if (pos('1', tmp) = 1) or (pos('2', tmp) = 1) or (pos('3', tmp) = 1) then begin
+           typ:= copy(tmp, 1, pos(' ', tmp)-1);       // Ban Type
+           delete(tmp, 1, pos(' ', tmp));
+        end;
+        if typ = '' then typ:= '1';
+        ShowMessage(typ + '_');
 
-        delete(tmp, 1, pos(' ', tmp));
+        //delete(tmp, 1, pos(' ', tmp));
         if (pos(' ', tmp) > 0) then
         nick:= copy(tmp, 1, pos(' ', tmp)-1) else  // Nick
         nick:= copy(tmp, 1, length(tmp));
