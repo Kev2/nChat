@@ -747,7 +747,7 @@ begin
               //if (pos('/ban', s) = 0) and (pos('/kb', s) = 0) then s:= s + ':' + chan;
               //if (pos('/ban', s) = 0) and (pos('/kb', s) = 0) then begin
 
-                 net[ne].conn.SendString(replce(s + ':' + chan))
+                 net[ne].conn.SendString(replce(s + ' :' + chan))
               else
                   if (pos('/me', lowercase(s)) = 1) then
                   net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
@@ -958,12 +958,13 @@ begin
            n:= fmainc.cnode(2,0,0,inttostr(num) + server);
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
+     {
      if (pos(nick, r) > 0) and (pos('PART', r) > 0) then begin
         //ShowMessage(r + ' n ' + inttostr(n) + nick);
         if (pos('enough param', r) = 0) then
-        //r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You have left channel ' + copy(r, pos('#',r), length(r));
+        r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You have left channel ' + copy(r, pos('#',r), length(r));
      end;
-
+     }
      if (pos('PING', r) > 0) then begin
         conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) +#13#10);
      end;
@@ -999,8 +1000,7 @@ begin
         mess:= copy(r, pos(':', r)+1, length(r));
          if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
          if (pos('TOPICLEN', tmp) = 0) then
-         if (pos('JOIN', tmp) > 0) then r:= tmp;
-         //if (pos('You', mess) > 0) then ShowMessage(r);
+            if (pos('JOIN', tmp) > 0) then r:= tmp;
      end;
 
      // Getting Server and Channel
@@ -1057,6 +1057,7 @@ begin
            n:= fmainc.cnode(2,0,0, cname);
       }
      if (pos('You left', mess) > 0) then begin
+        ShowMessage(inttostr(num) + server);
         n:= fmainc.cnode(2,0,0, inttostr(num) + server);
      end;
 
@@ -1383,7 +1384,7 @@ case s of
     end; // 3
 
     4: Begin // I PART
-       //ShowMessage('4 ' + r + ' :' + mess);
+       //ShowMessage('4 ' + r + sLineBreak + mess + sLineBreak + cname);
        fmainc.createlog(num, cname);
        output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
 
@@ -1404,15 +1405,16 @@ case s of
 
        if (pos('QUIT',r) = 0) then
        if cname <> '' then n:= fmainc.cnode(2,0,0, cname);
+          //ShowMessage('5 ' + r + ' :' + mess + sLineBreak + inttostr(n));
 
        if (pos('QUIT', r) = 0) then begin
           fmainc.createlog(num, copy(cname, 2, length(cname)));
-          cname:= copy(r, pos('!', r)+1, pos(' ', r)-1);
+          cname:= copy(r, pos('!', r)+1, pos(' ', r)-1); // ident + IP
           delete(cname, pos(' ', cname), length(cname));
        end;
 
        if pos('JOIN', r) > 0 then begin
-          //ShowMessage(inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
+          //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
           output(clgreen, copy(r, 1, pos('!', r)-1) + ' (' + cname + ')' + ' has joined ' +
           copy(m0[n].chan, 2, length(m0[n].chan)), n);
        end;
@@ -1892,8 +1894,12 @@ begin
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     r:= 'http://hola.net';
-     r:= 'Chrissy: ' + char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06augh ' +char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06t ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud'+char(3) + ' if it was alcohol it would  ' + char(2) +char(3) + '00,06L ' +char(2) +char(3) + '00,06augh ' + char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06ut ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud' + char(3);
+     //r:= 'http://hola.net';
+     //r:= 'Chrissy: ' + char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06augh ' +char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06t ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud'+char(3) + ' if it was alcohol it would  ' + char(2) +char(3) + '00,06L ' +char(2) +char(3) + '00,06augh ' + char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06ut ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud' + char(3);
+     //r:= 'JustAKiss: 😀☺';
+     //r:= 'JustaKiss: ⛄';
+     //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
+     r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //c:= clBlue;
      end;
      }
@@ -1922,8 +1928,10 @@ begin
 
      for l:= 1 to length(a) do if (pos(a[l],r) > 0) then u1:= true;
      if u1 = false then
-         //r:= ConvertEncoding(r, 'UTF8', 'ISO8859-1', false);
-         r:= ISO_8859_1ToUTF8(r);
+        r:= ConvertEncoding(r, 'ISO8859-1', 'UTF8', false);
+        //r:= ISO_8859_1ToUTF8(r);
+        //r:= ISO_8859_15ToUTF8(r);
+        //r:= ConvertEncoding(r, 'UTF8', 'ISO8859-1', false);
      m0[o].Lines.Add(r);
 
      if c = clnone then m0[o].BStrings.Add(r) else
@@ -2068,7 +2076,7 @@ begin
               //hy:= true;
               //ShowMessage(tmp);
               tmp2:= '';
-              while (c <= length(tmp)) do begin
+              while (c < length(tmp)) do begin
                     tmp2:= tmp2 + tmp[c];
                     if (pos('http://',tmp2) > 0) or (pos('https://',tmp2) > 0) then begin
                     tmp2:= '';
@@ -2099,11 +2107,15 @@ begin
 
            // Starting word wrapping
            if (length(tmp) > w) then begin
+              c:= w;
+
 
            // Word wrapping for lines and hypertext
-                 c:= w;
-                 while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%') and (c > 1) do dec(c);
-                 tmp2:= tmp;
+              while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
+                    and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 1) do dec(c);
+
+              tmp2:= tmp;
+
 
                  {
                  // Removing char(3)
@@ -2190,7 +2202,7 @@ begin
 
                  hy:= false;
                  c:= 1;
-                 while (c <= length(tmp2)) do begin
+                 while (c < length(tmp2)) do begin
                        if (tmp2[c] = char(2)) then
                           if b = false then b:= true else b:= false;
                        if (tmp2[c] = char(15)) then b:= false;
@@ -2628,7 +2640,7 @@ begin
 
      // char(3) +'4  4m';
      if (pos(char(3), r) > 0) then
-     while (c <= length(r)) do begin
+     while (c < length(r)) do begin
 
            if (r[c] = char(3)) then begin
                k:= copy(r, c, 1);
@@ -2648,7 +2660,7 @@ begin
            //if assigned(m0[1]) then ShowMessage(k);
            delete(r, c, length(k)); // Replace
            end;
-     if r[c] <> char(3) then inc(c);
+     if (r[c] <> char(3)) and (c < length(r)) then inc(c);
      end;
 
      if (r <> '') and (r <> #13) then
@@ -2744,9 +2756,10 @@ begin
      e:= x1+1;
      //y1:= CaretY;
      while (pos(str[e], chr) = 0) and (str[e] <> '*') do begin
-           if (str[e] = '/') then e1:= s+e;
+           if (str[e] = '/') or (str[e] = '%') then e1:= s+e;
            //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
-           if (pos(str[e], chr) = 0) and (e = length(str)) and (str[e] = '/') or (str[e] = '%')
+           if (e = length(str)) then if (pos(str[e], chr) = 0) and ( (str[e] = '/') or (str[e] = '%') or (str[e] = '=')
+               or (str[e] = '+') )
               and (y1 < lines.Count) then begin
               inc(y1);
               str:= str + lines[y1];
@@ -3072,7 +3085,7 @@ begin
 
           //Name:= 'Ubuntu Mono';
           name:= 'Nimbus Mono L';
-          CanUTF8;
+          //CanUTF8;
           height:= 12;
           Color:= clBlack;
           Style:= [];
@@ -3255,7 +3268,7 @@ begin
      with m0[a].Font do begin
           //Name:= 'Ubuntu Mono';
           name:= 'Nimbus Mono L';
-          CanUTF8;
+          //CanUTF8;
           Height:= 12;
           Color:= clBlack;
           Style:= [];
