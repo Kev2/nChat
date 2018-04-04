@@ -1798,9 +1798,9 @@ case s of
          if not (r = '') then begin
             while (pos(copy(cname, 2, length(cname)), r) > 0) do delete(r, 1, pos(' ', r));
             tmp:= r; while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
-            delete(r, pos(tmp, r)-1, length(tmp));
+            delete(r, pos(tmp, r), length(tmp));
             tmp:= DateTimeToStr( UnixToDateTime(strtoint(tmp)) );
-            output(clnone, r + ' ' + tmp ,n);
+            output(clnone, r + tmp ,n);
          end;
 
         r:= '';
@@ -3754,7 +3754,6 @@ begin
            delete(tmp, 1, pos(' ', tmp));
         end;
         if typ = '' then typ:= '1';
-        ShowMessage(typ + '_');
 
         //delete(tmp, 1, pos(' ', tmp));
         if (pos(' ', tmp) > 0) then
