@@ -119,6 +119,12 @@ begin
      r:= 'TOPIC ' + chan + ' :' + tmp;
      end;
 
+     // Mode
+     if (pos('mode', lowercase(r)) = 1) then begin
+        delete(r, pos(':',r)-1, length(r));
+        r:= StringReplace(r, 'mode','MODE',[rfReplaceAll]);
+     end;
+
 
      // Notice
      if (pos('notice', lowercase(r)) = 1) then begin
@@ -242,13 +248,12 @@ begin
      end;
 
      // Sorting
-     n:= 1;
      repeat
        ch:= false;
        n:= 1;
      while (n < length(tmp)) do begin
            //ShowMessage(inttostr(ord(tmp[n+1])) + ' n: ' + inttostr(ord(tmp[n])));
-           if ( ord(tmp[n+1]) > ord(tmp[n]) ) or ( (ord(tmp[n+1]) < (ord(tmp[n]))) and (tmp[n] <> '+') ) then begin
+           if ( ord(tmp[n+1]) > ord(tmp[n]) ) or ( (ord(tmp[n+1]) < (ord(tmp[n]))) and (tmp[n] = '+') ) then begin
               t:= tmp[n];
                  tmp[n]:= tmp[n+1];
                  tmp[n+1]:= t;
@@ -257,12 +262,13 @@ begin
      inc(n);
      end;
      until ch = false;
-     {The ascii code of + is higher than %, so let's move it to the end}
+
+     {     {The ascii code of + is higher than %, so let's move it to the end}
      if (pos('+', tmp) > 0) then begin
         tmp:= StringReplace(tmp, '+', '', [rfReplaceAll]);
         tmp:= tmp + '+';
      end;
-
+     }
      result:= tmp + copy(newnick, length(tmp)+1, length(newnick));
 end;
 

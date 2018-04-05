@@ -917,8 +917,8 @@ procedure tfmainc.raw(r: string);
 var ro: TextFile;
 begin
      if (r <> '') then m0[0].Lines.Add(r);
-        AssignFile(ro, '/home/nor/lmc.txt');
-        Rewrite(ro);
+        AssignFile(ro, '/home/nor/nchat_test.txt');
+        if not FileExists('/home/nor/nchat_test.txt') then rewrite(ro) else reset(ro);
      append(ro);
      if (r <> '') then writeln(ro, r);
      closefile(ro);
@@ -992,11 +992,10 @@ begin
         closefile(t);
      end;
      }
-
+     //if (assigned(m0[1])) and (pos('MODE', r) > 0) then ShowMessage(r);
      // Getting Message
      tmp:= r;
      if pos(':', r) > 0 then begin
-        //if (pos('JOIN', r) > 0) then ShowMessage('J ' + r);
         mess:= copy(r, pos(':', r)+1, length(r));
 
          if (pos(':', r) > 0) and (pos('!',r) = 0) then r:= copy(r, 1, pos(':', r)-1);
@@ -1021,7 +1020,7 @@ begin
      if ( (pos(nick, r) > 0) and (pos('PART', r) > 0) ) or (pos('461', r) > 0) then s:= 4 else
      if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
         (pos('QUITLEN',r) = 0) then s:= 5;
-     if (pos(nick, r) > 0) and ( (pos('311', r) > 0) or (pos('352', r) > 0) ) then s:= 6; // Whois
+     if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
      if (pos('NOTICE ' + nick, r) > 0) then s:= 7;
 
      //if (pos('QUERY', r) > 0) and (pos('coccco', r) > 0) then s:= 7;
@@ -1031,7 +1030,7 @@ begin
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
      if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 9;
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('KICKLEN', r) = 0) ) then s:= 10;
-     if (pos(nick, r) > 0) and (pos('367', r) > 0) then s:= 11;
+     if (pos('367 ' + nick, r) > 0) then s:= 11;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) then begin
@@ -1066,7 +1065,7 @@ begin
      }
      //if (mess = 'You left') then ShowMessage(mess);
      //if cname <> '' then while (not assigned(m0[n])) do inc(n);
-     //if (assigned(m0[1])) and (r <> '') then ShowMessage(r);
+     //if (assigned(m0[1])) and (pos('MODE', r) > 0) then ShowMessage(r + mess);
 
 case s of
      0: Begin // MOTD
@@ -1079,6 +1078,7 @@ case s of
         fmainc.createlog(num, server); //file open on connect
 
            if (pos('MODE ',r) > 0) then begin
+              ShowMessage('0 ' + r);
               if mess = '' then begin
                  mess:= r;
 
@@ -1472,7 +1472,8 @@ case s of
        n:= fmainc.cnode(5, n, 0, '');
 
        if (pos('352',r) > 0) then
-       while (pos('WHO',r) = 0) and (r <> '') do begin
+       repeat
+       {
              cname:= r + mess;
              for m:= 1 to 4 do delete(cname, 1, pos(' ' , cname));
 
@@ -1491,15 +1492,26 @@ case s of
 
                  // File and output
                  fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
-                 if (tmp <> '') then output(clnone, tmp, n);
+                 //if (tmp <> '') then output(clnone, tmp, n);
                  tmp:= '';
                  closefile(t);
              delete(cname, 1, pos(' ' , cname));
 
+             r:= conn.RecvString(100);
              end;
+             }
 
-             while (pos('WHO', r) = 0) do r:= conn.RecvString(100);
-       end;
+             if r <> '' then begin
+                delete(r, 1, pos('*', r)-1);
+                if (pos(':', r) = 0) then r:= r + mess;
+                r:= StringReplace(r, ':', '', [rfReplaceAll]);
+             // File and output
+                fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+                output(clnone, r, n);
+                closefile(t);
+             end;
+             r:= conn.RecvString(100);
+             until (pos('WHO', r) > 0);
 
        if (pos('311',r) > 0) then
        while (pos('WHOIS',r) = 0) and (r <> '') do begin
@@ -1636,9 +1648,14 @@ case s of
        fmainc.Timer1.Interval:= 50;
 
        // Getting user
+          // mcclane!* MODE user +i
        if r[length(r)] = ' ' then delete(r, length(r), 1);
        tmp:= r;
-       while (pos(' ', tmp) > 0) and (pos(' ', tmp) < length(tmp)) do delete(tmp, 1, pos(' ', tmp)); // User
+       while (tmp[length(tmp)] = ' ') do delete(tmp, length(tmp), 1);
+       while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
+
+       // If mess = ''
+       //if mess = '' then
 
        //if fmainc.TreeView1.Items[n].HasChildren then
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
@@ -1747,22 +1764,36 @@ case s of
 
              output(clMaroon, mess, n);
 
-       end else               // Any channel mode
+       end else begin // Any channel mode or user mode
 
-       if (pos('+',r) > 0) or (pos('-',r) > 0) then begin
+       r:= r + ' ' + mess;
+
+       tmp:= r;
+       // Making tmp = nick
+       if (pos('!', tmp) > 0) then
+          tmp:= copy(tmp, 1, pos('!', tmp)-1) else tmp:= copy(tmp, 1, pos(' ', tmp)-1);
+
+       if (pos('+',r) > 0) or (pos('-',r) > 0) or (pos('mode', lowercase(r)) > 0) then begin
           mess:= r;
+          while (mess[length(mess)] = ' ') do delete(mess, length(mess), 1);
+          while (pos(' ', mess) > 0) do delete(mess, 1, pos(' ', mess));
+          //ShowMessage('mess: ' + mess);
+
+          if (pos('+', mess) = 0) and (pos('-', mess) = 0) then begin
           delete(mess, 1, pos('#',mess));
           delete(mess, 1, pos(' ',mess));
           delete(mess, pos(' ',mess), length(mess));
-
+          end;
+          if (pos('#', r) > 0) then
+             mess:= ' sets mode ' + mess + ' to ' + copy(cname, 2, length(cname)) else
              mess:= ' sets mode ' + mess + ' to ' + tmp;
-
-             r:= copy(r, 1, pos('!' ,r)-1); // Kicker
-             mess:= r + mess;
+                                              //ShowMessage(r +sLineBreak+ mess);
+             //r:= copy(r, 1, pos('!' ,r)-1); // Kicker
+             mess:= tmp + mess;
 
              output(clMaroon, mess, n);
        end;
-
+       end;
 
        // Updating nick list
        //if pos('@',r) = 0 then
@@ -3952,7 +3983,7 @@ begin
      p:= strtoint(srchnick(nick1, 1, a)); // a is lb0 array number
      st:= srchnick(nick1, 2, a);
      //newnick:= st + newnick;
-     //ShowMessage('ch ' + newnick);
+     //ShowMessage('ch ' + nick1);
      //ShowMessage('new ' + st);
 
 Case task of
@@ -3965,12 +3996,13 @@ Case task of
      end;     // 1 Remove
 
      2: Begin // Change
-              lb0[a].Items.Insert(p+1, arstat(st) + newnick);
+              lb0[a].Items.Insert(p+1, arstat(st + newnick + nick1));
               lb0[a].Items.Delete(p);
 
      end;     // Change
 
      3: Begin // Add status
+              //ShowMessage('a ' + arstat(newnick + nick1));
               lb0[a].Items[p]:= arstat(st + newnick + nick1);
               //ShowMessage(arstat(st + newnick + nick1));
      end;     // Add Status
@@ -4067,7 +4099,7 @@ begin
      while (n < lb0[ch].Count) do begin
 
            tmp:= lowercase(lb0[ch].Items[n]);
-           while (pos(tmp[p], stat) > 0) and (p < length(stat)) do inc(p);
+           while (pos(tmp[p], stat) > 0) and (p < length(tmp)) do inc(p);
 
                  tmp:= copy(tmp, p, length(tmp));
 
