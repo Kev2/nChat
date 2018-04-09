@@ -33,7 +33,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1040,7 +1039,7 @@ begin
      //if (assigned(m0[1])) and not (r = '') then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
