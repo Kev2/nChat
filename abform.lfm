@@ -51,11 +51,10 @@ object abf: Tabf
       object abImage: TImage
         AnchorSideLeft.Control = About
         AnchorSideLeft.Side = asrCenter
-        AnchorSideTop.Control = verl
         AnchorSideTop.Side = asrBottom
         Left = 182
         Height = 60
-        Top = 97
+        Top = 72
         Width = 60
         BorderSpacing.Top = 20
         Picture.Data = {
@@ -3196,6 +3195,7 @@ object abf: Tabf
         Width = 54
         BorderSpacing.Top = 30
         Caption = 'IRC Client'
+        Font.Color = clBlack
         Font.Height = -11
         Font.Name = 'Sans'
         ParentColor = False
@@ -3208,7 +3208,7 @@ object abf: Tabf
         AnchorSideBottom.Side = asrBottom
         Left = 127
         Height = 32
-        Top = 231
+        Top = 233
         Width = 171
         Alignment = taCenter
         AutoSize = False
@@ -3222,12 +3222,13 @@ object abf: Tabf
       object verl: TLabel
         AnchorSideLeft.Control = About
         AnchorSideLeft.Side = asrCenter
-        AnchorSideTop.Control = Heading2
+        AnchorSideTop.Control = abImage
+        AnchorSideTop.Side = asrBottom
         Left = 201
         Height = 17
-        Top = 60
+        Top = 142
         Width = 23
-        BorderSpacing.Top = 20
+        BorderSpacing.Top = 10
         Caption = '1.0'
         Font.Color = 6805332
         Font.Height = -13
@@ -3239,12 +3240,12 @@ object abf: Tabf
       object http: TLabel
         AnchorSideLeft.Control = About
         AnchorSideLeft.Side = asrCenter
-        AnchorSideTop.Control = abImage
+        AnchorSideTop.Control = verl
         AnchorSideTop.Side = asrBottom
         Cursor = crHandPoint
         Left = 85
         Height = 14
-        Top = 177
+        Top = 179
         Width = 255
         BorderSpacing.Top = 20
         Caption = 'Visit the website at http://posmith.imgur.com'
@@ -3263,7 +3264,7 @@ object abf: Tabf
         Cursor = crHandPoint
         Left = 149
         Height = 14
-        Top = 201
+        Top = 203
         Width = 126
         BorderSpacing.Top = 10
         Caption = 'nventafini@gmail.com'
@@ -3289,7 +3290,7 @@ object abf: Tabf
         BorderSpacing.Top = 10
         BorderSpacing.Around = 10
         BorderStyle = bsNone
-        Color = clWhite
+        Color = clCream
         Font.Color = clBlack
         Font.Height = -9
         Font.Name = 'Sans'
