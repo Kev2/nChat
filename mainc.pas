@@ -33,6 +33,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1039,7 +1040,7 @@ begin
      //if (assigned(m0[1])) and not (r = '') then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
@@ -1353,7 +1354,7 @@ case s of
       end;
 
       if (pos('*', mess) = 1) then output(clPurple, mess, n) else
-      if (pos(nick, mess) = 0) then // and (copy(r, 1, pos(':', r) -1) <> '') then
+      if (pos(lowercase(nick), lowercase(mess)) = 0) then // and (copy(r, 1, pos(':', r) -1) <> '') then
          output(clNone, mess, n) else output(clred, mess, n);
 
       //if pos('reinadrama', lowercase(mess)) > 0 then writeln(t, mess);
@@ -1431,7 +1432,7 @@ case s of
 
                 //ShowMessage('quit nor_' + mess);
                 if length(mess) > 0 then
-                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit: (' + mess + ')', n) else
+                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit (' + mess + ')', n) else
                                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit', n);
 
                 //gnicks(chan[n]);
@@ -3538,16 +3539,14 @@ begin
      p:= 0; s:= 0; a:= '';
 
      // Getting connection
-     if (TreeView1.Selected.Parent <> nil) then  s:= TreeView1.Selected.Parent.Index +1 else
-        s:= TreeView1.Selected.Index +1;
-        // s = connection. Parent.index +1
-
+     s:= cnode(5, TreeView1.Selected.AbsoluteIndex, 0, ''); // Returns TSyn array
+     s:= StrToInt( copy(m0[s].chan, 1, 1) ) +1;
 
      // Querying who
      if (task = true) then net[s].conn.SendString('WHO ' + nick + #13#10);
 
      if (task = true) then while a = '' do a:= net[s].conn.RecvString(100);
-     while tmp = '' do tmp:= net[s].conn.RecvString(200);
+     while (pos('WHO', tmp) = 0) do tmp:= net[s].conn.RecvString(200);
      //m0[1].Append(a);
 
      if a <> '' then
