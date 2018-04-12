@@ -300,8 +300,8 @@ begin
         conn.SendString('NICK ' + nick + #13#10);
 
         if not fserv.globalc.Checked then
-        conn.sendstring('USER ' + nick + ' 0 * :' + fserv.rname.Caption + #13#10) else
-           conn.sendstring('USER ' + nick + ' 0 * :' + fserv.grname.Caption + #13#10);
+        conn.sendstring('USER ' + fserv.guser.caption + ' 0 * :' + fserv.rname.Caption + #13#10) else
+           conn.sendstring('USER ' + fserv.userm.caption + ' 0 * :' + fserv.grname.Caption + #13#10);
 
         //conn.SendString('USER McClane 0 * :John McClane' + #13#10);// You want to use SendStream or SendStreamRaw for binary.
 
@@ -973,9 +973,13 @@ begin
         r:= ':PART ' + copy(r, pos('#',r), length(r)) + ':You have left channel ' + copy(r, pos('#',r), length(r));
      end;
      }
+
      if (pos('PING', r) > 0) then begin
-        conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) +#13#10);
+        conn.SendString('PONG ' + copy(r, pos(':', r)+1, pos(' ', r) - pos(':', r)) +#13#10);
+        r:= '';
      end;
+
+     delete(r, 1, 1); // First colon
 
      {
      if (pos('MODE', r) > 0) or (pos('Spotchat.org', r) > 0) or (pos('PING', r) > 0)
@@ -988,13 +992,13 @@ begin
      }
      //if (pos('NOTICE', r) > 0) then ShowMessage(r);
 
-     delete(r, 1, 1); // First colon
 
      //if (assigned(m0[1])) and (pos('NOTICE', r) > 0) then ShowMessage(r);
 
      // Getting Message
      tmp:= r;
      bak:= r;
+     //if (pos('402', r) > 0) then ShowMessage(r + sLineBreak + mess);
      if (pos(nick + ' ', r) > 0) and ( (pos('!', r) < (pos(':', r))) ) then
         delete(bak, 1, pos(nick, bak) + length(nick));
         //if (bak <> '') and (assigned(m0[1])) then ShowMessage('bak ' +bak);
@@ -1002,12 +1006,17 @@ begin
         //delete(r, 1, pos(nick, r) + length(nick));
         if (pos(':', bak) > 0) then mess:= bak else mess:= r;
         if (pos(':',mess) = 1) then (delete(mess, 1, pos(':', mess))) else
-        if (pos('PRIVMSG',mess) = 0) or (pos('PRIVMSG:', mess) > 0) then
+           if (pos('005', r) > 0) then
+           //for s:= 0 to 2 do delete(mess, 1, pos(':' , mess)) else (delete(mess, 1, pos(':', mess)));
+
+        {if (pos('PRIVMSG',mess) = 0) or (pos('PRIVMSG:', mess) > 0) or (pos('PART:', mess) > 0) or (pos('QUIT:', mess) > 0) then}
         while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess)) else (delete(mess, 1, pos(':', mess)));
+        //ShowMessage(mess);
          // hola :no way
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
      end;
      delete(r, pos(':' + mess, r), length(mess)+1);
+     //if (pos('NickServ',r) > 0) then ShowMessage(r + sLineBreak + mess);
 
      // Getting Server and Channel
      //if emotd = true then begin
@@ -1023,9 +1032,8 @@ begin
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG', r) > 0) and (pos('@', r) > 0) and (pos('MODE', r) = 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
-     if ( (pos(nick, r) > 0) and (pos('PART', r) > 0) ) or (pos('461', r) > 0) then s:= 4 else
-     if (pos(nick, r) = 0) and (pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0) and
-        (pos('QUITLEN',r) = 0) then s:= 5;
+     if (pos(nick, r) > 0) and ( (pos('PART', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4 else
+     if (pos('PART:', r) = 0) then if (pos(nick, r) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) then s:= 5;
      if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
      if (pos('!', r) > 0) and (pos('NOTICE ' + nick, r) > 0) then s:= 7;
      //if (pos('QUERY', r) > 0) and (pos(nick, r) > 0) then s:= 7;
