@@ -1557,8 +1557,13 @@ case s of
              n:= fmainc.TreeView1.items[n].GetNextSibling.AbsoluteIndex;
              if fmainc.TreeView1.Items[n].HasChildren then
                 s:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex else s:= n;
-
        m:= n;  // Saving node
+
+       // If the active room belongs to the connection then send the notice there
+       if (fmainc.TreeView1.Selected.Parent <> nil) then
+       if (fmainc.TreeView1.Selected.Parent.AbsoluteIndex = n) then m:= fmainc.TreeView1.Selected.AbsoluteIndex else
+       if (fmainc.TreeView1.Selected.AbsoluteIndex = n) then m:= fmainc.TreeView1.Selected.AbsoluteIndex;
+
        // Searching for private message to send notice
        while (n <= s) do begin
              if (fmainc.TreeView1.Items[n].Text = cname) then m:= n;
