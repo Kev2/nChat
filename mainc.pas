@@ -1007,6 +1007,11 @@ begin
      if pos(':', r) > 0 then begin
         //delete(r, 1, pos(nick, r) + length(nick));
         if (pos(':', bak) > 0) then mess:= bak else mess:= r;
+
+     // if IP has :
+     if (pos('PRIVMSG #', mess) > 0) and (pos(':', mess) < pos('PRIVMSG #', mess)) then while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess)) else
+
+     // Cleaning message
         if (pos(':',mess) = 1) then (delete(mess, 1, pos(':', mess))) else
            if (pos('005', r) > 0) then
            //for s:= 0 to 2 do delete(mess, 1, pos(':' , mess)) else (delete(mess, 1, pos(':', mess)));
@@ -1017,6 +1022,7 @@ begin
          // hola :no way
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
      end;
+     // Deleting message from r to make it clean
      delete(r, pos(':' + mess, r), length(mess)+1);
      //if (r <> '') and (assigned(m0[1])) then ShowMessage(r);
 
@@ -1213,7 +1219,7 @@ case s of
         end;
 
         end; // Empty
-        until (pos('/NAMES', r) > 0);
+        until (r = '');
         output(clnone, #13, n);
 
         fmainc.timer1.Enabled:= true;
@@ -1225,7 +1231,7 @@ case s of
 
     2: Begin // nick
        // Sollo!~Sollo@181.31.118.135 NICK :collo
-
+                       ShowMessage(cname + sLineBreak + mess);
              if (pos('nickname already in use', r) > 0) then output(clblack, r, n) else
 
              if (mess = '') then mess:= copy(r, pos('NICK', r) + length('nick')+1, length(r));
@@ -1244,7 +1250,7 @@ case s of
              if fmainc.TreeView1.Items[n].GetLastChild <> nil then
                 m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
 
-             while (n <= m) do begin
+             while (n < m) do begin
                    s:= 0;
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
@@ -4081,7 +4087,7 @@ begin
       until ch= false;
 
       // Filling label
-      lab0[a].Caption:= 'Ops: ' + inttostr(op) + ', users: ' + inttostr(lb0[a].Items.Count - op) +
+      lab0[a].Caption:= 'Ops: ' + inttostr(op+1) + ', users: ' + inttostr(lb0[a].Items.Count - (op+1)) +
                         ' - Total: ' + inttostr(lb0[a].Items.Count);
 end;
 
