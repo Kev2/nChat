@@ -1003,16 +1003,16 @@ begin
      if (pos('NOTICE', r) > 0) and (pos('!', r) = 0) and (pos('NOTICE:', r) = 0) then delete(r, 1, pos('NOTICE',r) + length('NOTICE'));
      if (pos(nick + ' ', r) > 0) and ( (pos('!', r) < (pos(':', r))) ) then
         delete(bak, 1, pos(nick, bak) + length(nick));
-        //if (r <> '') then ShowMessage('bak ' + r);
+        //if (r <> '') then ShowMessage('bak ' + bak);
      if pos(':', r) > 0 then begin
         //delete(r, 1, pos(nick, r) + length(nick));
         if (pos(':', bak) > 0) then mess:= bak else mess:= r;
         if (pos(':',mess) = 1) then (delete(mess, 1, pos(':', mess))) else
-           if (pos('005', r) > 0) or ( pos('@', r) < pos(':', r) ) then
+           if (pos('005', r) > 0) then
            //for s:= 0 to 2 do delete(mess, 1, pos(':' , mess)) else (delete(mess, 1, pos(':', mess)));
 
         {if (pos('PRIVMSG',mess) = 0) or (pos('PRIVMSG:', mess) > 0) or (pos('PART:', mess) > 0) or (pos('QUIT:', mess) > 0) then}
-        while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess)) else (delete(mess, 1, pos(':', mess)));
+        while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess)) else if (pos(':', mess) > 0) then (delete(mess, 1, pos(':', mess)));
         //ShowMessage(mess);
          // hola :no way
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
@@ -1061,9 +1061,9 @@ begin
         if pos('#', r) > 0 then cname:= r else cname:= mess;
            cname:= StringReplace(cname, ':', ' ', [rfReplaceAll]);
         while (pos('#', cname) > 1) do delete(cname, 1, pos(' ', cname));
-                                        //if (pos('duck', mess) > 0) then ShowMessage(cname);
+
      if cname <> '' then
-     while (cname[length(cname)] = ' ') do delete(cname, length(cname), 1);
+     delete(cname, pos(' ', cname), length(cname));
      cname:= inttostr(num) + cname;
      end;
 
@@ -1559,9 +1559,8 @@ case s of
                 s:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex else s:= n;
 
        m:= n;  // Saving node
-
        // Searching for private message to send notice
-       while (fmainc.TreeView1.Items[n].Text <> cname) and (n < s) do begin
+       while (n <= s) do begin
              if (fmainc.TreeView1.Items[n].Text = cname) then m:= n;
        inc(n);
        end;
@@ -1570,7 +1569,6 @@ case s of
        //while (m <> m0[n].node) do inc(n);
        // Getting the right memo
        n:= fmainc.cnode(5, m, 0, '');
-
        fmainc.createlog(num, fmainc.TreeView1.Items[m].Text);
 
        //writeln(t, mess);
@@ -1647,6 +1645,7 @@ case s of
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
                                               //ShowMessage(r +sLineBreak + tmp);
        //if fmainc.TreeView1.Items[n].HasChildren then
+
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
        fmainc.createlog(num, copy(cname, 2, length(cname)));
 
