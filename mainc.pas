@@ -974,8 +974,9 @@ begin
      end;
      }
 
-     if (pos('PING', r) > 0) then begin
-        conn.SendString('PONG ' + copy(r, pos(':', r)+1, pos(' ', r) - pos(':', r)) +#13#10);
+     if (pos('PING :', r) > 0) then begin
+        conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
+        //ShowMessage('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
         r:= '';
      end;
 
@@ -993,20 +994,21 @@ begin
      //if (pos('NOTICE', r) > 0) then ShowMessage(r);
 
 
-     //if (assigned(m0[1])) and (pos('NOTICE', r) > 0) then ShowMessage(r);
+     //if (assigned(m0[1])) then r:= 'waterbot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #nvz :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
 
      // Getting Message
+     //if (pos('QUACK',r) > 0) or (pos('duck',r) > 0) or (pos('wordpress', r) > 0) then ShowMessage(r + sLineBreak + mess);
      tmp:= r;
      bak:= r;
-     //if (pos('402', r) > 0) then ShowMessage(r + sLineBreak + mess);
+     if (pos('NOTICE', r) > 0) and (pos('!', r) = 0) and (pos('NOTICE:', r) = 0) then delete(r, 1, pos('NOTICE',r) + length('NOTICE'));
      if (pos(nick + ' ', r) > 0) and ( (pos('!', r) < (pos(':', r))) ) then
         delete(bak, 1, pos(nick, bak) + length(nick));
-        //if (bak <> '') and (assigned(m0[1])) then ShowMessage('bak ' +bak);
+        //if (r <> '') then ShowMessage('bak ' + r);
      if pos(':', r) > 0 then begin
         //delete(r, 1, pos(nick, r) + length(nick));
         if (pos(':', bak) > 0) then mess:= bak else mess:= r;
         if (pos(':',mess) = 1) then (delete(mess, 1, pos(':', mess))) else
-           if (pos('005', r) > 0) then
+           if (pos('005', r) > 0) or ( pos('@', r) < pos(':', r) ) then
            //for s:= 0 to 2 do delete(mess, 1, pos(':' , mess)) else (delete(mess, 1, pos(':', mess)));
 
         {if (pos('PRIVMSG',mess) = 0) or (pos('PRIVMSG:', mess) > 0) or (pos('PART:', mess) > 0) or (pos('QUIT:', mess) > 0) then}
@@ -1016,7 +1018,7 @@ begin
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
      end;
      delete(r, pos(':' + mess, r), length(mess)+1);
-     //if (pos('NickServ',r) > 0) then ShowMessage(r + sLineBreak + mess);
+     //if (r <> '') and (assigned(m0[1])) then ShowMessage(r);
 
      // Getting Server and Channel
      //if emotd = true then begin
@@ -1030,12 +1032,12 @@ begin
 
      if (pos(nick + '!', r) > 0) and (pos('JOIN', r) > 0)  then s:= 1;
      if (pos('NICK ', r) > 0) then s:= 2;
-     if (pos('PRIVMSG', r) > 0) and (pos('@', r) > 0) and (pos('MODE', r) = 0) then s:= 3;
+     if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
      if (pos(nick, r) > 0) and ( (pos('PART', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4 else
      if (pos('PART:', r) = 0) then if (pos(nick, r) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) then s:= 5;
      if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
-     if (pos('!', r) > 0) and (pos('NOTICE ' + nick, r) > 0) then s:= 7;
+     if (pos('NOTICE ', r) > 0) and (pos('NOTICE:', r) = 0) and (pos('!', r) > 0) then s:= 7;
      //if (pos('QUERY', r) > 0) and (pos(nick, r) > 0) then s:= 7;
      //if fmainc.TreeView1.Items[n].HasChildren then
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
@@ -1049,6 +1051,7 @@ begin
 
                     // TEST
                     IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //if (pos('005', r) > 0) then ShowMessage(inttostr(s));
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
@@ -1058,8 +1061,7 @@ begin
         if pos('#', r) > 0 then cname:= r else cname:= mess;
            cname:= StringReplace(cname, ':', ' ', [rfReplaceAll]);
         while (pos('#', cname) > 1) do delete(cname, 1, pos(' ', cname));
-        delete(cname, pos(' ', cname), length(cname));
-                                        //if (pos('PART', r) > 0) then ShowMessage(cname);
+                                        //if (pos('duck', mess) > 0) then ShowMessage(cname);
      if cname <> '' then
      while (cname[length(cname)] = ' ') do delete(cname, length(cname), 1);
      cname:= inttostr(num) + cname;
@@ -1099,7 +1101,7 @@ case s of
 
         fmainc.createlog(num, server); //file open on connect
 
-        if (pos('NOTICE', r) > 0) and (pos('NOTICE:', r) = 0) then r:= '';
+        if (pos('NOTICE', r) > 0) and ( (pos('*', r) > 0) or (pos('auth', lowercase(r)) > 0) ) then r:= '';
 
         output(clnone, r + mess, n);
 
@@ -1291,10 +1293,12 @@ case s of
           delete(cname, pos(' ',cname), length(cname));
        end;
 
+
     // Getting channel
-          if (pos('#', r) = 0) or (pos('#', r) > pos(':', r)) then
+          if (pos('#', r) = 0) or (pos('#', r) < pos('!', r)) then
              cname:= copy(r, 1, pos('!', r)-1); // else
 
+                                                 //ShowMessage('3 ' + cname + '_');
           //if cname = '' then ShowMessage('WARNING cname is null ' + cname + '_');
           {
           cname:= copy(r, pos('#', r), length(r));
@@ -1311,7 +1315,7 @@ case s of
           }
           mess:= copy(r, 1, pos('!', r) -1) + ': '  + mess; // nick: message
 
-          if (pos('#', cname) > 0) then begin
+          if (pos('#', cname) = 0) then begin
           s:= 0;
           if fmainc.TreeView1.Items.Count > 1 then
           while (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) and (s < fmainc.TreeView1.Items.Count-1) do inc(s);
@@ -1938,7 +1942,8 @@ begin
      //r:= 'JustAKiss: 😀☺';
      //r:= 'JustaKiss: ⛄';
      //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
-     r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
+     //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
+     r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
      //c:= clBlue;
      end;
      }
