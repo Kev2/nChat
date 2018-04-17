@@ -696,7 +696,7 @@ begin
            chan:= copy(chan, 2, length(chan));   // Chanel name
            //s:= copy(s, pos('_',s)+1, length(s)); // Memo number
            trm:= TreeView1.Selected.AbsoluteIndex;
-           n:= cnode(5, trm,0,'');
+           n:= cnode(5,trm,0,'');
            //if pos('#', chan) = 0 then chan:= '';
            //ShowMessage(chan);
 
@@ -1098,7 +1098,7 @@ case s of
      0: Begin // MOTD
 
         if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 50 else
-                        fmainc.Timer1.Interval:= 2000;
+        fmainc.Timer1.Interval:= 2000;
 
         if (r <> '') or (mess <> '') then begin
 
@@ -2741,9 +2741,7 @@ var x1,y1:  integer;
     o:      smallint;
 begin
      o:= cnode(5, TreeView1.Selected.AbsoluteIndex,0, '');
-
      with m0[o] do begin
-
 
      x1:= (x div 7);
      y1:= (y div (LineHeight) + TopLine);
@@ -3406,10 +3404,11 @@ var
    c:     smallint = 0;
    maxn:  SmallInt = 0; // Max Node
    conn:  string;
+   tmp:   tchans;
 begin
      case task of
           0: Begin // Append
-          for n:= 0 to length(chanod)-1 do begin
+          for n:= 0 to length(chanod) do begin
                 if chanod[n].node >= nod then begin
                    chanod[n].node:= chanod[n].node+1;
                    //chanod[n].arr:= chanod[n].arr+1;
@@ -3424,7 +3423,7 @@ begin
           end; // Add
 
           1: Begin // Delete
-          while (n < length(chanod)-1) do begin
+          while (n < length(chanod)) do begin
                 if chanod[n].arr >= cnode(5,nod,0,'') then chanod[n]:= chanod[n+1];
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
@@ -3433,7 +3432,7 @@ begin
           end;
           SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
-          //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
+          for n:= 0 to length(chanod) do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Delete
 
           2: begin // Search channel by name
@@ -3463,54 +3462,64 @@ begin
               if (chanod[n].node = nod) then
               result:= chanod[n].arr;
           end;
+          //ShowMessage('5' + inttostr(result));
           end; // Search
 
           6: Begin // Delete a connection. Delete nodes and update channels
 
-          while n < length(chanod) do begin
-              //ShowMessage('nod ' + inttostr(chanod[n+1].node));
+          for n:= 0 to length(chanod) -1 do begin
               //if (n+1) < length(chanod) then
-              if (chanod[n].node >= nod) and (chanod[n].node <= ord) then begin
-                                  //ShowMessage('epa ' + inttostr(chanod[n].node) + ' ' + chanod[n].chan);
-                 for maxn:= n to length(chanod)-2 do begin
-                     chanod[maxn]:= chanod[maxn+1];
-                     //ShowMessage(chanod[maxn].chan);
-                     {com[n]:= com[n+1];
-                     length(com):= length(com)-1;}
-                 end;
-              dec(n);
-              setlength(chanod, length(chanod)-1);
-              end;
-          //ShowMessage('length: ' + inttostr(length(chanod)) + ' n: ' + inttostr(n) + ' '  + (chanod[n].chan));
-          inc(n);
+              if (chanod[n].node >= nod) and (chanod[n].node <= ord) then
+                 chanod[n].node:= 100;
           end;
+
+          repeat
+          maxn:= 0;
+
+              for n:= 0 to length(chanod)-2 do
+                  //if (n+1) < length(chanod) then
+                  //ShowMessage(chanod[n].chan);
+                  if (chanod[n].node > chanod[n+1].node) then begin
+                     tmp:= chanod[n];
+                     chanod[n]:= chanod[n+1];
+                     chanod[n+1]:= tmp;
+                     maxn:= 1;
+                     //ShowMessage(chanod[n].chan);
+                  end;
+
+          until maxn = 0;
+
+          setlength(chanod, length(chanod)-((ord - nod) +1));
+
+          //ShowMessage('length: ' + inttostr(length(chanod)) + ' n: ' + inttostr(n) + ' arr: '  + inttostr((chanod[n].arr)));
+          //for maxn:= 0 to length(chanod)-1 do ShowMessage(inttostr(maxn) + sLineBreak+ 'node: ' + inttostr(chanod[maxn].node) + ' chan: ' + chanod[maxn].chan);
 
           // Deleting last
           c:= nod;
-          while c <= ord do begin
-          inc(c);
-          end;
+          while c <= ord do inc(c);
 
           // Updating connection in channel names
           for n:= 0 to length(chanod)-1 do begin
-              chanod[n].node:= chanod[n].node - ((ord - nod) +1);
+              ShowMessage('6: ' + inttostr(chanod[n].node));
+              if (chanod[n].node > ord) then
+                 chanod[n].node:= chanod[n].node - (ord - nod +1);
               c:= 1;
               conn:= chanod[n].chan;
               //ShowMessage('u ' + conn);
               while (conn[c+1] in ['0'..'9']) and (c < length(chanod[n].chan)) do inc(c);
               conn:= copy(conn, 1, c);
 
+
           if strtoint(conn) > 0 then
               if conn <> '' then begin
                  delete(chanod[n].chan, 1, c);
                  chanod[n].chan:= inttostr(strtoint(conn)-1) + chanod[n].chan;
-                 //ShowMessage('las ' + chanod[n].chan);
               end;
+          //ShowMessage(conn + sLineBreak+ 'las ' + chanod[n].chan + sLineBreak + inttostr(chanod[n].node));
           end; // for
 
           //Delete last
           //ShowMessage('node: ' + inttostr(nod) + ' ' + inttostr(ord));
-          //for n:= 0 to length(chanod) -1 do ShowMessage('Node: ' + inttostr(chanod[n].node) + ' chan: ' + chanod[n].chan);
 
           end; // 6
 
@@ -4343,12 +4352,11 @@ begin
 
      if (TreeView1.Items.Item[rc].GetNextSibling <> nil) then TreeView1.Items.Item[rc].GetNextSibling.Selected:= true;
 
-
      // Deleting controls.
      n:= rc;
      while (n <= maxnode) do begin // OjO
            p:= cnode(5,n,0, '');
-           //ShowMessage('p ' + inttostr(p));
+           //ShowMessage('p ' + inttostr(n));
               if assigned(lb0[p]) then begin
               FreeAndNil(splt[p]);
               FreeAndNil(lab0[p]);
@@ -4362,7 +4370,6 @@ begin
      inc(n);
      end;
 
-
      // Updating tchan array
      cnode(6, rc, maxnode, ''); // nod: rc, maxnode: ord
      //cnode(7, 0, 0, '');
@@ -4371,11 +4378,13 @@ begin
      p:= Notebook1.PageCount;
      n:= rc;
      while (n <= maxnode) do begin
+           //ShowMessage('p ' + inttostr(n));
            Notebook1.Pages.Delete(rc);
            Notebook1.PageIndex:= Notebook1.PageIndex +1;
            Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
+     Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
      {
      p:= 0;
@@ -4395,6 +4404,7 @@ begin
      if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true;
      num:= Items.Item[n].Index; // Saving index to get the connection
      TreeView1.Items.Item[n].Delete;
+     TreeView1.Refresh;
 
      end; // TreeView
 
@@ -4410,14 +4420,17 @@ begin
 
      // 4. Copy Network
      p:= num; //2
+
      //ShowMessage('ppp ' + inttostr(p));
-     while (assigned(net[p+1])) do begin
-     //ShowMessage('net: ' + inttostr(p+1));
-           net[p]:= net[p+1];
-           net[p].num:= p-1;
-           net[p].server:= net[p+1].server;
-           //net[p+1].conn.CloseSocket;
-     p:= p+1;
+     for p:= 1 to length(net) do begin
+         if not (assigned(net[p])) then
+            for n:= p to length(net) do
+            if (assigned(net[n+1])) then begin
+                net[n]:= net[n+1];
+                net[n].num:= n-1;
+                net[n].server:= net[n+1].server;
+                //if assigned(net[n+1]) then freeandnil(net[n+1]);
+            end;
      end;
 
      //net[2].destroy;
@@ -4425,7 +4438,7 @@ begin
      //if assigned(net[1]) then ShowMessage('puta' + inttostr(rc+2));
      //net[1].conn.CloseSocket;
 
-     fmainc.Timer1.Enabled:= true;
+     //fmainc.Timer1.Enabled:= true;
 end;
 
 procedure Tfmainc.TreeView1CustomDraw(Sender: TCustomTreeView;
@@ -4593,7 +4606,7 @@ begin
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
-     if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
@@ -4687,7 +4700,7 @@ begin
      while not assigned(net[n]) do inc(n);
 
      while assigned(net[n]) do begin
-     //ShowMessage('t ' + inttostr(n));
+     //if not (assigned(m0[4])) then ShowMessage('t ' + inttostr(n));
 
      if (timer1.Interval = 50) then begin
         while (Assigned(net[n])) do inc(n);
