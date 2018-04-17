@@ -713,10 +713,13 @@ begin
 
            s:= TEdit(sender).Caption;
 
+               {
+               // Nick Change
                if not (TreeView1.Items[ne-1].HasChildren) then
                if (pos('/nick ', s) = 1) then
                   if (pos(':',s) = 0)  then net[ne].nick:= copy(s, pos(' ',s)+1, length(s)) else
                   net[ne].nick:= copy(s, pos(' ',s)+1, pos(':',s) - pos(' ',s)-1);
+               }
 
            if (pos(lowercase('/list'), lowercase(s)) = 1) then fclist.getchannels(ne, net[ne].nick) else
 
@@ -1231,7 +1234,7 @@ case s of
 
     2: Begin // nick
        // Sollo!~Sollo@181.31.118.135 NICK :collo
-                       ShowMessage(cname + sLineBreak + mess);
+       //ShowMessage(cname + sLineBreak + mess + sLineBreak +r + sLineBreak + nick);
              if (pos('nickname already in use', r) > 0) then output(clblack, r, n) else
 
              if (mess = '') then mess:= copy(r, pos('NICK', r) + length('nick')+1, length(r));
@@ -1244,20 +1247,21 @@ case s of
              if (pos('You', cname) = 1) then net[n+1].nick:= mess;
        n:= 0;
        m:= 0;
+
        while (fmainc.TreeView1.Items[n].Index < num) do
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
 
              if fmainc.TreeView1.Items[n].GetLastChild <> nil then
                 m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
 
-             while (n < m) do begin
+             while (n <= m) do begin
                    s:= 0;
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
 
                    fmainc.createlog(num, copy(m0[n].chan,2,length(m0[n].chan)));
 
-                   if (pos('You',cname) >0) then begin
+                   if (pos('You', cname) >0) then begin
                       m0[n].nnick:= mess;
 
                       output(clBlack, cname, n);
@@ -3432,7 +3436,7 @@ begin
           end;
           SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
-          for n:= 0 to length(chanod) do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
+          //for n:= 0 to length(chanod) do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
           end; // Delete
 
           2: begin // Search channel by name
@@ -3881,7 +3885,7 @@ begin
      conn.SendString('NAMES ' + ch + ' ' + #13#10);
      while (pos('/NAMES', r) = 0) do begin
      r:= conn.RecvString(200);
-     ShowMessage(r);
+     //ShowMessage(r);
      end;
      {
      if (pos('JOIN',r) > 0) or (pos('PART',r) > 0) or (pos('PRIVMSG',r) > 0) or
@@ -4042,18 +4046,12 @@ var
 begin
      e:= '!~&@%+';
 
-     // If there's only one user
-     item1:= lowercase(lb0[a].Items[0]);
-     if (pos(item1[1], e) > 0) and (pos(item1[1], e) < 5) then inc(op);
-
      // Sorting all
      repeat
      n:= 0;
      ch:= false;
      while (n < lb0[a].Items.Count -1) do begin
            item1:= lowercase(lb0[a].Items[n]);
-           while (pos(item1[p], e) > 0) do inc(p);
-           if (p > 0) and (p < 5) then inc(op);
            item1:= copy(item1, p, length(item1));
            p:= 1;
 //ShowMessage('sort: ' + item1);
@@ -4078,12 +4076,12 @@ begin
      repeat
      n:= 0;
      ch:= false;
-     op:= 0;
+     //op:= 0;
       while (n < lb0[a].Items.Count -1) do begin
             //if (pos(lb0[a].Items[n],e) > 0) then begin
                s:= pos(lb0[a].Items[n][1], e);   if s=0 then s:= 1000;
                t:= pos(lb0[a].Items[n+1][1], e); if t=0 then t:= 1000;
-               if (s > 0) and (s < 5) then inc(op);
+               //if (s > 0) and (s < 5) then inc(op);
             //end;
                 if (t < s ) then begin
                 ch:= true;
@@ -4095,8 +4093,20 @@ begin
       end;
       until ch= false;
 
+      // Counting ops
+      for n:= 0 to lb0[a].Items.Count-1 do begin
+      p:= 0;
+      s:= 0;
+            item1:= lowercase(lb0[a].Items[n]);
+            while (s < length(item1)) do begin
+                  if (pos(item1[s], e) > 0) then
+                     if (s > 0) and (s < 6) then inc(op);
+            inc(s);
+            end;
+      end;
+
       // Filling label
-      lab0[a].Caption:= 'Ops: ' + inttostr(op+1) + ', users: ' + inttostr(lb0[a].Items.Count - (op+1)) +
+      lab0[a].Caption:= 'Ops: ' + inttostr(op) + ', users: ' + inttostr(lb0[a].Items.Count - op) +
                         ' - Total: ' + inttostr(lb0[a].Items.Count);
 end;
 
