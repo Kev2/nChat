@@ -982,7 +982,7 @@ begin
      end;
      }
 
-     if (pos('PING :', r) > 0) then begin
+     if (pos('PING ', r) > 0) then begin
         conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
         //ShowMessage('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
         r:= '';
