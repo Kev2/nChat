@@ -939,7 +939,7 @@ procedure connex.loop;
 var r: string = ''; // recvstring
 begin      r:= conn.RecvString(200);
            //if (pos('PING', r) > 0) then conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) + #13#10);
-           if (r <> '' ) then
+           //if (r <> '' ) then
            //result:= r;
            recstatus(r);
            //ShowMessage(r);
@@ -1301,8 +1301,9 @@ case s of
     end; // 2
 
     3: Begin // PRIVMSG
-       r:= tmp;
-    // priv McClane!~JMcClane@17-122-17-190.fibertel.com.ar PRIVMSG #nvz :hola
+       //r:= tmp;
+       // priv McClane!~JMcClane@17-122-17-190.fibertel.com.ar PRIVMSG #nvz :hola
+       //ShowMessage(r + sLineBreak + mess);
 
     // Getting channel
        cname:= r;
@@ -4257,7 +4258,7 @@ begin
      // Room = Node name
      room:= TreeView1.Items[rc].Text;
 
-     if (pos('#', room) > 0) then
+     if (pos('#', room) > 0) and (pos('(', room) = 0) then
      net[conn].conn.SendString('PART ' + room + ' Leaving' + #13#10);
      //timer1.Enabled:= false;
 
