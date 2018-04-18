@@ -7,7 +7,7 @@ interface
 uses
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, ssl_openssl, ssl_openssl_lib,
-    SynEdit, SynHighlighterPosition,
+    SynEdit, SynHighlighterPosition, crt,
     dateutils, abform, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
@@ -184,7 +184,7 @@ Type
   procedure join;
   procedure send(t: string);
 
-  function loop: string;
+  procedure loop;
   procedure recstatus(r: string);
 
   procedure output(c: tcolor; r: string; o: smallint);
@@ -333,7 +333,7 @@ begin
    if conn.GetRemoteSinIP <> '' then m0[n].Lines.Add('Connected... now logging in');
 
    fmainc.TreeView1.Items[n].Selected:= true;
-   m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
+   //m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
    //fmainc.createlog(co, server);
 
 {
@@ -935,13 +935,14 @@ begin
      closefile(ro);
 end;
 
-function connex.loop: string;
+procedure connex.loop;
 var r: string = ''; // recvstring
 begin      r:= conn.RecvString(200);
            //if (pos('PING', r) > 0) then conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) + #13#10);
-           if (r <> '' ) and (pos('PING :', r) = 0) then
-           result:= r;
+           if (r <> '' ) then
+           //result:= r;
            recstatus(r);
+           //ShowMessage(r);
            //fmainc.raw(r);
 end;
 
@@ -959,14 +960,18 @@ begin
         // Getting connection in the tree where num = connection number starting with 0
         //if (num = 0) then ShowMessage('zero');
         //if num > 0 then
+        {
         while (fmainc.TreeView1.Items[n].Index < num) do begin
               //ShowMessage(fmainc.TreeView1.Items[n].Text);
               if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
               n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
               //while (n <> m0[n].node) do inc(n);
         end;
-           //if assigned(net[num]) then ShowMessage(inttostr(num));
+        }
+           //if assigned(net[num+1]) then ShowMessage(inttostr(num) + sLineBreak + net[num+1].server);
            n:= fmainc.cnode(2,0,0,inttostr(num) + server);
+
+
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
      {
@@ -983,6 +988,7 @@ begin
         r:= '';
      end;
 
+     if (pos(':', r) = 1) then
      delete(r, 1, 1); // First colon
 
      {
@@ -1000,7 +1006,7 @@ begin
      //if (assigned(m0[1])) then r:= 'waterbot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #nvz :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
 
      // Getting Message
-     //if (pos('QUACK',r) > 0) or (pos('duck',r) > 0) or (pos('wordpress', r) > 0) then ShowMessage(r + sLineBreak + mess);
+     //if (pos('*',r) > 0) then ShowMessage(r + sLineBreak + mess);
      tmp:= r;
      bak:= r;
      if (pos('NOTICE', r) > 0) and (pos('!', r) = 0) and (pos('NOTICE:', r) = 0) then delete(r, 1, pos('NOTICE',r) + length('NOTICE'));
@@ -1027,7 +1033,6 @@ begin
      end;
      // Deleting message from r to make it clean
      delete(r, pos(':' + mess, r), length(mess)+1);
-     //if (r <> '') and (assigned(m0[1])) then ShowMessage(r);
 
      // Getting Server and Channel
      //if emotd = true then begin
@@ -1043,7 +1048,7 @@ begin
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
-     if (pos(nick, r) > 0) and ( (pos('PART', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4 else
+     if (pos(nick, r) > 0) and ( (pos('PART ', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4 else
      if (pos('PART:', r) = 0) then if (pos(nick, r) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) then s:= 5;
      if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
      if (pos('NOTICE ', r) > 0) and (pos('NOTICE:', r) = 0) and (pos('!', r) > 0) then s:= 7;
@@ -1056,11 +1061,12 @@ begin
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('=', r) = 0) ) then s:= 10;
      if (pos('367 ' + nick, r) > 0) then s:= 11;
 
-     //if (assigned(m0[1])) and not (r = '') then ShowMessage(r);
+     //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
                     IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
-                    //if (pos('005', r) > 0) then ShowMessage(inttostr(s));
+                    //if s=10 then s:= 0;
+
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
@@ -1087,9 +1093,10 @@ begin
         if (pos('JOIN',r) = 0) then
            n:= fmainc.cnode(2,0,0, cname);
       }
+
      {
-     if (pos('You left', mess) > 0) then begin
-        ShowMessage(inttostr(num) + server);
+     if (pos('PART', r) > 0) then begin
+        ShowMessage(r + sLineBreak + mess);
         n:= fmainc.cnode(2,0,0, inttostr(num) + server);
      end;
      }
@@ -1112,6 +1119,7 @@ case s of
 
         if (pos('NOTICE', r) > 0) and ( (pos('*', r) > 0) or (pos('auth', lowercase(r)) > 0) ) then r:= '';
 
+        if not assigned(m0[n]) then ShowMessage('0:' + inttostr(n));
         output(clnone, r + mess, n);
 
            if (pos('End of', mess) > 0) then fmainc.Timer1.Interval:= 2000;
@@ -1390,8 +1398,13 @@ case s of
     end; // 3
 
     4: Begin // I PART
-       //ShowMessage('4 ' + r + sLineBreak + mess + sLineBreak + cname);
+       n:= fmainc.cnode(2,0,0, cname);
+       //ShowMessage('4 ' + inttostr(n) + r + sLineBreak + mess + sLineBreak + cname);
+
        fmainc.createlog(num, cname);
+       if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+       //ShowMessage(inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+
        output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
 
        if (pos('#', r) > 0) then
@@ -1400,9 +1413,10 @@ case s of
                 '(' + fmainc.TreeView1.Items[m].Text + ')';
        inc(m);
        end;
-       if assigned(lb0[m-1]) then begin
-          lb0[m-1].Clear;
-          lab0[m-1].Caption:= '';
+       if not assigned(m0[m]) then m:= n;
+       if assigned(lb0[m]) then begin
+          lb0[m].Clear;
+          lab0[m].Caption:= '';
        end;
     end;
 
@@ -1845,7 +1859,6 @@ case s of
     end;
 
 
-
  end; // Case
 
  //TreeView1.Refresh;
@@ -2019,6 +2032,7 @@ begin
 
      // Making last line <> 0 to paint the marker line if the page is not visible
      //if (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].visible) then shw:= true;
+
      if not (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].visible) then begin
         if shw = true then
            //ShowMessage('tre');
@@ -2746,7 +2760,7 @@ var x1,y1:  integer;
 begin
      o:= cnode(5, TreeView1.Selected.AbsoluteIndex,0, '');
      with m0[o] do begin
-
+                        //ShowMessage('5' + inttostr(o));
      x1:= (x div 7);
      y1:= (y div (LineHeight) + TopLine);
      //if x < Width -100 then CaretX:= x1;
@@ -3427,11 +3441,12 @@ begin
           end; // Add
 
           1: Begin // Delete
-          while (n < length(chanod)) do begin
+          while (n < length(chanod)-1) do begin
                 if chanod[n].arr >= cnode(5,nod,0,'') then chanod[n]:= chanod[n+1];
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
+                   ShowMessage('1: ' + inttostr(cnode(5,nod,0,'')));
           inc(n);
           end;
           SetLength(chanod, length(chanod)-1);
@@ -3443,8 +3458,8 @@ begin
           while (n < length(chanod)) do begin
                 //chanod[n].chan:= lowercase(chanod[n].chan);
                 if (lowercase(chanod[n].chan) = lowercase(chan)) then result:= chanod[n].arr;
+                //if assigned(m0[1]) then ShowMessage(inttostr(result));
           inc(n); end;
-          //if assigned(m0[1]) then ShowMessage('chan: ' + chan);
           end; // Search
 
           3: begin // array-array
@@ -3493,18 +3508,14 @@ begin
 
           until maxn = 0;
 
-          setlength(chanod, length(chanod)-((ord - nod) +1));
+          setlength(chanod, length(chanod)-(ord - nod +1));
 
           //ShowMessage('length: ' + inttostr(length(chanod)) + ' n: ' + inttostr(n) + ' arr: '  + inttostr((chanod[n].arr)));
           //for maxn:= 0 to length(chanod)-1 do ShowMessage(inttostr(maxn) + sLineBreak+ 'node: ' + inttostr(chanod[maxn].node) + ' chan: ' + chanod[maxn].chan);
 
-          // Deleting last
-          c:= nod;
-          while c <= ord do inc(c);
-
           // Updating connection in channel names
           for n:= 0 to length(chanod)-1 do begin
-              ShowMessage('6: ' + inttostr(chanod[n].node));
+              //ShowMessage('arr: ' + inttostr(chanod[n].arr) + sLineBreak + 'node: ' + inttostr(chanod[n].node) + inttostr(ord));
               if (chanod[n].node > ord) then
                  chanod[n].node:= chanod[n].node - (ord - nod +1);
               c:= 1;
@@ -3513,17 +3524,13 @@ begin
               while (conn[c+1] in ['0'..'9']) and (c < length(chanod[n].chan)) do inc(c);
               conn:= copy(conn, 1, c);
 
-
           if strtoint(conn) > 0 then
-              if conn <> '' then begin
+              if conn <> '' then if (chanod[n].node >= ord) then begin
                  delete(chanod[n].chan, 1, c);
                  chanod[n].chan:= inttostr(strtoint(conn)-1) + chanod[n].chan;
               end;
-          //ShowMessage(conn + sLineBreak+ 'las ' + chanod[n].chan + sLineBreak + inttostr(chanod[n].node));
+          //ShowMessage('conn: ' + conn + sLineBreak+ 'las: ' + chanod[n].chan + sLineBreak + ' arr: ' +inttostr(chanod[n].arr));
           end; // for
-
-          //Delete last
-          //ShowMessage('node: ' + inttostr(nod) + ' ' + inttostr(ord));
 
           end; // 6
 
@@ -4263,7 +4270,8 @@ begin
      freeandnil(splt[conn]);
 
      // Deleting chan and node
-     cnode(1, rc, 0, '');
+     //cnode(1, rc, 0, '');
+     cnode(6, rc, rc, '');
 
      {
      // Testing
@@ -4304,6 +4312,7 @@ var
     n:       smallint = 0; // Node
     p:       smallint = 0; // Controls
     num:     smallint = 1; // Connection number Starting with 0
+    lconn:   connex;       // Backup connection
 begin
      fmainc.Timer1.Enabled:= false;
 
@@ -4366,7 +4375,7 @@ begin
      n:= rc;
      while (n <= maxnode) do begin // OjO
            p:= cnode(5,n,0, '');
-           //ShowMessage('p ' + inttostr(n));
+           //ShowMessage('5 ' + inttostr(n));
               if assigned(lb0[p]) then begin
               FreeAndNil(splt[p]);
               FreeAndNil(lab0[p]);
@@ -4394,7 +4403,7 @@ begin
            Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
-     Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
+     //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
      {
      p:= 0;
@@ -4411,44 +4420,57 @@ begin
 
      // Deleting Tree Nodes
      n:= rc;
-     if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true;
-     num:= Items.Item[n].Index; // Saving index to get the connection
+     if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true else Items[rc].Selected:= true;
+     //num:= Items.Item[n].Index; // Saving index to get the connection
+     //TreeView1.Items.Item[n].Text:= '(' + TreeView1.Items.Item[n].Text + ')';
      TreeView1.Items.Item[n].Delete;
-     TreeView1.Refresh;
 
      end; // TreeView
 
      // Making num match the connection
-     inc(num);
+     num:= rc+1;
+     //ShowMessage('rc ' + inttostr(num));
 
      // 3. Close network
      net[num].conn.CloseSocket; // Disconnect
      //items[rc].Text:= '(' + items[rc].text + ')';
 
      // net:      array[1..10] of connex;
-     FreeAndNil(net[num]);
+     //if assigned(net[num]) then ShowMessage(net[num].server);
+     net[num]:= nil;
 
-     // 4. Copy Network
-     p:= num; //2
+     for p:= 1 to length(net)-1 do
+         if not (assigned(net[p])) then begin
 
-     //ShowMessage('ppp ' + inttostr(p));
-     for p:= 1 to length(net) do begin
-         if not (assigned(net[p])) then
-            for n:= p to length(net) do
-            if (assigned(net[n+1])) then begin
-                net[n]:= net[n+1];
-                net[n].num:= n-1;
-                net[n].server:= net[n+1].server;
-                //if assigned(net[n+1]) then freeandnil(net[n+1]);
+            if (assigned(net[p+1])) then
+            if not (net[p+1].num = -2) then begin
+                net[p]:= net[p+1];
+                net[p].num:= p -1;
+                net[p].server:= net[p+1].server;
+
+                net[p+1]:= nil;
+               end;
+            //if assigned(net[p]) then ShowMessage(inttostr(p) + ' num ' + inttostr(net[p].num) + sLineBreak + net[p].server);
             end;
-     end;
 
      //net[2].destroy;
      //FreeAndNil(net[2]);
      //if assigned(net[1]) then ShowMessage('puta' + inttostr(rc+2));
      //net[1].conn.CloseSocket;
 
-     //fmainc.Timer1.Enabled:= true;
+     fmainc.Timer1.Enabled:= true;
+
+     {
+     for p:= 1 to length(net) do
+         if (net[p].num = -1) then
+            net[p]:= nil;
+                //if assigned(net[n]) then ShowMessage('num ' + inttostr(net[n].num) + sLineBreak + net[n].server);
+     }
+     {
+     for p:= 1 to length(net) do if assigned(net[p]) then ShowMessage(inttostr(p) + sLineBreak +
+                    inttostr(net[p].num) + sLineBreak + net[p].server);
+     }
+
 end;
 
 procedure Tfmainc.TreeView1CustomDraw(Sender: TCustomTreeView;
@@ -4616,7 +4638,7 @@ begin
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
-     //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
@@ -4653,7 +4675,6 @@ begin
            //ShowMessage('count ' + inttostr(Notebook1.PageCount));
      inc(n);
      end;
-
 end;
 
 procedure Tfmainc.mstatusChange(Sender: TObject);
@@ -4707,10 +4728,7 @@ begin
      end else begin
      }
 
-     while not assigned(net[n]) do inc(n);
-
-     while assigned(net[n]) do begin
-     //if not (assigned(m0[4])) then ShowMessage('t ' + inttostr(n));
+     while (assigned(net[n])) and (assigned(net[n].conn)) do begin
 
      if (timer1.Interval = 50) then begin
         while (Assigned(net[n])) do inc(n);
@@ -4719,6 +4737,7 @@ begin
 
      net[n].loop;
      //if assigned(net[2]) then ShowMessage(inttostr(n));
+
      if timer1.Interval = 2000 then
      ping:= ping + 2000;
      if (ping = 100000) then begin
