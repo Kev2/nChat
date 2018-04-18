@@ -1045,6 +1045,7 @@ begin
      }
 
      if (pos(nick + '!', r) > 0) and (pos('JOIN', r) > 0)  then s:= 1;
+     if (pos('328', r) > 0)  then s:= 1;
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
@@ -1064,7 +1065,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
 
@@ -1153,8 +1154,8 @@ case s of
        //chan[fmainc.TreeView1.Selected.AbsoluteIndex]:= server + '_' + copy(r, pos('#', r), length(r));
 
        // Getting the right memo
-       //ShowMessage('hoa cname: ' + cname + ' r: '+r);
        n:= fmainc.cnode(2,0,0, cname);
+       //ShowMessage('hoa cname: ' + inttostr(n) + ' ' + cname + ' r: ' + r);
 
        //m0[n].Canvas.Pen.Color:= clred;
        //m0[n].Canvas.Line(0,m0[n].CaretY, m0[n].Width,m0[n].CaretY);
@@ -1165,6 +1166,7 @@ case s of
        repeat
         r:= '';
         r:= conn.recvstring(1000);
+        //ShowMessage('cname: ' + cname + sLineBreak + ' r: ' +r + sLineBreak + mess);
              //if pos ('Make sure to read the topic', r) > 0 then ShowMessage(r);
         //while (pos(':', r) > 0 ) do delete(r, 1, pos(':', r));
         if r <> '' then begin
@@ -1191,14 +1193,13 @@ case s of
         {end else // Topic exists
             if (pos('/NAMES', r) = 0) then output(clnone, r, n);}
 
-
          if (pos('333 ' + nick, r) > 0) then begin
                r:= gtopic(r);
                output(clblue, r, n);
         //ShowMessage(r);
 
          end;
-        if (pos('353 ' + nick, r) > 0) then begin // and (pos('/NAMES', r) = 0) do begin
+        if (pos('353 ' + nick, r) > 0) or (pos('366 ' + nick, r) > 0) then begin // and (pos('/NAMES', r) = 0) do begin
         // NICKS
         //repeat
               //lb0[n].Clear;
@@ -1208,13 +1209,6 @@ case s of
               //r:= conn.RecvString(200);
               //r:= conn.RecvString(200);
         //until pos('/NAMES', r) > 0;           // END of /NAMES list
-        end;
-
-        // SERVICES
-        if (pos('NOTICE', uppercase(r)) > 0) or (pos('service', lowercase(r)) > 0) then begin
-           delete(r, 1, pos(':', r));
-           delete(r, 1, pos(':', r));
-           output(clgreen, r, n);
         end;
 
         // MODES
@@ -1227,6 +1221,13 @@ case s of
         //output(clgreen, r, n);
         if pos('+v',mess) > 0 then fmainc.lbchange(nick, '+', 3, n, num+1);
         if pos('-v',mess) > 0 then fmainc.lbchange(nick, '+', 4, n, num+1);
+        end;
+
+        // SERVICES
+        if (pos('NOTICE', uppercase(r)) > 0) or (pos('service', lowercase(r)) > 0) then begin
+           delete(r, 1, pos(':', r));
+           delete(r, 1, pos(':', r));
+           output(clgreen, r, n);
         end;
 
         end; // Empty
@@ -1574,7 +1575,7 @@ case s of
        // Using cname as sender
        cname:= copy(r, 1, pos('!',r)-1); // Author
        if (pos('::', mess) > 0) then
-          while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess));
+          while (pos(':', mess) > 0) do delete(mess, 1, pos(' ', mess));
 
        // num is Connection number/name. Searching Parent for connexion in the tree
        n:= 0;
@@ -3969,7 +3970,8 @@ begin
         until (pos('/NAMES', s) > 0);
      }
 
-     while (pos(' ', r) > 0) and (pos('/NAMES', r) = 0) do begin
+     if (pos('/NAMES', r) > 0) then r:= '';
+     while (pos(' ', r) > 0) do begin
            names[n]:= copy(r, 1, pos(' ', r) -1);;
            delete(r, 1, pos(' ', r));
      inc(n);
@@ -4060,6 +4062,7 @@ begin
      ch:= false;
      while (n < lb0[a].Items.Count -1) do begin
            item1:= lowercase(lb0[a].Items[n]);
+           while (pos(item1[p], e) > 0) do inc(p);
            item1:= copy(item1, p, length(item1));
            p:= 1;
 //ShowMessage('sort: ' + item1);
