@@ -33,6 +33,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1064,9 +1065,8 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
-
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
@@ -1397,21 +1397,37 @@ case s of
     end; // 3
 
     4: Begin // I PART
-       n:= fmainc.cnode(2,0,0, cname);
-       //ShowMessage('4 ' + inttostr(n) + r + sLineBreak + mess + sLineBreak + cname);
 
-       fmainc.createlog(num, cname);
-       if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
-       //ShowMessage(inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+       //Searching Parent
+       m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
 
-       output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
+       while (fmainc.TreeView1.Items[n].Index < m) do begin
+             //ShowMessage(fmainc.TreeView1.Items[n].Text);
+             if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
+             n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
+             //while (n <> m0[n].node) do inc(n);
+       end;
+
+       m:= fmainc.TreeView1.Selected.AbsoluteIndex;
+       //ShowMessage('n' + inttostr(m));
 
        if (pos('#', r) > 0) then
        while (m < fmainc.TreeView1.Items.Count) do begin
              if (fmainc.TreeView1.Items[m].Text = copy(cname, 2, length(cname))) then fmainc.TreeView1.Items[m].Text:=
-                '(' + fmainc.TreeView1.Items[m].Text + ')';
+             '(' + fmainc.TreeView1.Items[m].Text + ')';
        inc(m);
        end;
+       dec(m);
+       if n < 0 then n:= fmainc.cnode(2,0,0, inttostr(num) + fmainc.TreeView1.Selected.Text);
+       //ShowMessage('n1 ' + inttostr(num));
+
+       fmainc.createlog(num, cname);
+       //if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+
+       if assigned(m0[m]) then n:= m;
+       output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
+       //ShowMessage(inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+
        if not assigned(m0[m]) then m:= n;
        if assigned(lb0[m]) then begin
           lb0[m].Clear;
@@ -1970,7 +1986,7 @@ begin
      //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     r:= '1' + char(2) + 'hola' + char(2);
+     r:= '11' + char(2) + 'hola' + char(2);
      //c:= clBlue;
      end;
 
@@ -4317,6 +4333,7 @@ begin
 
 
      // Deleting Tree Node
+     TreeView1.Items[rc].Parent.Selected:= true;
      TreeView1.Items[rc].Delete;
      //TreeView1.Refresh;
      //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
