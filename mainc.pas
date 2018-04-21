@@ -330,7 +330,7 @@ begin
    end;
    //if fmainc.TreeView1.Items.Count = 2 then n:= 1;
 
-   if conn.GetRemoteSinIP <> '' then m0[n].Lines.Add('Connected... now logging in');
+   if conn.GetRemoteSinIP <> '' then output(clnone, 'Connected... now logging in', n);
 
    fmainc.TreeView1.Items[n].Selected:= true;
    //m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
@@ -1120,8 +1120,8 @@ case s of
 
         if (pos('NOTICE', r) > 0) and ( (pos('*', r) > 0) or (pos('auth', lowercase(r)) > 0) ) then r:= '';
 
-        if not assigned(m0[n]) then ShowMessage('0:' + inttostr(n));
-        output(clnone, r + mess, n);
+        r:= r + mess;
+        if (r <> '') then output(clnone, r, n);
 
            if (pos('End of', mess) > 0) then fmainc.Timer1.Interval:= 2000;
            closefile(t);
@@ -1148,8 +1148,6 @@ case s of
 
        if room = false then
        fmainc.txp(num, copy(cname, pos('#', cname), length(cname)), nick, false, false, true);
-
-       //closefile(t);
 
        //chan[fmainc.TreeView1.Selected.AbsoluteIndex]:= server + '_' + copy(r, pos('#', r), length(r));
 
@@ -1960,7 +1958,7 @@ begin
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
-
+     }
      if (pos('orb', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -1972,10 +1970,10 @@ begin
      //r:= 'JustaKiss: ⛄';
      //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
-     r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
+     //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
+     r:= '1' + char(2) + 'hola' + char(2);
      //c:= clBlue;
      end;
-     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -1984,7 +1982,7 @@ begin
         writeln(test, r);
         CloseFile(test);
      //end;
-
+     //ShowMessage('o ' + r);
      //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2005,13 +2003,14 @@ begin
         //r:= ISO_8859_1ToUTF8(r);
         //r:= ISO_8859_15ToUTF8(r);
         //r:= ConvertEncoding(r, 'UTF8', 'ISO8859-1', false);
+
      m0[o].Lines.Add(r);
 
      if c = clnone then m0[o].BStrings.Add(r) else
-        m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + r);
+        m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + '-' + r);
 
 
-     if m0[o].lines.Count = 100 then begin
+     if m0[o].lines.Count > 100 then begin
         l:= m0[o].TopLine;
         m0[o].unwr;
         m0[o].wr(false);
@@ -2089,40 +2088,52 @@ var
    nd:                string = ' ,()[]';     // Hypertext end
 begin
 
-     if app then l:= Lines.Count-1;
+     l1:= BStrings.Count-1;
+     l:= Lines.Count-1;
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
      w:=   Width div (font.Height div 2) - 25; // Nimbus
      //if lines.Count > 1 then
 
-     while (l < Lines.Count) do begin
+     //Searching for the original string to not process all the lines
+           if (app) then
+           if l1 > 0 then begin
+           tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
+              if (pos('bkcol', BStrings[l1]) = 1) then
+                 k:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
+              if (pos('bkcol', BStrings[l1]) = 1) then
+              while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(BStrings[l1]))) <>1) and (l > 0) do dec(l) else
+                 while (pos(tmp2, BStrings[l1]) <> 1) and (l > 0) do dec(l);
+                 //if (pos('CHALLENGE', BStrings[l1]) > 0) then ShowMessage(BStrings[l1]);
+           end;
 
+     if app=false then l:= 0;
+
+     if lines.Count > 0 then
+     while (l < Lines.Count) do begin
            tmp:= lines[l];
 
-     //Searching for the original string
-     l1:= BStrings.Count-1;
-     while (pos(copy(tmp,6, length(tmp)), BStrings[l1]) = 0) and (l1 > 0) do dec(l1);
+     tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
+     if (pos('bkcol', BStrings[l1]) = 1) then
+     k:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
+     if (pos('bkcol', BStrings[l1]) = 1) then
+     while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(BStrings[l1]))) <> 1) and
+           (l1 > 0) do dec(l1) else
+           while (pos(tmp2, BStrings[l1]) <> 1) and
+                 (l1 > 0) do dec(l1);
 
-           //if l = lines.Count-1 then lines[l]:= lines[l] + char(15);
-           //BStrings[BStrings.Count-1]:= BStrings[BStrings.Count-1] + char(15);
-           //if pos('topic', lowercase(tmp)) > 0 then ShowMessage('bkcol: ' + tmp);
-           if (pos('bkcol', BStrings[l1]) > 0) then begin
+
+        if (pos('bkcol', BStrings[l1]) > 0) then begin
               col:= true;
 
-              tmp2:= copy(BStrings[l1], 6, 6);
-              k:= copy(tmp2, 1, 1);
-              //if assigned(m0[1]) then ShowMessage('col1 ' + k);
+              tmp2:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
+              k:= tmp2;
+
               if (pos(char(3), k) = 1) then
 
-                  while ( (tmp2[length(k)+1] in ['0'..'9'])
-                        or (copy(BStrings[l1], 6, length(k)+1)[length(k)+1] = ',') )
-                        and (length(k)+1 < length(tmp2))
-                        do k:= copy(BStrings[l1], 6, length(k)+1);
-
-                        while( k[length(k)] = ',' ) do delete(k, length(k), 1);
-                        while(pos(',,', k) > 0) do k:= StringReplace(k, ',,',',',[rfReplaceAll]);
-                        //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
-                  //ShowMessage(k);
+                 while( k[length(k)] = ',' ) do delete(k, length(k), 1);
+                 while(pos(',,', k) > 0) do k:= StringReplace(k, ',,',',',[rfReplaceAll]);
+                 //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
 
                         if (pos(',',k) > 0) then begin
                            tmp3:= copy(k, pos(',',k)+1, length(k));
@@ -2146,7 +2157,8 @@ begin
            // Getting hyperlink
               // hola http://hole.net hey no way http://no.way
            c:= 1;
-           //if assigned(m0[1]) and (pos('http', tmp3) > 0) then ShowMessage(tmp3);
+
+           //if (pos(char(1) + 'http:', lines[l]) = 0) then
            if (pos('http://',tmp) > 0) or (pos('https://', tmp) > 0) then begin
               //hy:= true;
               //ShowMessage(tmp);
@@ -2169,6 +2181,8 @@ begin
                //if tmp[length(tmp)] = char(1) then delete(tmp, length(tmp), 1);
                end;
            lines[l]:= tmp;
+           //BStrings[l1]:= tmp;
+           //ShowMessage(BStrings[l1] + sLineBreak + lines[l])
            end;
 
            c:= 1;
@@ -2425,47 +2439,52 @@ var
   fr, bk:       string;
 begin
      if first = '' then first:= lines[0];
+     l:= Lines.Count-1; // Last line
 
-     if app then
-     if lines.Count > 2 then l:= lines.Count -3;
+     if co = clnone then f:= clblack else
 
-     //if assigned(m0[1]) then ShowMessage(lines[0]);
-     if co = clnone then f:= clblack;
-
-     if (co <> clnone) then
         if (pos('bkcol', BStrings[BStrings.Count-1]) = 1) then begin //ShowMessage(BStrings[BStrings.Count-1]);
-           l:= Lines.Count-1;
-           k:= copy(BStrings[BStrings.Count-1], 6, 3);
-           if length(k) > 1 then
-           while not (k[length(k)] in ['0'..'9']) do delete(k, length(k), 1) else k:= char(3) + '1';
+           k:= copy(BStrings[BStrings.Count-1], 6, pos('-', BStrings[BStrings.Count-1])-6);
 
-        //ShowMessage('hey ' + lines[l]);
+        //ShowMessage('hey ' + k);
         {ShowMessage('hey ' + BStrings[BStrings.Count-1]);}
         //while (pos(copy(Lines[l], 1, 10), BStrings[BStrings.Count-1]) = 0) do dec(l);
 
-        lines[l]:= k + lines[l];
-        while (pos(copy(lines[l],1, length(lines[l])), BStrings[BStrings.Count-1]) <> 1) and (l > 0) do dec(l);
-        //if app then l:= lines.Count-1;
+        // Ading color to TSyn lines
+        lines[l]:= k + copy(lines[l], pos('-', lines[l])+1, length(lines[l]));
      end;
 
-     // Multiline
-     //if (assigned(m0[1])) and (BStrings.Count > 1) then ShowMessage(lines[l] + char(13) + BStrings[BStrings.Count-1]);
+     // Multiline (decreases l to not process all the lines)
+     if (app) and (lines.Count > 0) then begin
+        l:= Lines.Count-1; // Last line
+        bl:= BStrings.count-1;
+        if (pos('bkcol', BStrings[bl]) = 1) then
+        while (pos(copy(lines[l], length(k)+1, length(lines[l])), copy(BStrings[bl], pos('-', BStrings[bl])+1, length(BStrings[bl]))) <> 1 ) and (l > 0) do dec(l) else
+           while (pos(lines[l], BStrings[bl]) <> 1) and (l > 0) do dec(l);
 
-     //if app = true then
-
-
-     //if assigned(m0[1]) then ShowMessage(inttostr(l) + #13 + lines[l]);
+        //ShowMessage(lines[l] + sLineBreak + BStrings[bl]);
+     end;
 
      if app = false then hl.ClearAllTokens;
+     if not app then l:= 0;
 
-     //if (not app) then hl.ClearAllTokens;
+  if lines.Count > 0 then
   while (l < Lines.Count) do begin
-        //if not app then ShowMessage(inttostr(l));
-        //if (pos('bkcol',lines[l]) > 0) then lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
+
+        //if app then ShowMessage(inttostr(l));
+        if (pos('bkcol',lines[l]) > 0) then begin
+           lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
+           str:= lines[l];
+           delete(str, pos('-', str), 1);
+           lines[l]:= str;
+        end;
+
+  str:= lines[l];
 
         // Searching master line in BStrings. If it is a new line: empty background color
-        if (BStrings.Count > 1) then begin
+        if (BStrings.Count > 0) then begin
            bl:= 0;
+           //ShowMessage(lines[l]);
            while (pos(lines[l], copy(BStrings[bl], 1, length(lines[l]))) <> 1) and (bl < BStrings.Count-1) do inc(bl);
 
                  if (pos(copy(lines[l], 1, length(lines[l])),
@@ -2473,8 +2492,6 @@ begin
                     bco:= clnone; bk:= '';
                     end;
         end;
-        lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
-        str:= Lines[l];
 
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
@@ -2627,8 +2644,8 @@ begin
         if (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) or (str[ch] = char(15)) or (str[ch] = char(31)) then inc(chs);
 
            if (co = clnone) then
-           if ( (ch > 1 ) and (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
-              if not (modi) then hl.AddToken(l, ch-chs-1, tktext);
+           if ( (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
+              if not (modi) then hl.AddToken(l, ch-chs, tktext);
            modi:= true;
         end;
 
@@ -2636,7 +2653,7 @@ begin
         //if (str[ch] = char(2)) and (co <> clnone) then if (b = false) then hl.AddToken(l, ch-chs-1, Attr1);
         if (c = true) and not (k = '') then if (str[ch+1] = char(2)) then hl.AddToken(l, ch-chs, Attr1);
         if (str[ch] = char(2)) then if (b = false) then hl.AddToken(l, ch-chs, Attr2);
-        //if (str[ch] = char(2)) then if (b1 = false) and (c = false) and (co= clnone) then hl.AddToken(l, ch-chs, tkText);
+        //if (ch = length(str)) then if (b = true) then hl.AddToken(l, ch-chs-1, Attr2);
 
         if (str[ch] = char(15)) then if (b1 = true) and (c1 = false) then hl.AddToken(l, ch-chs, Attr2);
         //if (str[ch] = char(15)) then if (b = true) and (c = true) then hl.AddToken(l, ch-chs, tktext);
@@ -2650,6 +2667,7 @@ begin
         if (ch = length(str)) and not (str[ch] = char(1)) then if (c1 = true) then hl.AddToken(l, ch-chs, Attr1);
         //if (ch = length(str)) then if (hy = true) then hl.AddToken(l, ch-chs, Attr3);
         end;
+
 
   if (str[ch] = char(2)) and (str[ch+1] = char(3)) then begin
      //if b = false then ShowMessage(str[ch]);
@@ -2777,6 +2795,7 @@ end;
 procedure tfmainc.tsynMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var x1:      integer = 0;
     y1:      integer = 0;
+    y2:      integer = 0;
     s:       smallint = 0; // Start position
     e:       smallint = 0; // End position
     e1:      smallint = 0;
@@ -2799,6 +2818,7 @@ begin
 
      x1:= m0[o].CaretX;
      y1:= carety-1;
+     y2:= y1;
 
         //CaretX:= x1;
         //CaretY:= y1;
@@ -2810,6 +2830,7 @@ begin
      str:= Lines[y1];
      tmp:= str;
 
+     //m0[o].Append('x1: ' + inttostr(x1) + ' y1: ' + inttostr(y1));
 
      // Getting string
      // Searching backwards from caret position to find a space or bracket
@@ -2818,35 +2839,38 @@ begin
      if (x1 > length(lines[y1])) then x1:= length(lines[y1])-1;
      s:= x1;
      while (pos(str[s], chr) = 0) and (s > 0) do begin
-           if (pos(str[s],chr ) = 0) and (lowercase(str[s]) <> 'h') and (s = 1) and (y1 >= 0) then begin
+           //ShowMessage(lines[y1]);
+           if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
               dec(y1);
-              str:= lines[y1] + str;
+              str:= lines[y1];
               s:= length(lines[y1]);
            end;
      dec(s);
      end; // s = space
-     //ShowMessage(inttostr(x1) + ' ' + inttostr(y1) + ' t ' + str);
+     //ShowMessage(inttostr(x1) + ' ' + inttostr(y1) + ' s_' + inttostr(s));
 
      // Getting string
      // Searching forward from caret position to find a space or bracket
-     e:= x1+1;
+     //e:= x1+1;
+     e:= length(str);
      //y1:= CaretY;
      while (pos(str[e], chr) = 0) and (str[e] <> '*') do begin
-           if (str[e] = '/') or (str[e] = '%') then e1:= s+e;
+           //if (str[e] = '/') or (str[e] = '%') and (e = x1+1) then e:= s+e;
            //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
-           if (e = length(str)) then if (pos(str[e], chr) = 0) and ( (str[e] = '/') or (str[e] = '%') or (str[e] = '=')
+           if (e = length(str)) then if (pos(str[e], chr) = 0) then if ( (str[e] = '/') or (str[e] = '%') or (str[e] = '=')
                or (str[e] = '+') )
               and (y1 < lines.Count) then begin
               inc(y1);
               str:= str + lines[y1];
+              //ShowMessage(str);
            end;
      inc(e);
      end;
-     dec(e);
-     //if (str[e] <> ' ') then dec(e);
-     //ShowMessage('_'+str[e]+'_');
 
-     str:= copy(str, s+1, e-s); // copying from s+1 to e-1 -> resulting link
+     //if (str[e] <> ' ') then dec(e);
+     //ShowMessage('e '+ copy(str, s, e-s));
+     //if e < s then e:= e+s;
+     str:= copy(str, s+1, e-s-1); // copying from s+1 to e-1 -> resulting link
 
      //Removing the next line if necessary
      if (pos('*', str) > 0) or (str[length(str)] = ':') then begin
@@ -2854,8 +2878,6 @@ begin
              while not (str[e] = '/') and not (str[e] = '%') do dec(e);
      delete(str, e+1, length(str)-e);
      end;
-     //m0[o].Append(str);
-
 
      if (pos('http://',str) = 1) or (pos('https://',str) = 1) then begin
         x1:= x + fmainc.Left + Left;
@@ -2864,6 +2886,7 @@ begin
         //Clipboard.AsText:= str;
      if Button = mbRight then
         fmainc.poplm.PopUp(x1+100,y1+50) else fmainc.opmClick(nil);
+        //ShowMessage(str);
      end;
 
      //ed0[o].Caption:= str;
@@ -3045,7 +3068,7 @@ procedure tfmainc.nbadd1(c,nick: string; con,i: smallint);
  c = text, con = connection, i = pageindex}
 var a: smallint = 0; // Memo number
 begin
-     //ShowMessage('nb1 '+inttostr(Notebook1.PageCount));
+
       if i = Notebook1.PageCount then
          Notebook1.Pages.Add('Page' + inttostr(i))
       else
@@ -4646,7 +4669,6 @@ begin
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
-
      //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
      if TreeView1.Items.Count > 0 then
      for p:= 0 to length(chanod)-1 do begin
@@ -4665,7 +4687,6 @@ begin
 
      if (b = false) then TrayIcon1.Icon:= i;
      //TreeView1.Refresh;
-
 
      // Getting Tedit to set focus
      n:= 0;
