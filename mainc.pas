@@ -2873,7 +2873,7 @@ begin
      // Getting string
      // Searching forward from caret position to find a space or bracket
      e:= x1+1;
-     //e:= length(str);
+     if e < s then e:= e+s;
      //y1:= CaretY;
      while (pos(str[e], chr) = 0) and (str[e] <> '*') do begin
            //if (str[e] = '/') or (str[e] = '%') and (e = x1+1) then e:= s+e;
@@ -2890,7 +2890,7 @@ begin
 
      //if (str[e] <> ' ') then dec(e);
      //ShowMessage('e '+ copy(str, s, e-s));
-     //if e < s then ShowMessage(inttostr(e));
+     //if e < s then e:= s+2;
      str:= copy(str, s+1, e-1-s); // copying from s+1 to e-1 -> resulting link
 
      //Removing the next line if necessary
