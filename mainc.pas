@@ -1992,9 +1992,8 @@ begin
      r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
      c:= clgreen;
-     }
      end;
-
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -2031,7 +2030,7 @@ begin
         m0[o].BStrings.Add('bkcol' + char(3) + inttostr(icolors(c)) + '-' + r);
 
 
-     if m0[o].lines.Count > 100 then begin
+     if m0[o].lines.Count >= 100 then begin
         l:= m0[o].TopLine;
         m0[o].unwr;
         m0[o].wr(false);
@@ -2082,10 +2081,11 @@ begin
             BStrings.Add(inttostr(l));
         end;
      CaretY:= lines.Count;
-     m0[0].Append(inttostr(m0[1].TopLine));
+     //m0[0].Append(inttostr(m0[1].TopLine));
      end;
      //end;
      }
+
      end; // m0[o]
 end;
 
@@ -2123,7 +2123,7 @@ begin
               if (pos('bkcol', BStrings[l1]) = 1) then
                  k:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
               if (pos('bkcol', BStrings[l1]) = 1) then
-              while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(BStrings[l1]))) <>1) and (l > 0) do dec(l) else
+              while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(tmp2))) <>1) and (l > 0) do dec(l) else
                  while (pos(tmp2, BStrings[l1]) <> 1) and (l > 0) do dec(l);
                  //if (pos('CHALLENGE', BStrings[l1]) > 0) then ShowMessage(BStrings[l1]);
            end;
@@ -2138,11 +2138,11 @@ begin
      if (pos('bkcol', BStrings[l1]) = 1) then
      k:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
      if (pos('bkcol', BStrings[l1]) = 1) then
-     while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(BStrings[l1]))) <> 1) and
+     while (pos(tmp2, copy(BStrings[l1], pos('-', BStrings[l1])+1, length(tmp2))) <> 1) and
            (l1 > 0) do dec(l1) else
            while (pos(tmp2, BStrings[l1]) <> 1) and
                  (l1 > 0) do dec(l1);
-
+     //if assigned(m0[1]) then ShowMessage(k);
 
         if (pos('bkcol', BStrings[l1]) > 0) then begin
               col:= true;
@@ -2433,7 +2433,6 @@ procedure TSyn.unwr;
 var l: smallint = 0;
 begin
      Clear;
-
      while (l < BStrings.Count) do begin
            Lines.add(BStrings[l]);
      inc(l);
@@ -2464,35 +2463,31 @@ begin
 
      if co = clnone then f:= clblack else
 
+        if app then
         if (pos('bkcol', BStrings[BStrings.Count-1]) = 1) then begin //ShowMessage(BStrings[BStrings.Count-1]);
            k:= copy(BStrings[BStrings.Count-1], 6, pos('-', BStrings[BStrings.Count-1])-6);
-
-        //ShowMessage('hey ' + k);
-        {ShowMessage('hey ' + BStrings[BStrings.Count-1]);}
-        //while (pos(copy(Lines[l], 1, 10), BStrings[BStrings.Count-1]) = 0) do dec(l);
-
-        // Ading color to TSyn lines
-        lines[l]:= k + lines[l];
-     end;
+           lines[l]:= k + lines[l];
+        end;
 
      // Multiline (decreases l to not process all the lines)
      if (app) and (lines.Count > 0) then begin
         l:= Lines.Count-1; // Last line
         bl:= BStrings.count-1;
         if (pos('bkcol', BStrings[bl]) = 1) then
-        while (pos(copy(lines[l], length(k)+1, length(lines[l])), copy(BStrings[bl], pos('-', BStrings[bl])+1, length(BStrings[bl]))) <> 1 ) and (l > 0) do dec(l) else
+        while (pos(copy(lines[l], length(k)+1, length(lines[l])), copy(BStrings[bl], pos('-', BStrings[bl])+1, length(lines[l])-length(k)+1)) <> 1 ) and (l > 0) do dec(l) else
            while (pos(lines[l], BStrings[bl]) <> 1) and (l > 0) do dec(l);
-
         //ShowMessage(lines[l] + sLineBreak + BStrings[bl]);
      end;
 
      if app = false then hl.ClearAllTokens;
-     if not app then l:= 0;
+     if app = false then l:= 0;
 
   if lines.Count > 0 then
   while (l < Lines.Count) do begin
+        //if l = lines.Count-1 then ShowMessage(lines[l]);
 
         //if app then ShowMessage(inttostr(l));
+        //if not app then
         if (pos('bkcol',lines[l]) > 0) then begin
            lines[l]:= StringReplace(lines[l], 'bkcol','', [rfReplaceAll]);
            str:= lines[l];
