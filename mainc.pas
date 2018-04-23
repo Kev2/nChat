@@ -33,7 +33,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -755,6 +754,8 @@ begin
               //if (pos('/ban', s) = 0) and (pos('/kb', s) = 0) then begin
 
                  net[ne].conn.SendString(replce(s + ' :' + chan))
+                 //ShowMessage(replce(s + ':' + chan))
+                 //ShowMessage(replce(s + ' :' + chan))
               else
                   if (pos('/me', lowercase(s)) = 1) then
                   net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
@@ -1010,7 +1011,7 @@ begin
      tmp:= r;
      bak:= r;
      if (pos('NOTICE', r) > 0) and (pos('!', r) = 0) and (pos('NOTICE:', r) = 0) then delete(r, 1, pos('NOTICE',r) + length('NOTICE'));
-     if (pos(nick + ' ', r) > 0) and ( (pos('!', r) < (pos(':', r))) ) then
+     if (pos(nick + ' ', r) > 0) and ( (pos('!', r) > (pos(':', r))) ) then
         delete(bak, 1, pos(nick, bak) + length(nick));
         //if (r <> '') then ShowMessage('bak ' + bak);
      if pos(':', r) > 0 then begin
@@ -1027,7 +1028,6 @@ begin
 
         {if (pos('PRIVMSG',mess) = 0) or (pos('PRIVMSG:', mess) > 0) or (pos('PART:', mess) > 0) or (pos('QUIT:', mess) > 0) then}
         while (pos(':', mess) > 0) do delete(mess, 1, pos(':', mess)) else if (pos(':', mess) > 0) then (delete(mess, 1, pos(':', mess)));
-        //ShowMessage(mess);
          // hola :no way
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
      end;
@@ -1065,7 +1065,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1157,7 +1157,7 @@ case s of
        //m0[n].Canvas.Pen.Color:= clred;
        //m0[n].Canvas.Line(0,m0[n].CaretY, m0[n].Width,m0[n].CaretY);
 
-       fmainc.createlog(num, copy(cname, 2, length(cname)));
+       fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
 
        fmainc.Timer1.Enabled:= false;
        repeat
@@ -1265,7 +1265,7 @@ case s of
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
 
-                   fmainc.createlog(num, copy(m0[n].chan,2,length(m0[n].chan)));
+                   fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan),length(m0[n].chan)));
 
                    if (pos('You', cname) >0) then begin
                       m0[n].nnick:= mess;
@@ -1306,7 +1306,7 @@ case s of
     // Getting channel
        cname:= r;
        if (pos('#', cname) > 0) then begin
-          delete(cname, 1, pos('#', cname)-1);
+          cname:= copy(cname, pos('#', cname), length(cname));
           delete(cname, pos(' ',cname), length(cname));
        end;
 
@@ -1397,7 +1397,6 @@ case s of
     end; // 3
 
     4: Begin // I PART
-
        //Searching Parent
        m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
 
@@ -1421,12 +1420,12 @@ case s of
        if n < 0 then n:= fmainc.cnode(2,0,0, inttostr(num) + fmainc.TreeView1.Selected.Text);
        //ShowMessage('n1 ' + inttostr(num));
 
-       fmainc.createlog(num, cname);
        //if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
 
        if assigned(m0[m]) then n:= m;
-       output(clnone, 'You have left ' + copy(cname,2,length(cname)) + ' ' + mess, n);
-       //ShowMessage(inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
+       fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
+       if mess = '' then mess:= 'Leaving';
+       output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
        if not assigned(m0[m]) then m:= n;
        if assigned(lb0[m]) then begin
@@ -1442,10 +1441,14 @@ case s of
        if cname <> '' then n:= fmainc.cnode(2,0,0, cname);
 
        if (pos('QUIT', r) = 0) then begin
-          fmainc.createlog(num, copy(cname, 2, length(cname)));
-          cname:= copy(r, pos('!', r)+1, pos(' ', r)-1); // ident + IP
+          fmainc.createlog(num, copy(cname, pos('#', cname), length(cname)));
+          cname:= copy(r, pos('!', r)+1, pos(' ', r)-pos('!', r)); // ident + IP
           delete(cname, pos(' ', cname), length(cname));
        end;
+
+       cname:= r;
+       delete(cname, 1, pos('!', cname));
+       delete(cname,  pos(' ', cname), length(cname));
 
        if pos('JOIN', r) > 0 then begin
           //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
@@ -1479,7 +1482,7 @@ case s of
                 if (assigned(lb0[n])) then
                 if fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n) = 'true' then begin
 
-                fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
+                fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
 
                 //ShowMessage('quit nor_' + mess);
                 if length(mess) > 0 then
@@ -1501,7 +1504,7 @@ case s of
     6: Begin // WHOIS
        n:= fmainc.cnode(5, n, 0, '');
 
-       if (pos('352',r) > 0) then
+       if (pos('352',r) > 0) then // who
        repeat
        {
              cname:= r + mess;
@@ -1648,7 +1651,7 @@ case s of
        if (pos('TOPIC', tmp) > 0) then
        r:= r + ' has changed the topic to: ' + mess;
 
-       fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
+       fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
 
        if (pos('332', tmp) > 0) or (pos('333', tmp) > 0) then
           output(clPurple, r, n) else
@@ -1671,7 +1674,7 @@ case s of
                  ' (' + server + ')';
        end;
 
-       fmainc.createlog(num, copy(m0[n].chan, 2, length(m0[n].chan)));
+       fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
        output(clGreen, mess ,n);
        closefile(t);
     end;
@@ -1691,7 +1694,7 @@ case s of
        //if fmainc.TreeView1.Items[n].HasChildren then
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
-       fmainc.createlog(num, copy(cname, 2, length(cname)));
+       fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1, length(m0[n].chan)));
 
        // Kick
        if (pos('KICK',r) > 0) then begin
@@ -1973,7 +1976,7 @@ begin
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
-     }
+
      if (pos('orb', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -1989,6 +1992,7 @@ begin
      r:= '11' + char(2) + 'hola' + char(2);
      //c:= clBlue;
      end;
+     }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
@@ -2466,7 +2470,7 @@ begin
         //while (pos(copy(Lines[l], 1, 10), BStrings[BStrings.Count-1]) = 0) do dec(l);
 
         // Ading color to TSyn lines
-        lines[l]:= k + copy(lines[l], pos('-', lines[l])+1, length(lines[l]));
+        lines[l]:= k + copy(BStrings[BStrings.Count-1], pos('-', BStrings[BStrings.Count-1])+1, length(lines[l]));
      end;
 
      // Multiline (decreases l to not process all the lines)
@@ -2922,7 +2926,7 @@ with TSyn(Sender) do begin
      //Append('l: ' + inttostr(l) + ' T: '+inttostr(l));
      l:= (lines.count - l); // Last line
      //if (pos('hey', lines[lines.Count-1]) > 0) then ShowMessage('hey');
-     if (last > 0) then begin
+     if (last > 1) then begin
         //if (pos('hey', lines[lines.Count-1]) > 0) then ShowMessage('hey');
      //if (TSyn(Sender).last div TSyn(Sender).LineHeight - tsyn(sender).TopLine) > TSyn(Sender).TopLine then begin
         Canvas.Pen.Color:= clred;

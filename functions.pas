@@ -86,13 +86,13 @@ begin
         tmp:= r;
         delete(tmp, 1, pos(' ', tmp));
         if (pos('#', tmp) = 1) then begin
-           chan:= copy(tmp, 1, pos(':', tmp)-1);
-           delete(chan, pos(' ',chan), length(chan));
-           delete(tmp, 1, pos(' ',tmp));
-        end;
-        delete(tmp, pos(':', tmp)-1, length(tmp));
-        //part #nvz
-        if (tmp = '') or (tmp = 'PART') or (tmp = chan) then tmp:= 'Leaving';
+           chan:= copy(tmp, pos('#', tmp), pos(' ', tmp)-1);
+           delete(tmp, 1, pos(' ',tmp)); // tmp = message
+        end else
+            chan:= copy(tmp, pos(':', tmp)+1, length(tmp));
+        delete(tmp, pos(':', tmp), length(tmp)); // tmp = message
+
+        if (tmp = '') or (tmp = ' ') or (tmp = chan) then tmp:= 'Leaving';
         //if (pos('#', chan) > 0) then
            r:= 'PART ' + chan + ' :' + tmp;
      end;
