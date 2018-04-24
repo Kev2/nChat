@@ -33,6 +33,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1071,7 +1072,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1996,11 +1997,11 @@ begin
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
-     r:= char(3) + '4hola ' + 'http://ChanOps.com/radio.html ' + char(3) + '3or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server ' + char(3) + '4hola';
+     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //c:= clgreen;
      end;
-
+     }
+     {
      if (pos('h2', r) > 0) then begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      end;
@@ -4176,16 +4177,17 @@ begin
      while (n < lb0[ch].Count) do begin
 
            tmp:= lowercase(lb0[ch].Items[n]);
-           while (pos(tmp[p], stat) > 0) and (p <= length(stat)) do inc(p);
+           while (pos(tmp[p], stat) > 0) and (p < length(stat)) do inc(p);
 
                  tmp:= copy(tmp, p, length(tmp));
+                 //ShowMessage(tmp);
 
            if (lowercase(nick) = tmp) then begin
               st:= st + copy(lowercase(lb0[ch].Items[n]), 1, p-1);
               //ShowMessage('st ' + st);
               f:= true;
               p:= n;
-              n:= lb0[ch].Count-1;
+              n:= lb0[ch].Count;
            end;
 
         inc(n);
