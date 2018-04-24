@@ -33,7 +33,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -742,6 +741,11 @@ begin
 
               end else
 
+              if (pos(lowercase('/nick'), lowercase(s)) = 1) then begin
+                 net[ne].conn.SendString(copy(s, 2, length(s)) + #13#10);
+                 m0[n].nnick:= copy(s, pos(' ', s)+1, length(s));
+              end else
+
               if (pos(lowercase('/topic'), lowercase(s)) = 1) or
                  (pos(lowercase('/part'), lowercase(s)) = 1) or
                  (pos(lowercase('/op'),lowercase(s)) = 1) or (pos(lowercase('/deop'),lowercase(s)) = 1) or
@@ -1011,9 +1015,10 @@ begin
      //if (pos('*',r) > 0) then ShowMessage(r + sLineBreak + mess);
      tmp:= r;
      bak:= r;
+
      if (pos('NOTICE', r) > 0) and (pos('!', r) = 0) and (pos('NOTICE:', r) = 0) then delete(r, 1, pos('NOTICE',r) + length('NOTICE'));
-     if (pos(nick + ' ', r) > 0) and ( (pos('!', r) > (pos(':', r))) ) then
-        delete(bak, 1, pos(nick, bak) + length(nick));
+     //if (pos(nick + ' ', r) > 0) and ( (pos('!', r) > (pos(':', r))) ) then
+        for m:= 0 to 2 do delete(bak, 1, pos(' ', bak));
         //if (r <> '') then ShowMessage('bak ' + bak);
      if pos(':', r) > 0 then begin
         //delete(r, 1, pos(nick, r) + length(nick));
@@ -1066,7 +1071,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1114,7 +1119,7 @@ case s of
         if (r <> '') or (mess <> '') then begin
 
         // Deleting 1 to nick from r
-        delete(r, 1, pos(nick, r) + length(nick));
+        for m:= 0 to 2 do delete(r, 1, pos(' ', r));
 
         fmainc.createlog(num, server); //file open on connect
 
@@ -1241,7 +1246,7 @@ case s of
 
     2: Begin // nick
        // Sollo!~Sollo@181.31.118.135 NICK :collo
-       //ShowMessage(cname + sLineBreak + mess + sLineBreak +r + sLineBreak + nick);
+       //ShowMessage(cname + sLineBreak + mess + sLineBreak +r + sLineBreak + sLineBreak + mess + sLineBreak + nick);
              if (pos('nickname already in use', r) > 0) then output(clblack, r, n) else
 
              if (mess = '') then mess:= copy(r, pos('NICK', r) + length('nick')+1, length(r));
@@ -1266,11 +1271,10 @@ case s of
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
 
-                   fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan),length(m0[n].chan)));
+                   fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1,length(m0[n].chan)));
 
                    if (pos('You', cname) >0) then begin
                       m0[n].nnick:= mess;
-
                       output(clBlack, cname, n);
                    end;
 
@@ -1288,13 +1292,13 @@ case s of
 
                    if pos('You',cname) = 0 then
                       output(clBlack, cname, n);
-                   CloseFile(t);
                    //m0[n].lines.LoadFromFile(log[n]);
 
                    end;
 
              end;
              inc(n);
+             CloseFile(t);
              end; // lb0[n]
     n:= 1;
     end; // 2
@@ -1978,9 +1982,10 @@ begin
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
 
-     if (pos('orb', r) > 0) then begin
+
+     if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     //r:= '< Autobot > ' + char(3) + '3Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= 'http://hola.net';
@@ -1989,9 +1994,20 @@ begin
      //r:= 'JustaKiss: ⛄';
      //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
-     r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
+     //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     c:= clgreen;
+     //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     r:= char(3) + '4hola ' + 'http://ChanOps.com/radio.html ' + char(3) + '3or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server ' + char(3) + '4hola';
+     //c:= clgreen;
+     end;
+
+     if (pos('h2', r) > 0) then begin
+     r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
+     end;
+
+     if (assigned(m0[1])) and (m0[1].lines.Count = 0) then begin
+        //r:= (char(3) + '4hola');
+        //m0[1].BStrings.Add('bkcol' + char(3) + '4-hola');
      end;
      }
 
@@ -2001,9 +2017,7 @@ begin
         Append(test);
         writeln(test, r);
         CloseFile(test);
-     //end;
-     //ShowMessage('o ' + r);
-     //if assigned(m0[1]) and (pos(char(1), str) > 0) then ShowMessage(r);
+
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
 
@@ -2179,7 +2193,7 @@ begin
               // hola http://hole.net hey no way http://no.way
            c:= 1;
 
-           //if (pos(char(1) + 'http:', lines[l]) = 0) then
+           if (pos(char(1) + 'http:', lines[l]) = 0) then
            if (pos('http://',tmp) > 0) or (pos('https://', tmp) > 0) then begin
               //hy:= true;
               //ShowMessage(tmp);
@@ -2460,6 +2474,7 @@ var
 begin
      if first = '' then first:= lines[0];
      l:= Lines.Count-1; // Last line
+     bl:= BStrings.count-1;
 
      if co = clnone then f:= clblack else
 
@@ -2472,7 +2487,6 @@ begin
      // Multiline (decreases l to not process all the lines)
      if (app) and (lines.Count > 0) then begin
         l:= Lines.Count-1; // Last line
-        bl:= BStrings.count-1;
         if (pos('bkcol', BStrings[bl]) = 1) then
         while (pos(copy(lines[l], length(k)+1, length(lines[l])), copy(BStrings[bl], pos('-', BStrings[bl])+1, length(lines[l])-length(k)+1)) <> 1 ) and (l > 0) do dec(l) else
            while (pos(lines[l], BStrings[bl]) <> 1) and (l > 0) do dec(l);
@@ -2497,17 +2511,7 @@ begin
 
   str:= lines[l];
 
-        // Searching master line in BStrings. If it is a new line: empty background color
-        if (BStrings.Count > 0) then begin
-           bl:= 0;
-           //ShowMessage(lines[l]);
-           while (pos(lines[l], copy(BStrings[bl], 1, length(lines[l]))) <> 1) and (bl < BStrings.Count-1) do inc(bl);
-
-                 if (pos(copy(lines[l], 1, length(lines[l])),
-                    copy(BStrings[bl], 1, length(lines[l]))) = 1) then begin
-                    bco:= clnone; bk:= '';
-                    end;
-        end;
+        bco:= clnone; bk:= '';
 
         //if (pos(char(3), str) = 1) then ShowMessage(str);
         //if (co = clnone) and (pos(char(3), str) = 0) then str:= char(3) + '1' + str;
@@ -2660,7 +2664,7 @@ begin
         if (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) or (str[ch] = char(15)) or (str[ch] = char(31)) then inc(chs);
 
            if (co = clnone) then
-           if ( (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
+           if ( (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
               if not (modi) then hl.AddToken(l, ch-chs, tktext);
            modi:= true;
         end;
@@ -2679,8 +2683,8 @@ begin
         //if (str[ch] = char(15)) and (b1 = false) and (c1 = false) then hl.AddToken(l, ch-chs, tkText);
 
         if (hy = false) then begin
-        if (ch = length(str)) and not (str[ch] = char(1)) then if (b1 = true) and (c1 = false) then hl.AddToken(l, ch-chs, Attr2);
-        if (ch = length(str)) and not (str[ch] = char(1)) then if (c1 = true) then hl.AddToken(l, ch-chs, Attr1);
+        if (ch = length(str)) and not (str[ch] = char(1)) then if (b1 = true) and (c1 = false) then hl.AddToken(l, ch, Attr2);
+        if (ch = length(str)) and not (str[ch] = char(1)) then if (c1 = true) then hl.AddToken(l, ch, Attr1);
         //if (ch = length(str)) then if (hy = true) then hl.AddToken(l, ch-chs, Attr3);
         end;
 
@@ -2695,11 +2699,14 @@ begin
 
 
         // Coloring hyperlinks with purple
+        //r:= 'hola ' + 'http://ChanOps.com/radio.html ' + char(15) + char(3) +
+        //'3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) +
+        //'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
         //if (hy = true) and (str[ch] = char(1)) then hl.AddToken(l, ch-chs+1, tkText);
+        //if (assigned(m0[1])) and (str[ch] = char(1)) then ShowMessage(inttostr(ch));
         if (str[ch] = char(1)) then
               if (hy = false) then hl.AddToken(l, ch-chs+1, Attr3) else
-                 if (c1 = true) then hl.AddToken(l, ch-chs, Attr1) else
-                    hl.AddToken(l, ch-chs-1, tkText);
+                 if (c1 = true) then hl.AddToken(l, ch-chs, Attr1);
 
         if (hy = true) and (ch = length(str)) then hl.AddToken(l, ch-chs, Attr3);
 
@@ -4102,9 +4109,6 @@ begin
      ch:= false;
      while (n < lb0[a].Items.Count -1) do begin
            item1:= lowercase(lb0[a].Items[n]);
-           while (pos(item1[p], e) > 0) do inc(p);
-           item1:= copy(item1, p, length(item1));
-           p:= 1;
 //ShowMessage('sort: ' + item1);
 
            item2:= lowercase(lb0[a].Items[n+1]);
@@ -4145,15 +4149,15 @@ begin
       until ch= false;
 
       // Counting ops
-      for n:= 0 to lb0[a].Items.Count-1 do begin
-      p:= 0;
+      for n:= 0 to lb0[a].Items.Count -1 do begin
       s:= 0;
+      p:= 0;
             item1:= lowercase(lb0[a].Items[n]);
-            while (s < length(item1)) do begin
-                  if (pos(item1[s], e) > 0) then
-                     if (s > 0) and (s < 6) then inc(op);
+            while (s < length(e)) do begin
+                  if (pos(item1[s], e) > 0) and (pos(item1[s], e) < 6) then p:= pos(item1[s], e);
             inc(s);
             end;
+            if (p > 0) and (p < 6) then inc(op);
       end;
 
       // Filling label
