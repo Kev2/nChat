@@ -287,7 +287,7 @@ begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           if (conn.GetRemoteSinIP = '') then conn.CloseSocket;
+           if (conn.LastError <> 0) then ShowMessage('Could not connect to the server');
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
@@ -861,7 +861,7 @@ begin
      key:= 0;
      end else // ssctl
          // Setting focus on TRichMemo when RPage and APage are pressed
-         if (key = 33) or (key = 34) then m0[trm].SetFocus;
+         if (key = 33) or (key = 34) then m0[n].SetFocus;
      end; // Fmainc
      ctrl:= 0;
      while not (Notebook1.Page[pin].Controls[ctrl] is TEdit) do inc(ctrl);
@@ -4110,12 +4110,13 @@ begin
      ch:= false;
      while (n < lb0[a].Items.Count -1) do begin
            item1:= lowercase(lb0[a].Items[n]);
-//ShowMessage('sort: ' + item1);
-
            item2:= lowercase(lb0[a].Items[n+1]);
+
+           while (pos(item1[p], e) > 0) do inc(p);
+           item1:= copy(item1, p, length(item1));
+           p:= 1;
            while (pos(item2[p], e) > 0) do inc(p);
            item2:= copy(item2, p, length(item2));
-           p:= 1;
 
            if (item2 < item1) then begin
               ch:= true;
