@@ -39,7 +39,6 @@ Type
     filem: TMenuItem;
     dconm: TMenuItem;
     clistm: TMenuItem;
-    infm: TMenuItem;
     gvm: TMenuItem;
     bnickm: TMenuItem;
     banidm: TMenuItem;
@@ -55,13 +54,16 @@ Type
     helpm: TMenuItem;
     abm: TMenuItem;
     hlpm: TMenuItem;
+    MenuItem1: TMenuItem;
+    Kbm: TMenuItem;
+    MenuItem2: TMenuItem;
+    nickm: TMenuItem;
     opm: TMenuItem;
     optm: TMenuItem;
     poplm: TPopupMenu;
     topm: TMenuItem;
     tvm: TMenuItem;
     opam: TMenuItem;
-    nckm: TMenuItem;
     rconm: TMenuItem;
     setm: TMenuItem;
     quitm: TMenuItem;
@@ -287,7 +289,10 @@ begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           if (conn.LastError <> 0) then conn.SetRemoteSin('','');
+           if (conn.LastError <> 0) then begin
+              conn.SetRemoteSin('','');
+              ShowMessage(conn.LastErrorDesc);
+           end;
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
@@ -3777,7 +3782,8 @@ begin
         chan:= TreeView1.Selected.Text;
 
      // Getting message
-     for p:= 5 to 8 do if nickpop.Items[2].Items[p] = sender then fkickmess.ShowModal;
+     if nickpop.Items[2].Items[5] = sender then fkickmess.ShowModal;
+     for p:= 0 to 2 do if nickpop.Items[2].Items[6].Items[p] = sender then fkickmess.ShowModal;
      mess:= ' :' + fkickmess.Edit1.Caption;
 
      // Voice
@@ -3794,7 +3800,7 @@ begin
      if (sender = banipm) then bans('/ban 3 ' + nickpop.items[0].caption,chan,con);
 
      // Kick
-     if sender = kickm then net[con].conn.SendString('KICK ' + chan + ' ' + nickpop.items[0].caption + mess + e);
+     if (sender = kickm) then net[con].conn.SendString('KICK ' + chan + ' ' + nickpop.items[0].caption + mess + e);
 
      // Kickban
         if (sender = kbnm)  then bans('/kb 1 ' + nickpop.items[0].caption + mess,chan,con);
@@ -3919,7 +3925,7 @@ begin
 
         end;
 //ShowMessage(mess);
-        if (com = 'kb') then net[con].conn.SendString('KICK ' + chan + ' ' + nick  + ' :' + mess + #13#10);
+        if (com = 'kb') then net[con].conn.SendString('KICK ' + chan + ' ' + nick  + ' ' + mess + #13#10);
      Timer1.Enabled:= true;
 end;
 

@@ -7238,6 +7238,14 @@ object fmainc: Tfmainc
       ParentShowHint = False
       ShowHint = True
     end
+    object Label1: TLabel
+      Left = 41
+      Height = 15
+      Top = 2
+      Width = 40
+      Caption = 'Label1'
+      ParentColor = False
+    end
   end
   object Splitter1: TSplitter
     AnchorSideLeft.Side = asrBottom
@@ -8088,10 +8096,9 @@ object fmainc: Tfmainc
   object nickpop: TPopupMenu
     left = 160
     top = 8
-    object nckm: TMenuItem
-      Caption = 'New Item2'
-      object infm: TMenuItem
-        OnClick = infmClick
+    object nickm: TMenuItem
+      object MenuItem1: TMenuItem
+        Caption = 'New Item15'
       end
     end
     object privm: TMenuItem
@@ -8116,32 +8123,39 @@ object fmainc: Tfmainc
         Caption = 'Take op (-o)'
         OnClick = nickrclick
       end
-      object bnickm: TMenuItem
-        Caption = 'Ban Nick (nick!*@*)'
-        OnClick = nickrclick
-      end
-      object banidm: TMenuItem
-        Caption = 'Ban Ident (*!ident@*)'
-        OnClick = nickrclick
-      end
-      object banipm: TMenuItem
-        Caption = 'Ban IP (*!*@ip)'
-        OnClick = nickrclick
+      object MenuItem2: TMenuItem
+        Caption = 'Bans'
+        object bnickm: TMenuItem
+          Caption = 'Ban Nick (nick!*@*)'
+          OnClick = nickrclick
+        end
+        object banidm: TMenuItem
+          Caption = 'Ban Ident (*!ident@*)'
+          OnClick = nickrclick
+        end
+        object banipm: TMenuItem
+          Caption = 'Ban IP (*!*@ip)'
+          OnClick = nickrclick
+        end
       end
       object kickm: TMenuItem
         Caption = 'Kick'
         OnClick = nickrclick
       end
-      object kbnm: TMenuItem
-        Caption = 'Kick/Ban nick'
-        OnClick = nickrclick
-      end
-      object kbim: TMenuItem
-        Caption = 'Kick/Ban ident'
-        OnClick = nickrclick
-      end
-      object kbipm: TMenuItem
-        Caption = 'Kick/Ban IP'
+      object Kbm: TMenuItem
+        Caption = 'Kick/Ban'
+        object kbnm: TMenuItem
+          Caption = 'Kick/Ban nick'
+          OnClick = nickrclick
+        end
+        object kbim: TMenuItem
+          Caption = 'Kick/Ban ident'
+          OnClick = nickrclick
+        end
+        object kbipm: TMenuItem
+          Caption = 'Kick/Ban IP'
+          OnClick = nickrclick
+        end
       end
     end
   end
