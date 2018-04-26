@@ -79,6 +79,11 @@ begin
      n:= strtoint(c);
 
      if assigned(net[n+1]) then getchannels(n+1, net[n+1].nick);
+
+     // Setting titles
+     StringGrid1.Cells[0,0]:= 'Channel';
+     StringGrid1.Cells[1,0]:= 'Users';
+     StringGrid1.Cells[2,0]:= 'Topic';
 end;
 
 
@@ -120,11 +125,11 @@ begin
      with fmainc do begin
      Timer1.Enabled:= false;
 
-     net[con].conn.SendString('LIST' + #13#10);
+     net[con].conn.SendString('LIST >=0' + #13#10);
           repeat
           r:= '';
-          r:= net[con].conn.RecvString(10);
-          if (r <> '') and (pos(':end of', lowercase(r)) = 0) then ch.Add(r);
+          r:= net[con].conn.RecvString(500);
+          if (r <> '') and (pos('end of', lowercase(r)) = 0) and (pos('users', lowercase(r)) = 0) then ch.Add(r);
 
           //ShowMessage(r);
           //if (pos('end of', lowercase(r)) > 0) and (pos('list', lowercase(r)) > 0) then ShowMessage(r);

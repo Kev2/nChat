@@ -1,0 +1,182 @@
+object fclist: Tfclist
+  Left = 536
+  Height = 403
+  Top = 298
+  Width = 805
+  Caption = 'Channel List'
+  ClientHeight = 384
+  ClientWidth = 805
+  Color = 12966084
+  Menu = MainMenu1
+  OnResize = FormResize
+  Position = poMainFormCenter
+  LCLVersion = '1.6.4.0'
+  object StringGrid1: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = ToolBar1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = LabeledEdit1
+    Left = 10
+    Height = 304
+    Top = 36
+    Width = 785
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 10
+    ColCount = 3
+    ColumnClickSorts = True
+    Columns = <    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Channel'
+        Width = 120
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Users'
+        Width = 40
+      end    
+      item
+        Title.Alignment = taCenter
+        Title.Caption = 'Topic'
+        Width = 600
+      end>
+    DefaultRowHeight = 20
+    FixedCols = 0
+    FixedRows = 0
+    Font.Height = -11
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goRowSelect, goSmoothScroll]
+    ParentFont = False
+    RowCount = 15
+    TabOrder = 0
+    TitleFont.Height = -11
+    TitleStyle = tsNative
+  end
+  object LabeledEdit1: TLabeledEdit
+    AnchorSideLeft.Control = StringGrid1
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 330
+    Height = 24
+    Top = 350
+    Width = 144
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Bottom = 10
+    EditLabel.AnchorSideLeft.Side = asrBottom
+    EditLabel.AnchorSideTop.Control = LabeledEdit1
+    EditLabel.AnchorSideTop.Side = asrCenter
+    EditLabel.AnchorSideRight.Control = LabeledEdit1
+    EditLabel.AnchorSideBottom.Control = LabeledEdit1
+    EditLabel.AnchorSideBottom.Side = asrBottom
+    EditLabel.Left = 267
+    EditLabel.Height = 14
+    EditLabel.Top = 355
+    EditLabel.Width = 60
+    EditLabel.Caption = 'Search filter'
+    EditLabel.ParentColor = False
+    EditLabel.ParentFont = False
+    EditLabel.Font.Height = -11
+    Font.Height = -11
+    LabelPosition = lpLeft
+    ParentFont = False
+    TabOrder = 1
+    OnKeyPress = LabeledEdit1KeyPress
+  end
+  object srchb: TButton
+    AnchorSideLeft.Control = LabeledEdit1
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = LabeledEdit1
+    Left = 479
+    Height = 25
+    Top = 350
+    Width = 75
+    BorderSpacing.Left = 5
+    Caption = '&Filter'
+    Font.Height = -11
+    OnClick = srchbClick
+    ParentFont = False
+    TabOrder = 2
+  end
+  object Label1: TLabel
+    AnchorSideLeft.Control = StringGrid1
+    AnchorSideTop.Control = LabeledEdit1
+    AnchorSideTop.Side = asrCenter
+    Left = 10
+    Height = 15
+    Top = 355
+    Width = 153
+    Caption = 'Please wait,  retrieving list...'
+    ParentColor = False
+    Visible = False
+  end
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 26
+    Top = 0
+    Width = 805
+    Caption = 'ToolBar1'
+    Images = fmainc.ImageList1
+    TabOrder = 3
+    object ToolButton1: TToolButton
+      Left = 1
+      Top = 2
+      Caption = '&Retrieve Channels List'
+      ImageIndex = 9
+      MenuItem = chlistm
+    end
+    object ToolButton2: TToolButton
+      Left = 24
+      Top = 2
+      Caption = '&Open'
+      ImageIndex = 6
+      MenuItem = openm
+    end
+    object ToolButton3: TToolButton
+      Left = 47
+      Top = 2
+      Caption = '&Save'
+      ImageIndex = 10
+      MenuItem = savem
+    end
+  end
+  object sdd: TSaveDialog
+    left = 64
+    top = 296
+  end
+  object odd: TOpenDialog
+    left = 16
+    top = 296
+  end
+  object MainMenu1: TMainMenu
+    Images = fmainc.ImageList1
+    left = 96
+    object filem: TMenuItem
+      Caption = '&File'
+      object openm: TMenuItem
+        Caption = '&Open'
+        ImageIndex = 6
+        OnClick = openmClick
+      end
+      object savem: TMenuItem
+        Caption = '&Save'
+        ImageIndex = 10
+        OnClick = savemClick
+      end
+      object exitm: TMenuItem
+        Caption = '&Exit'
+        ImageIndex = 5
+      end
+    end
+    object servm: TMenuItem
+      Caption = '&Server'
+      object chlistm: TMenuItem
+        Caption = '&Retrieve Channels List'
+        ImageIndex = 9
+        OnClick = chlistmClick
+      end
+    end
+  end
+end

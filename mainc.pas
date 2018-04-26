@@ -287,7 +287,7 @@ begin
            conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           if (conn.LastError <> 0) then ShowMessage('Could not connect to the server');
+           if (conn.LastError <> 0) then conn.SetRemoteSin('','');
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
@@ -732,6 +732,13 @@ begin
 
            if (pos('/', s) = 1) then begin
 
+              // Banlist
+              if (pos('/banlist', s) = 1) then begin
+                 if (TreeView1.Items[trm].Parent = nil) then
+                    ShowMessage('You need to get the bans list from a channel') else
+                    fbanlist.FormActivate(banlm);
+              end;
+
               // Bans
               if (pos('/ban', s) = 1) or (pos('/kb', s) = 1) then begin
                  s:= StringReplace(s, '   ', ' ', [rfReplaceAll]);
@@ -1065,9 +1072,10 @@ begin
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
-     if (pos('INVITE',r) > 0) and (pos('341', r) > 0) then s:= 9;
+     if (pos('INVITE',r) > 0) then s:= 9; //and (pos('341', r) > 0) then s:= 9;
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK',r) > 0) and (pos('=', r) = 0) ) then s:= 10;
      if (pos('367 ' + nick, r) > 0) then s:= 11;
+     //if (pos('#', r) > 0) and (pos(nick, r) > 0) and (pos('=', r) = 0) then s:= 12; // Messages
 
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
@@ -1119,6 +1127,13 @@ case s of
 
         if (r <> '') or (mess <> '') then begin
 
+        // Searching channel
+        if (pos('#', cname) > 0) then begin
+           //ShowMessage(cname);
+           m:= fmainc.cnode(2,0,0,cname);
+           if (m >= 0) then if (assigned(m0[m])) then n:= m;
+        end;
+
         // Deleting 1 to nick from r
         for m:= 0 to 2 do delete(r, 1, pos(' ', r));
 
@@ -1146,9 +1161,11 @@ case s of
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
        if (fmainc.TreeView1.Items[n].HasChildren) then
           while (n < fmainc.TreeView1.Items.Count) do begin
-                if ('(' + copy(cname, 2, length(cname)) + ')' = fmainc.TreeView1.Items[n].Text) then room:= true;
+                if ('(' + copy(cname, length(inttostr(num))+1, length(cname)) + ')' = fmainc.TreeView1.Items[n].Text) then begin
+                   room:= true;
                    fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, '(', '', [rfReplaceAll]);
                    fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, ')', '', [rfReplaceAll]);
+                end;
        inc(n);
        end;
 
@@ -1235,7 +1252,7 @@ case s of
         end;
 
         end; // Empty
-        until (r = '');
+        until (pos('/NAMES', r) > 0);
         output(clnone, #13, n);
 
         fmainc.timer1.Enabled:= true;
@@ -1271,6 +1288,9 @@ case s of
                    s:= 0;
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
+             // Changing nick in tree
+                if fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1) then
+                   fmainc.TreeView1.Items[n].Text := mess;
 
                    fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1,length(m0[n].chan)));
 
@@ -1404,27 +1424,28 @@ case s of
 
     4: Begin // I PART
        //Searching Parent
-       m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
+       //m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
 
-       while (fmainc.TreeView1.Items[n].Index < m) do begin
+       while (fmainc.TreeView1.Items[n].Index < num) do begin
              //ShowMessage(fmainc.TreeView1.Items[n].Text);
              if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
              //while (n <> m0[n].node) do inc(n);
        end;
 
-       m:= fmainc.TreeView1.Selected.AbsoluteIndex;
+       //n:= fmainc.cnode(2,0,0, inttostr(num) + fmainc.TreeView1.Selected.Text);
        //ShowMessage('n' + inttostr(m));
+       m:= -1;
 
        if (pos('#', r) > 0) then
-       while (m < fmainc.TreeView1.Items.Count) do begin
-             if (fmainc.TreeView1.Items[m].Text = copy(cname, 2, length(cname))) then fmainc.TreeView1.Items[m].Text:=
-             '(' + fmainc.TreeView1.Items[m].Text + ')';
-       inc(m);
+       for s:= n to fmainc.TreeView1.Items.Count -1 do begin
+             if (fmainc.TreeView1.Items[s].Text = copy(cname, length(inttostr((num)))+1, length(cname))) then begin
+             fmainc.TreeView1.Items[s].Text:= '(' + fmainc.TreeView1.Items[s].Text + ')';
+             m:= s;
+             end;
        end;
-       dec(m);
-       if n < 0 then n:= fmainc.cnode(2,0,0, inttostr(num) + fmainc.TreeView1.Selected.Text);
-       //ShowMessage('n1 ' + inttostr(num));
+       m:= fmainc.cnode(5, m, 0, '');
+       //ShowMessage('n1 ' + inttostr(m));
 
        //if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
 
@@ -1541,6 +1562,7 @@ case s of
              }
 
              if r <> '' then begin
+                //ShowMessage(r + sLineBreak + mess);
                 delete(r, 1, pos('*', r)-1);
                 if (pos(':', r) = 0) then r:= r + mess;
                 r:= StringReplace(r, ':', '', [rfReplaceAll]);
@@ -1667,9 +1689,10 @@ case s of
 
     9: Begin // INVITE
        if (pos('#', mess) > 0) then // Spotchat puts the channel after : (colon)
-          cname:= copy(mess, pos('#', mess), length(mess));
+          cname:= copy(r, pos('#', r), length(r)) else cname:= copy(mess, pos('#', mess), length(mess));
 
        // :server sollo mcclane chan
+       //ShowMessage(cname + sLineBreak + r + sLineBreak + mess);
 
        if (pos('!', r) > 0) then
        mess:= 'You have been invited to ' + cname + ' by ' + copy(r, 1, pos('!', r)-1) + ' (' + server + ')' else begin
@@ -1688,7 +1711,7 @@ case s of
 
     10: Begin // MODE
        fmainc.Timer1.Interval:= 50;
-
+              //ShowMessage(r + sLineBreak + mess);
        // Getting user
           // mcclane!* MODE user +i
        if r[length(r)] = ' ' then delete(r, length(r), 1);
@@ -1696,7 +1719,7 @@ case s of
        while (tmp[length(tmp)] = ' ') do delete(tmp, length(tmp), 1);
        delete(tmp, 1, pos('MODE', tmp) + 4);
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
-                                              //ShowMessage(r +sLineBreak + tmp);
+
        //if fmainc.TreeView1.Items[n].HasChildren then
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
@@ -1794,7 +1817,7 @@ case s of
        end else            // Ban
 
        if (pos('+b',r) > 0) or (pos('-b',r) > 0) then begin
-                          //ShowMessage(r + sLineBreak + mess + sLineBreak + tmp);
+
           if (pos('+', r) > 0) then
              mess:= ' sets ' else mess:= ' removes ';
              if mess = ' sets ' then
@@ -1806,7 +1829,7 @@ case s of
              output(clMaroon, mess, n);
 
        end else begin // Any channel mode or user mode
-
+                          //ShowMessage(r +sLineBreak + 'tmp: ' + tmp + sLineBreak + 'mess: ' + mess);
        r:= r + ' ' + mess;
 
        //tmp:= r;
@@ -1882,6 +1905,11 @@ case s of
         output(clnone, 'End of ' + copy(cname, 2, length(cname)) + ' Banlist' ,n);
     end;
 
+    12: Begin // Messages to channel
+        ShowMessage(r + ' ' + mess);
+        n:= fmainc.cnode(2,0,0, copy(cname, length(inttostr(num))+1, length(cname)));
+            output(clnone, mess ,n);
+    end;
 
  end; // Case
 
@@ -1897,7 +1925,8 @@ begin
      //while r = '' do r:= conn.RecvString(200);
      //orwell.freenode.net 333 Sollo #nvz McClane!~JMcClane@17-122-17-190.fibertel.com.ar 1521126049
 
-        delete (r, 1, pos('#', r) -1);
+
+        delete (r, 1, pos('#', r)-1);
         delete (r, 1, pos(' ', r));
      if (pos('!', r) = 0) then
         s:= copy(r, 1, pos(' ', r)-1) else s:= copy(r, 1, pos('!', r)-1);
@@ -1982,7 +2011,10 @@ begin
         //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
-
+        r:= 'TNTease: *•♪ღ♪*•.¸¸¸.•*¨¨*•.¸¸¸.•*•♪¸.•*¨¨*•.¸¸¸.•*•♪ღ♪•«';
+        r:= 'TNTease: ♪ღ♪░H░A░P░P░Y░ B░I░R░T░H░D░A░Y░░♪ღ♪';
+        r:= 'JustAKiss: 😀☺';
+        r:= 'JustaKiss: ⛄';
 
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
@@ -1991,31 +2023,25 @@ begin
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= 'http://hola.net';
      //r:= 'Chrissy: ' + char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06augh ' +char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06t ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud'+char(3) + ' if it was alcohol it would  ' + char(2) +char(3) + '00,06L ' +char(2) +char(3) + '00,06augh ' + char(2) +char(3) + '00,06O' + char(2) +char(3) + '00,06ut ' +char(2) +char(3) + '00,06L' + char(2) +char(3) + '00,06oud' + char(3);
-     //r:= 'JustAKiss: 😀☺';
-     //r:= 'JustaKiss: ⛄';
      //r:= 'twinklingbean: ever type something random to try to pretend you understand the conversation?';
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
-     //c:= clgreen;
-     end;
-     }
-     {
-     if (pos('h2', r) > 0) then begin
-     r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
+     r:= '4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
+     c:= clgreen;
      end;
 
-     if (assigned(m0[1])) and (m0[1].lines.Count = 0) then begin
-        //r:= (char(3) + '4hola');
-        //m0[1].BStrings.Add('bkcol' + char(3) + '4-hola');
+
+     if (pos('h2', r) > 0) then begin
+     r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
+     //c:= clGreen;
      end;
      }
 
      // Sending to test file
      //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
-        assignfile(test, '/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/test.txt');
-        Append(test);
+        assignfile(test, '/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/bugs.txt');
+        if not FileExists('/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/bugs.txt') then Rewrite(t) else Append(test);
         writeln(test, r);
         CloseFile(test);
 
@@ -2100,7 +2126,6 @@ begin
      end;
      //end;
      }
-
      end; // m0[o]
 end;
 
@@ -2149,6 +2174,7 @@ begin
      while (l < Lines.Count) do begin
            tmp:= lines[l];
 
+     {
      tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
      if (pos('bkcol', BStrings[l1]) = 1) then
      k:= copy(BStrings[l1], 6, pos('-', BStrings[l1])-6);
@@ -2157,8 +2183,10 @@ begin
            (l1 > 0) do dec(l1) else
            while (pos(tmp2, BStrings[l1]) <> 1) and
                  (l1 > 0) do dec(l1);
+     }
      //if assigned(m0[1]) then ShowMessage(k);
 
+     if app then
         if (pos('bkcol', BStrings[l1]) > 0) then begin
               col:= true;
 
@@ -3846,6 +3874,7 @@ var
    // user types /ban 1 nick :mess
 begin
      // Processing commands
+     Timer1.Enabled:= false;
 
         delete(com, 1,1);
         tmp:= com;
@@ -3870,19 +3899,18 @@ begin
         end;
 
      // Querying who
-        net[con].conn.SendString('WHO ' + nick + #13#10);
+        net[con].conn.SendString('WHOIS ' + nick + #13#10);
         tmp:= '';
         while (tmp = '') do tmp:= net[con].conn.RecvString(300);
-               while (pos( 'who', lowercase(net[con].conn.RecvString(300))) = 0 ) do net[con].conn.RecvString(300);
+              while (pos( 'whois', lowercase(ip)) = 0 ) do ip:= net[con].conn.RecvString(300);
         // :barjavel.freenode.net 352 Sollo * ~JMcClane 181.31.118.135 tolkien.freenode.net McClane H :0 John McClane
-//ShowMessage(tmp);
-      if (pos('#', tmp) > 0) then
-        delete(tmp, 1, pos('#', tmp)) else delete(tmp, 1, pos('*', tmp));
-        delete(tmp, 1, pos(' ', tmp));
-        ident:= copy(tmp, 1, pos(' ', tmp)-1);
-        delete(tmp, 1, pos(' ', tmp));
-        ip:= copy(tmp, 1, pos(' ', tmp)-1);
-//ShowMessage(ident + ' ' + ip);
+//ShowMessage('bans: ' + tmp + sLineBreak + com + sLineBreak + chan + sLineBreak + typ);
+        for n:= 1 to 5 do begin
+            delete(tmp, 1, pos(' ', tmp));
+            if n = 4 then ident:= copy(tmp, 1, pos(' ', tmp)-1) else ip:= copy(tmp, 1, pos(' ', tmp)-1);
+        end;
+        //ShowMessage(ident + sLineBreak + ip);
+
         if (com = 'ban') or (com = 'kb') then begin
 
            if typ = '1' then net[con].conn.SendString('MODE ' + chan + ' +b ' + nick + '!*@*' + #13#10);
@@ -3892,7 +3920,7 @@ begin
         end;
 //ShowMessage(mess);
         if (com = 'kb') then net[con].conn.SendString('KICK ' + chan + ' ' + nick  + ' :' + mess + #13#10);
-
+     Timer1.Enabled:= true;
 end;
 
 
