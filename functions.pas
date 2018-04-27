@@ -217,15 +217,18 @@ begin
      end;
 
      // BAN
-     if (pos(lowercase('ban'), r) = 1) then begin
-        r:= StringReplace(r, 'ban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' +b', [rfReplaceAll]);
+     if (pos(lowercase('ban'), r) = 1) then begin //ban m:nick :#chan
+        chan:= r;
+        while (pos(':', chan) > 0) do delete(chan, 1, pos(':', chan));
+        delete(r, pos(chan, r), length(chan));
+        r:= StringReplace(r, 'ban', 'MODE ' + chan + ' +b', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
-        delete(r, pos(':',r), length(r));
+        //delete(r, pos('#',r)-2, length(r));
      end;
      if (pos(lowercase('unban'), r) = 1) then begin
         r:= StringReplace(r, 'unban', 'MODE ' + copy(r, pos('#',r), length(r)) + ' -b', [rfReplaceAll]);
         ///MODE #nvx:/op Sol Sollo
-        delete(r, pos(':',r), length(r));
+        //delete(r, pos('#',r)-2, length(r));
      end;
      if tmp = 'no13' then result:= r else result:= r + #13#10;
 end;

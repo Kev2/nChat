@@ -742,10 +742,10 @@ begin
                  if (TreeView1.Items[trm].Parent = nil) then
                     ShowMessage('You need to get the bans list from a channel') else
                     fbanlist.FormActivate(banlm);
-              end;
+              end else
 
               // Bans
-              if (pos('/ban', s) = 1) or (pos('/kb', s) = 1) then begin
+              if (pos('/ban', lowercase(s)) = 1) or (pos('/kb', lowercase(s)) = 1) and (pos(':m', s) = 0) then begin
                  s:= StringReplace(s, '   ', ' ', [rfReplaceAll]);
                  s:= StringReplace(s, '  ', ' ', [rfReplaceAll]);
                  //if (s[length(s)] = ' ') then delete(s, length(s), 1);
@@ -778,6 +778,7 @@ begin
                   if (pos('/me', lowercase(s)) = 1) then
                   net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
                   net[ne].conn.SendString(replce(s));
+
               //com[trm, l[trm]]:= s;
               //inc(l[trm]);
               m0[n].com[length(m0[n].com)-1]:= s;
@@ -1051,6 +1052,7 @@ begin
          //if (r <> '') and (assigned(m0[1])) then ShowMessage(tmp + sLineBreak + r + sLineBreak + mess);
      end;
      // Deleting message from r to make it clean
+     if ( (pos('m:', r) = 0) and (pos('m:', r) < (pos(':', r))) ) then
      delete(r, pos(':' + mess, r), length(mess)+1);
 
      // Getting Server and Channel
@@ -1064,7 +1066,7 @@ begin
      }
 
      if (pos(nick + '!', r) > 0) and (pos('JOIN', r) > 0)  then s:= 1;
-     if (pos('328', r) > 0)  then s:= 1;
+     //if (pos('328', r) > 0)  then s:= 1;
      if (pos('NICK ', r) > 0) then s:= 2;
      if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
@@ -1134,9 +1136,10 @@ case s of
 
         // Searching channel
         if (pos('#', cname) > 0) then begin
-           //ShowMessage(cname);
+           //ShowMessage(r);
            m:= fmainc.cnode(2,0,0,cname);
            if (m >= 0) then if (assigned(m0[m])) then n:= m;
+           //ShowMessage('0: ' + inttostr(n));
         end;
 
         // Deleting 1 to nick from r
@@ -1257,6 +1260,7 @@ case s of
         end;
 
         end; // Empty
+
         until (pos('/NAMES', r) > 0);
         output(clnone, #13, n);
 
@@ -1332,7 +1336,7 @@ case s of
     3: Begin // PRIVMSG
        //r:= tmp;
        // priv McClane!~JMcClane@17-122-17-190.fibertel.com.ar PRIVMSG #nvz :hola
-       //ShowMessage(r + sLineBreak + mess);
+       //ShowMessage(lb0[1].Items[0]);
 
     // Getting channel
        cname:= r;
@@ -1454,12 +1458,14 @@ case s of
 
        //if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
 
-       if assigned(m0[m]) then n:= m;
+       if (m >= 0) then if (assigned(m0[m])) then n:= m;
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
-       if not assigned(m0[m]) then m:= n;
+       //ShowMessage('4 ' + inttostr(m));
+
+       if m < 0 then m:= n;
        if assigned(lb0[m]) then begin
           lb0[m].Clear;
           lab0[m].Caption:= '';
@@ -1822,7 +1828,7 @@ case s of
        end else            // Ban
 
        if (pos('+b',r) > 0) or (pos('-b',r) > 0) then begin
-
+                    //ShowMessage(r + sLineBreak + mess);
           if (pos('+', r) > 0) then
              mess:= ' sets ' else mess:= ' removes ';
              if mess = ' sets ' then
@@ -3529,7 +3535,7 @@ begin
                 if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
-                   ShowMessage('1: ' + inttostr(cnode(5,nod,0,'')));
+                   //ShowMessage('1: ' + inttostr(cnode(5,nod,0,'')));
           inc(n);
           end;
           SetLength(chanod, length(chanod)-1);
@@ -3540,9 +3546,10 @@ begin
           2: begin // Search channel by name
           while (n < length(chanod)) do begin
                 //chanod[n].chan:= lowercase(chanod[n].chan);
+                //if assigned(m0[1]) then ShowMessage(chanod[n].chan + sLineBreak + chan);
                 if (lowercase(chanod[n].chan) = lowercase(chan)) then result:= chanod[n].arr;
-                //if assigned(m0[1]) then ShowMessage(inttostr(result));
           inc(n); end;
+                //if assigned(m0[1]) then ShowMessage(inttostr(result));
           end; // Search
 
           3: begin // array-array
@@ -3561,6 +3568,7 @@ begin
 
           5: begin // Returns array from node
           for n:= 0 to length(chanod)-1 do begin
+              //ShowMessage('5' + chanod[n].chan);
               if (chanod[n].node = nod) then
               result:= chanod[n].arr;
           end;

@@ -5,7 +5,7 @@ unit banlist;
 interface
 
 uses
-  Classes, SysUtils, dateutils, Forms, Grids,
+  Classes, SysUtils, dateutils, Forms, Dialogs, Grids,
   StdCtrls, LCLType, functions;
 
 type
@@ -30,6 +30,7 @@ type
 
 var
   fbanlist: Tfbanlist;
+  n:        smallint;
 
 implementation
 uses mainc;
@@ -90,17 +91,27 @@ end;
 
 procedure Tfbanlist.rembClick(Sender: TObject);
 begin
+     if (pos( '@', fmainc.srchnick(net[getcon].nick, 2, fmainc.cnode(2,0,0,inttostr(getcon-1) + fmainc.TreeView1.Selected.Text))) > 0) then begin
+        if StringGrid1.RowCount > 0 then begin
+
      fmainc.Timer1.Interval:= 50;
      net[getcon].conn.SendString('MODE ' + fmainc.TreeView1.Selected.Text + ' -b ' +
                                        StringGrid1.Cells[StringGrid1.Selection.Left, StringGrid1.Selection.Bottom] + #13#10);
      StringGrid1.DeleteRow(StringGrid1.Selection.Bottom);
      fmainc.Timer1.Interval:= 2000;
+     end;
+
+     end else ShowMessage('You need to be channel operator to perform this action');
 end;
 
 procedure Tfbanlist.clbClick(Sender: TObject);
 var r:    smallint = 1;
     a:    string = '';
 begin
+          if (pos( '@', fmainc.srchnick(net[getcon].nick, 2, fmainc.cnode(2,0,0,inttostr(getcon-1) + fmainc.TreeView1.Selected.Text))) > 0) then begin
+
+        if StringGrid1.RowCount > 0 then begin
+
      if (univ('Are you sure you want to remove all bans?', '', 1, clb)) = true then
      while (r < StringGrid1.RowCount -1) do begin
      net[getcon].conn.SendString('MODE ' + fmainc.TreeView1.Selected.Text + ' -b ' +
@@ -108,6 +119,9 @@ begin
 
      StringGrid1.DeleteRow(StringGrid1.Selection.Bottom);
      end;
+     end;
+
+     end else ShowMessage('You need to be channel operator to perform this action');
      //while (a = '') do a:= net[getcon].conn.RecvString(100);
      //fmainc.Timer1.Interval:= 2000;
 end;
