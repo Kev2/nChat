@@ -729,9 +729,9 @@ begin
            if (pos(lowercase('/list'), lowercase(s)) = 1) then fclist.getchannels(ne, net[ne].nick) else
 
            if (pos('/query', lowercase(s)) = 1) then begin
-              if (pos('#', replce(s)) > 0) then
+              if (pos('#', replce(s)) > 0) or (lowercase(replce(s)) = 'noquery') then
                  m0[n].Append('Usage /query <nick>, opens a private message window for someone') else
-                 txp(ne-1,replce(s), net[ne].nick,false,true,true);
+                    txp(ne-1,replce(s), net[ne].nick,false,true,true);
                  m0[n].CaretY:= m0[n].Lines.Count;
            end else
 
@@ -1434,6 +1434,7 @@ case s of
     4: Begin // I PART
        //Searching Parent
        //m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
+       //ShowMessage('4: ' + inttostr(n));
 
        while (fmainc.TreeView1.Items[n].Index < num) do begin
              //ShowMessage(fmainc.TreeView1.Items[n].Text);
@@ -1465,7 +1466,7 @@ case s of
 
        //ShowMessage('4 ' + inttostr(m));
 
-       if m < 0 then m:= n;
+       //if m < 0 then m:= n;
        if assigned(lb0[m]) then begin
           lb0[m].Clear;
           lab0[m].Caption:= '';
@@ -4384,7 +4385,7 @@ begin
 
 
      // Deleting Tree Node
-     TreeView1.Items[rc].Parent.Selected:= true;
+     //TreeView1.Items[rc].Parent.Selected:= true;
      TreeView1.Items[rc].Delete;
      //TreeView1.Refresh;
      //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;

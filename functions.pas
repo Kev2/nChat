@@ -169,6 +169,7 @@ begin
      if (pos('query', lowercase(r)) = 1) then begin
         delete(r, 1, pos(' ',r));
         delete(r, pos(' ',r), length(r));
+        if (r = '') or (r = ' ') or (r = '  ') or (lowercase(r) = 'query') then r:= 'noquery';
      tmp:= 'no13';
      end;
 
