@@ -33,7 +33,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1087,7 +1086,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -1435,6 +1434,7 @@ case s of
        //Searching Parent
        //m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
        //ShowMessage('4: ' + inttostr(n));
+      n:= 0;
 
        while (fmainc.TreeView1.Items[n].Index < num) do begin
              //ShowMessage(fmainc.TreeView1.Items[n].Text);
@@ -1448,7 +1448,8 @@ case s of
        m:= -1;
 
        if (pos('#', r) > 0) then
-       for s:= n to fmainc.TreeView1.Items.Count -1 do begin
+       if fmainc.TreeView1.Items[n].HasChildren then
+       for s:= n to fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex do begin
              if (fmainc.TreeView1.Items[s].Text = copy(cname, length(inttostr((num)))+1, length(cname))) then begin
              fmainc.TreeView1.Items[s].Text:= '(' + fmainc.TreeView1.Items[s].Text + ')';
              m:= s;
