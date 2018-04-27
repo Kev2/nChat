@@ -33,6 +33,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1086,7 +1087,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
@@ -2039,8 +2040,9 @@ begin
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     r:= '4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
-     c:= clgreen;
+     //r:= '4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
+     r:= char(3) + '2 did ' + char(3) + '6â' + char(8)+char(9)+char(3)+'6,6 ' + char(3) + '0,0 ' + char(3)+'6,1Kevster'+ char(3) + '0,0 '+ char(3)+ '6,6 ' + char(15) + char(3) + '6â' + char(8)+char(9) + char(15)+char(3) + '2 go out smoking?';
+     //c:= clgreen;
      end;
 
 
@@ -2702,7 +2704,8 @@ begin
             Attr2:=hl.CreateTokenID('Attr2',f,clNone,[fsBold]);
         end;
 
-        if (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) or (str[ch] = char(15)) or (str[ch] = char(31)) then inc(chs);
+        if (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) or
+           (str[ch] = char(8)) or (str[ch] = char(9)) or (str[ch] = char(15)) or (str[ch] = char(31)) then inc(chs);
 
            if (co = clnone) then
            if ( (str[ch] = char(1)) or (str[ch] = char(2)) or (str[ch] = char(3)) ) then begin
@@ -2758,6 +2761,8 @@ begin
            b1:= false;
            c1:= false;
            f:= clblack;
+           bco:= clnone;
+           bk:= '';
         end;
 
         if (str[ch] = char(2)) then begin
@@ -2776,6 +2781,8 @@ begin
   str:= StringReplace(str, char(1), '', [rfReplaceAll]);
   str:= StringReplace(str, char(2), '', [rfReplaceAll]);
   str:= StringReplace(str, char(3), '', [rfReplaceAll]);
+  str:= StringReplace(str, char(8), '', [rfReplaceAll]);
+  str:= StringReplace(str, char(9), '', [rfReplaceAll]);
   str:= StringReplace(str, char(15), '', [rfReplaceAll]);
   str:= StringReplace(str, char(31), '', [rfReplaceAll]);
   str:= StringReplace(str, char(13), '', [rfReplaceAll]);
