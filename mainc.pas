@@ -290,7 +290,7 @@ begin
            conn.SSLDoConnect;
            if (conn.LastError <> 0) then begin
               conn.SetRemoteSin('','');
-              ShowMessage(conn.LastErrorDesc);
+              if conn.LastErrorDesc <> '' then ShowMessage(conn.LastErrorDesc);
            end;
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
@@ -1433,21 +1433,20 @@ case s of
     4: Begin // I PART
        //Searching Parent
        //m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
-       //ShowMessage('4: ' + inttostr(n));
-      n:= 0;
 
+       n:= 0;
        while (fmainc.TreeView1.Items[n].Index < num) do begin
              //ShowMessage(fmainc.TreeView1.Items[n].Text);
              if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
              //while (n <> m0[n].node) do inc(n);
        end;
+       //n:= fmainc.TreeView1.Items[n].Index;
+       m:= -1;
 
        //n:= fmainc.cnode(2,0,0, inttostr(num) + fmainc.TreeView1.Selected.Text);
        //ShowMessage('n' + inttostr(m));
-       m:= -1;
 
-       if (pos('#', r) > 0) then
        if fmainc.TreeView1.Items[n].HasChildren then
        for s:= n to fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex do begin
              if (fmainc.TreeView1.Items[s].Text = copy(cname, length(inttostr((num)))+1, length(cname))) then begin
@@ -1456,22 +1455,22 @@ case s of
              end;
        end;
        m:= fmainc.cnode(5, m, 0, '');
-       //ShowMessage('n1 ' + inttostr(m));
+       if not assigned(m0[m]) then n:= fmainc.cnode(5,n,0,'');
+               //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
 
-       //if not assigned(m0[n]) then n:= fmainc.cnode(2, 0,0, inttostr(num) + fmainc.TreeView1.Items[fmainc.TreeView1.Selected.AbsoluteIndex].Text);
-
-       if (m >= 0) then if (assigned(m0[m])) then n:= m;
+       if (m < fmainc.TreeView1.Items.Count) then if (assigned(m0[m])) then n:= m;
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
        //ShowMessage('4 ' + inttostr(m));
 
-       //if m < 0 then m:= n;
-       if assigned(lb0[n]) then begin
-          lb0[n].Clear;
-          lab0[n].Caption:= '';
+       if (m < fmainc.TreeView1.Items.Count) then if assigned(m0[m]) then
+       if assigned(lb0[m]) then begin
+          lb0[m].Clear;
+          lab0[m].Caption:= '';
        end;
+
     end;
 
     5: Begin // JOIN PART QUIT
@@ -3608,20 +3607,25 @@ begin
 
           // Updating connection in channel names
           for n:= 0 to length(chanod)-1 do begin
-              //ShowMessage('arr: ' + inttostr(chanod[n].arr) + sLineBreak + 'node: ' + inttostr(chanod[n].node) + inttostr(ord));
-              if (chanod[n].node > ord) then
-                 chanod[n].node:= chanod[n].node - (ord - nod +1);
+
+              // Updating connection
               c:= 1;
               conn:= chanod[n].chan;
               //ShowMessage('u ' + conn);
               while (conn[c+1] in ['0'..'9']) and (c < length(chanod[n].chan)) do inc(c);
               conn:= copy(conn, 1, c);
 
-          if strtoint(conn) > 0 then
-              if conn <> '' then if (chanod[n].node >= ord) then begin
-                 delete(chanod[n].chan, 1, c);
-                 chanod[n].chan:= inttostr(strtoint(conn)-1) + chanod[n].chan;
-              end;
+
+              if strtoint(conn) > 0 then
+                  if conn <> '' then if (chanod[n].node > ord) then begin
+                     delete(chanod[n].chan, 1, c);
+                     chanod[n].chan:= inttostr(strtoint(conn)-1) + chanod[n].chan;
+                  end;
+
+              //ShowMessage('arr: ' + inttostr(chanod[n].arr) + sLineBreak + 'node: ' + inttostr(chanod[n].node) + inttostr(ord));
+              if (chanod[n].node > ord) then
+                 chanod[n].node:= chanod[n].node - (ord - nod +1);
+
           //ShowMessage('conn: ' + conn + sLineBreak+ 'las: ' + chanod[n].chan + sLineBreak + ' arr: ' +inttostr(chanod[n].arr));
           end; // for
 
