@@ -1467,9 +1467,9 @@ case s of
        //ShowMessage('4 ' + inttostr(m));
 
        //if m < 0 then m:= n;
-       if assigned(lb0[m]) then begin
-          lb0[m].Clear;
-          lab0[m].Caption:= '';
+       if assigned(lb0[n]) then begin
+          lb0[n].Clear;
+          lab0[n].Caption:= '';
        end;
     end;
 
