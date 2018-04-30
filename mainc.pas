@@ -173,7 +173,7 @@ Type
   num:     smallint;
   conn:    TTCPBlockSocket;
   nick:    string;
-  nick2:   string;
+  nickold: string;
   nick3:   string;
 
   public
@@ -245,6 +245,7 @@ implementation
 constructor connex.create;
 begin
      conn:= TTCPBlockSocket.Create;
+     conn.SocksTimeout:= 6000;
 end;
 
 destructor connex.destroy;
@@ -290,8 +291,9 @@ begin
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
            if (conn.LastError <> 0) then begin
+              //ShowMessage('connex: ' + conn.GetRemoteSinIP);
               conn.SetRemoteSin('','');
-              if conn.LastErrorDesc <> '' then ShowMessage(conn.LastErrorDesc);
+              //if conn.LastErrorDesc <> '' then
            end;
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
@@ -756,7 +758,10 @@ begin
 
               if (pos(lowercase('/nick'), lowercase(s)) = 1) then begin
                  net[ne].conn.SendString(copy(s, 2, length(s)) + #13#10);
-                 m0[n].nnick:= copy(s, pos(' ', s)+1, length(s));
+                 //m0[n].nnick:= copy(s, pos(' ', s)+1, length(s));
+                 net[ne].nickold:= net[ne].nick;
+                 net[ne].nick:= copy(s, pos(' ', s)+1, length(s));
+                 m0[n].nnick:= net[ne].nick;
               end else
 
               if (pos(lowercase('/topic'), lowercase(s)) = 1) or
@@ -990,7 +995,8 @@ begin
         }
            //if assigned(net[num+1]) then ShowMessage(inttostr(num) + sLineBreak + net[num+1].server);
            n:= fmainc.cnode(2,0,0,inttostr(num) + server);
-
+           //if (n < 0) and (n > 20) then ShowMessage('0: ' + inttostr(n));
+           //ShowMessage(m0[n].nnick);
 
      //if (assigned(m0[2])) and (pos('PART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
 
@@ -1065,6 +1071,7 @@ begin
      end else
      }
 
+     //if (pos('JOIN', r) > 0) then ShowMessage(m0[n].nnick);
      if (pos(nick + '!', r) > 0) and (pos('JOIN', r) > 0)  then s:= 1;
      //if (pos('328', r) > 0)  then s:= 1;
      if (pos('NICK ', r) > 0) then s:= 2;
@@ -1129,7 +1136,8 @@ begin
 case s of
      0: Begin // MOTD
 
-        if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 50 else
+        if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 100 else
+        //if (mess <> '') then fmainc.Timer1.Interval:= 50 else
         fmainc.Timer1.Interval:= 2000;
 
         if (r <> '') or (mess <> '') then begin
@@ -1248,8 +1256,8 @@ case s of
 
         output(clnone, copy(r, 2, pos('!', r) -2) + ' sets mode ' + mess, n);
         //output(clgreen, r, n);
-        if pos('+v',mess) > 0 then fmainc.lbchange(nick, '+', 3, n, num+1);
-        if pos('-v',mess) > 0 then fmainc.lbchange(nick, '+', 4, n, num+1);
+        if pos('+v',mess) > 0 then fmainc.lbchange(m0[n].nnick, '+', 3, n, num+1);
+        if pos('-v',mess) > 0 then fmainc.lbchange(m0[n].nnick, '+', 4, n, num+1);
         end;
 
         // SERVICES
@@ -1273,17 +1281,16 @@ case s of
 
     2: Begin // nick
        // Sollo!~Sollo@181.31.118.135 NICK :collo
-       //ShowMessage(cname + sLineBreak + mess + sLineBreak +r + sLineBreak + sLineBreak + mess + sLineBreak + nick);
+       //ShowMessage(cname + sLineBreak + sLineBreak +r + sLineBreak + sLineBreak + mess + sLineBreak + inttostr(n));
              if (pos('nickname already in use', r) > 0) then output(clblack, r, n) else
 
              if (mess = '') then mess:= copy(r, pos('NICK', r) + length('nick')+1, length(r));
 
-             if (pos(nick, r) > 0) then
-                cname:= 'You are now known as ' + mess
-             else
-                 cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + mess;
+             if (pos('You', cname) = 1) then begin
+                net[n+1].nick:= mess;
+                m0[n].nnick:= mess;
+             end;
 
-             if (pos('You', cname) = 1) then net[n+1].nick:= mess;
        n:= 0;
        m:= 0;
 
@@ -1291,20 +1298,27 @@ case s of
              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
 
              if fmainc.TreeView1.Items[n].GetLastChild <> nil then
-                m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
+                m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex else m:= n;
 
              while (n <= m) do begin
                    s:= 0;
                    //while (n <> chanod[s].node) do inc(s);
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
              // Changing nick in tree
+
+                      if (pos(nickold, r) > 0) then begin
+                         cname:= 'You are now known as ' + mess;
+                         m0[n].nnick:= mess;
+                      end
+                      else
+                          cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + mess;
+
                 if fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1) then
                    fmainc.TreeView1.Items[n].Text := mess;
 
                    fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1,length(m0[n].chan)));
 
-                   if (pos('You', cname) >0) then begin
-                      m0[n].nnick:= mess;
+                   if (pos('You', cname) > 0) then begin
                       output(clBlack, cname, n);
                    end;
 
@@ -1490,7 +1504,7 @@ case s of
        cname:= r;
        delete(cname, 1, pos('!', cname));
        delete(cname,  pos(' ', cname), length(cname));
-
+                                       //ShowMessage('5 ' + cname);
        if pos('JOIN', r) > 0 then begin
           //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
           output(clgreen, copy(r, 1, pos('!', r)-1) + ' (' + cname + ')' + ' has joined ' +
@@ -4838,11 +4852,12 @@ begin
 
      while (assigned(net[n])) and (assigned(net[n].conn)) do begin
 
+     {
      if (timer1.Interval = 50) then begin
         while (Assigned(net[n])) do inc(n);
         dec(n);
      end;
-
+     }
      net[n].loop;
      //if assigned(net[2]) then ShowMessage(inttostr(n));
 
