@@ -1136,8 +1136,8 @@ case s of
 
         // Searching channel
         if (pos('#', cname) > 0) then begin
-           //ShowMessage(r);
-           m:= fmainc.cnode(2,0,0,cname);
+           //ShowMessage(r + sLineBreak + mess);
+           m:= fmainc.cnode(2,0,0,inttostr(num) + cname);
            if (m >= 0) then if (assigned(m0[m])) then n:= m;
            //ShowMessage('0: ' + inttostr(n));
         end;
@@ -1456,17 +1456,18 @@ case s of
              end;
        end;
        m:= fmainc.cnode(5, m, 0, '');
-       if not assigned(m0[m]) then n:= fmainc.cnode(5,n,0,'');
+       n:= fmainc.cnode(5,n,0,'');
                //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
+       //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
-       if (m < fmainc.TreeView1.Items.Count) then if (assigned(m0[m])) then n:= m;
+       if (m >= 0) and (m < 21) then if (assigned(m0[m])) then n:= m;
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
-       //ShowMessage('4 ' + inttostr(m));
+       //if (assigned(m0[2])) or (assigned(m0[3])) then ShowMessage('s ' + inttostr(m));
 
-       if (m < fmainc.TreeView1.Items.Count) then if assigned(m0[m]) then
+       if (m >= 0) and (m < 21) then if assigned(m0[m]) then
        if assigned(lb0[m]) then begin
           lb0[m].Clear;
           lab0[m].Caption:= '';
@@ -4369,11 +4370,13 @@ begin
 
      // Deleting components on deleted page
      conn:= cnode(5,rc,0, '');
-     //ShowMessage(inttostr(conn));
-     freeandnil(lab0[conn]); freeandnil(gb0[conn]);
-     freeandnil(lb0[conn]);
-     freeandnil(ed0[conn]);freeandnil(m0[conn]);
-     freeandnil(splt[conn]);
+     if assigned(lb0[conn]) then begin
+           freeandnil(lab0[conn]); freeandnil(gb0[conn]);
+           freeandnil(lb0[conn]);
+           FreeAndNil(splt[conn]);
+     end;
+        freeandnil(ed0[conn]);freeandnil(m0[conn]);
+        //if not assigned(m0[conn]) then ShowMessage('5: ' + inttostr(conn));
 
      // Deleting chan and node
      //cnode(1, rc, 0, '');
@@ -4482,7 +4485,7 @@ begin
      n:= rc;
      while (n <= maxnode) do begin // OjO
            p:= cnode(5,n,0, '');
-           //ShowMessage('5 ' + inttostr(n));
+           //ShowMessage('5 ' + inttostr(p));
               if assigned(lb0[p]) then begin
               FreeAndNil(splt[p]);
               FreeAndNil(lab0[p]);
