@@ -317,7 +317,7 @@ begin
               if univ('File exists, do you want to overwrite it?', '', 1, savem) = false then
                  exe:= false else DeleteFile(path);
 
-                 StringGrid1.SaveToCSVFile(path,',', true);
+                 StringGrid1.SaveToCSVFile(path,char(9), true);
 
      end; // sdd.execute
      end; // while exe = false

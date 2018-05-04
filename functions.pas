@@ -112,11 +112,14 @@ begin
      end;
 
      // Message
+     if (pos(': :', r) > 0) then tmp:= ':' else
      if r[1] = '#' then tmp:= copy(r, pos(' ',r)+1, length(r)) else
         tmp:= copy(r, 1, pos(':',r)-1);
 
-     // r
-     r:= 'TOPIC ' + chan + ' :' + tmp;
+     if tmp = ':' then r:= 'TOPIC ' + chan + ' :' else
+     if tmp <> '' then
+        r:= 'TOPIC ' + chan + ' :' + tmp else
+        r:= 'TOPIC ' + chan;
      end;
 
      // Mode
