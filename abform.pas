@@ -18,9 +18,9 @@ type
       abb: TButton;
       clb: TButton;
       email: TLabel;
-      Heading1: TLabel;
       Heading2: TLabel;
       http: TLabel;
+      Image1: TImage;
       liclic: TLabel;
       licb: TButton;
       Memo1: TMemo;
@@ -54,7 +54,6 @@ implementation
 
 procedure Tabf.FormActivate(Sender: TObject);
 begin
-     Heading1.Caption:= Application.Title;
      //http.Caption:= 'http://kelvin.net46.net';
 end;
 
