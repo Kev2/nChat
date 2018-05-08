@@ -1110,7 +1110,7 @@ begin
      if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
      if (pos(nick, copy(r, 1, pos('!',r)-1)) > 0) and ( (pos('PART ', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4;
-     if (pos(nick, copy(r, 1, pos('!',r)-1)) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) then s:= 5;
+     if (pos(nick, copy(r, 1, pos('!',r)-1)) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) and (pos('PART:', r) = 0) then s:= 5;
      if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
      if (pos('NOTICE ', r) > 0) and (pos('NOTICE:', r) = 0) and (pos('!', r) > 0) then s:= 7;
      //if (pos('QUERY', r) > 0) and (pos(nick, r) > 0) then s:= 7;
