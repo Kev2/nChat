@@ -462,7 +462,7 @@ begin
 
      //if not (sender = rconm) then
      repeat
-           if pos('(', TreeView1.Items[n].Text) = 0 then begin
+           if (pos('(', TreeView1.Items[n].Text) = 0) and (pos('#', TreeView1.Items[n].Text) > 0) then begin
            TreeView1.Items[n].Text:= '(' + TreeView1.Items[n].Text + ')';
            m0[n].Append('Disconnected');
            end;
@@ -1013,9 +1013,11 @@ procedure connex.recstatus(r: string);
 var
           test:  TextFile;
           room:  boolean = false;
-          n:     smallint = 0;
-          m:     smallint = 0;
-          s:     smallint = 0;
+          n:     smallint = 0; // Initial node
+          m:     smallint = 0; // Final node
+          s:     smallint = 0; // Case
+          x1:    smallint = 0; // tmp
+          x2:    smallint = 0; // tmp
           cname: string = ''; // Channel name
           mess:  string;      // Message
           bak,tmp:   string;
@@ -1033,7 +1035,7 @@ begin
         end;
         }
            //if assigned(net[num+1]) then ShowMessage(inttostr(num) + sLineBreak + net[num+1].server);
-           n:= fmainc.cnode(2,0,0,inttostr(num) + server);
+           //n:= fmainc.cnode(2,0,0,inttostr(num) + server);
            //if (n < 0) and (n > 20) then ShowMessage('0: ' + inttostr(n));
            //ShowMessage(m0[n].nnick);
 
@@ -1151,9 +1153,23 @@ begin
      end;
 
      if cname = '' then cname:= inttostr(num) + server;
-     //if (pos('#', cname) > 0) then ShowMessage(cname);
-     //if (pos('JOIN',r) > 0) then ShowMessage(cname);
-     //if pos('topic is set', mess) > 0 then ShowMessage('mess ' + r);
+
+     // Getting Tree bounds
+     n:= 0;
+     while (fmainc.TreeView1.Items[n].Index < num) do begin
+           //ShowMessage(fmainc.TreeView1.Items[n].Text);
+           if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
+           n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
+           //while (n <> m0[n].node) do inc(n);
+     end;
+     m:= -1;
+
+     //if s = 5 then ShowMessage('0 ' + inttostr(n));
+     if fmainc.TreeView1.Items[n].HasChildren then m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex;
+
+     {m:= fmainc.cnode(5, m, 0, '');
+     n:= fmainc.cnode(5,n,0,'');
+     }
 
      {
      // Getting the right memo
@@ -1208,21 +1224,19 @@ case s of
      1: Begin // Join
        // Create room tab
        if (pos('#', cname) = 0) then cname:= mess;
-       //ShowMessage('J: '+ cname + '_');
+       //ShowMessage('J: '+ inttostr(n) + sLineBreak + inttostr(m) + sLineBreak + cname);
+       x1:= n;
 
        // Searching for created room
-       //if num > 0 then
-       n:= 0;
-       while (fmainc.TreeView1.Items[n].Index < num) do
-             n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
+       //n = Initial node
        if (fmainc.TreeView1.Items[n].HasChildren) then
-          while (n < fmainc.TreeView1.Items.Count) do begin
-                if ('(' + copy(cname, length(inttostr(num))+1, length(cname)) + ')' = fmainc.TreeView1.Items[n].Text) then begin
+          while (x1 <= m) do begin
+                if ('(' + copy(cname, length(inttostr(num))+1, length(cname)) + ')' = fmainc.TreeView1.Items[x1].Text) then begin
                    room:= true;
-                   fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, '(', '', [rfReplaceAll]);
-                   fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, ')', '', [rfReplaceAll]);
+                   fmainc.TreeView1.Items[x1].Text:= StringReplace(fmainc.TreeView1.Items[x1].Text, '(', '', [rfReplaceAll]);
+                   fmainc.TreeView1.Items[x1].Text:= StringReplace(fmainc.TreeView1.Items[x1].Text, ')', '', [rfReplaceAll]);
                 end;
-       inc(n);
+       inc(x1);
        end;
 
        if room = false then
@@ -1231,6 +1245,7 @@ case s of
        //chan[fmainc.TreeView1.Selected.AbsoluteIndex]:= server + '_' + copy(r, pos('#', r), length(r));
 
        // Getting the right memo
+       //ShowMessage('hoa cname: ' + inttostr(n) + ' cname ' + cname + ' r: ' + r);
        n:= fmainc.cnode(2,0,0, cname);
        //ShowMessage('hoa cname: ' + inttostr(n) + ' ' + cname + ' r: ' + r);
 
@@ -1334,17 +1349,6 @@ case s of
              else
                  cname:= copy(r, 1, pos('!', r)-1) + ' is now known as ' + mess;
 
-
-       n:= 0;
-       m:= 0;
-
-       while (fmainc.TreeView1.Items[n].Index < num) do
-             n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
-             // n.index +1 = connection
-
-             if fmainc.TreeView1.Items[n].GetLastChild <> nil then
-                m:= fmainc.TreeView1.Items[n].GetLastChild.AbsoluteIndex else m:= n;
-
        if (pos('You', cname) = 1) then begin
           net[fmainc.TreeView1.Items[n].Index +1].nick:= mess;
           //output(clBlack, cname, fmainc.cnode(5,n,0,''));
@@ -1408,7 +1412,7 @@ case s of
           if (pos('#', r) = 0) or (pos('#', r) < pos('!', r)) then
              cname:= copy(r, 1, pos('!', r)-1); // else
 
-                                                 //ShowMessage('3 ' + cname + '_');
+          //ShowMessage('3 ' + inttostr(n) + sLineBreak + inttostr(m));
           //if cname = '' then ShowMessage('WARNING cname is null ' + cname + '_');
           {
           cname:= copy(r, pos('#', r), length(r));
@@ -1428,9 +1432,9 @@ case s of
           if (pos('#', cname) = 0) then begin
           s:= 0;
           if fmainc.TreeView1.Items.Count > 1 then
-          while (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) and (s < fmainc.TreeView1.Items.Count-1) do inc(s);
+          while (lowercase(fmainc.TreeView1.Items.Item[n].Text) <> lowercase(cname)) and (n < m) do inc(n);
                 //ShowMessage(fmainc.TreeView1.Items.Item[s].Text);
-                if (lowercase(fmainc.TreeView1.Items.Item[s].Text) <> lowercase(cname)) then begin
+                if (lowercase(fmainc.TreeView1.Items.Item[n].Text) <> lowercase(cname)) then begin
                 fmainc.txp(num, cname, nick, false, true, false);
                 //cname:= inttostr(num) + cname;
                 {
@@ -1534,7 +1538,6 @@ case s of
     end;
 
     5: Begin // JOIN PART QUIT
-       n:= 0;
        //5 Solloo!Sollo@AN-6BC70F2B.fibertel.com.ar PART #nvz
 
        if (pos('QUIT',r) = 0) then
@@ -1578,21 +1581,24 @@ case s of
        //n:= 0;
        if (pos('QUIT', r) > 0) then
 
-          while (n < length(chanod)) do begin
+          while (n <= m) do begin
+                s:= fmainc.cnode(5, n, 0, '');
 
-                if (assigned(lb0[n])) then
-                if fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n) = 'true' then begin
+                if (fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1)) or
+                   ( (assigned(lb0[n])) and
+                   (fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n) = 'true') ) then begin
 
-                fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
+                fmainc.createlog(num, copy(m0[s].chan, pos('#', m0[s].chan), length(m0[s].chan)));
 
                 //ShowMessage('quit nor_' + mess);
                 if length(mess) > 0 then
-                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit (' + mess + ')', n) else
-                                  output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit', n);
+                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit (' + mess + ')', s) else
+                                  output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit', s);
 
                 //gnicks(chan[n]);
                 //lb0[n].Clear;
-                fmainc.lbchange(copy(r, 1, pos('!', r)-1), '', 1, n, num+1);
+                if (assigned(lb0[n])) then
+                fmainc.lbchange(copy(r, 1, pos('!', r)-1), '', 1, s, num+1);
                 closefile(t);
                 //m0[n].lines.LoadFromFile(log[n]);
                 end;
@@ -2091,7 +2097,7 @@ begin
         r:= 'TNTease: ♪ღ♪░H░A░P░P░Y░ B░I░R░T░H░D░A░Y░░♪ღ♪';
         r:= 'JustAKiss: 😀☺';
         r:= 'JustaKiss: ⛄';
-
+     }
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2103,20 +2109,21 @@ begin
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     //r:= '4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
+     r:= char(3) +'4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
      //r:= char(3) + '2 did ' + char(3) + '6â' + char(8)+char(9)+char(3)+'6,6 ' + char(3) + '0,0 ' + char(3)+'6,1Kevster'+ char(3) + '0,0 '+ char(3)+ '6,6 ' + char(15) + char(3) + '6â' + char(8)+char(9) + char(15)+char(3) + '2 go out smoking?';
      //r:= 'Topic for #moon is: ' + char(15) + char(2) + char(29) + char(3) + '7~~~Very good May Day weekend to all~~~';
-     r:= ':rajaniemi.freenode.net 333 Sollo #lazarus-ide jesusrmx!~jesusrmx@187.134.129.53 1522000251';
-     r:= gtopic(r);
+     //r:= char(3) + '4,14<' + char(3) + '5,15H' + char(3) + '4,14>' + char(3) + '9,14<' + char(3) + '3,15A'  + char(3) + '9,14>' + char(3) + '12,14<' + char(3) + '2,15P' + char(3) + '12,14>' + char(3) + '13,14<' + char(3) + '6,15P' + char(3) + '13,14>' + char(3) + '8,14<' + char(3) + '7,15Y' + char(3) + '8,14>' + char(3) + '4,14<' + char(3) + '5,15B' + char(3) + '4,14>' + char(3) + '9<' + char(3) + '3,15I' + char(3) + '9,14>' + char(3) + '12<' + char(3) + '2,15R' + char(3) + '12,14>' + char(3) + '13<' + char(3) + '6,15T' + char(3) + '13,14>' + char(3) + '8<' + char(3) + '7,15H' + char(3) + '8,14>' + char(3) + '4<' + char(3) + '5,15D' + char(3) + '4,14>' + char(3) + '9<' + char(3) + '3,15A' + char(3) + '9,14>' + char(3) + '12<' + char(3) + '2,15Y' + char(3) + '12,14> ' + char(3) + '13<' + char(3) + '6,15 to colin-carpenter ' + char(3) + '13,14>';
+     //r:= char(3) + '4*`' + char(3) + '3_' + char(3) + '`~' + char(3) + '6;.' + char(3) + '8`,' + char(3) + '9*,<' + char(3) + '11+''.' + char(3) + '12".*' + char(3) + '13,''.*';
+     //r:= char(3) + '2.*'':' + char(3) + '3.;~' + char(3) +'4+,''' + char(3) + '5*`.''' + char(3) + '6.*~`''.' + char(3) + '7,;''' + char(3) + '8*.';
+     //r:= gtopic(r);
      //c:= clgreen;
      end;
-
 
      if (pos('h2', r) > 0) then begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-     }
+
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2288,7 +2295,7 @@ begin
                         end;
                   //ShowMessage('col' + k);
               tmp:= k + tmp;
-              //if k = '' then ShowMessage('col1 ' + k);
+              //if k <> '' then ShowMessage('col1 ' + k);
            end;
 
            // Getting hyperlink
@@ -2322,28 +2329,44 @@ begin
            //ShowMessage(BStrings[l1] + sLineBreak + lines[l])
            end;
 
-           c:= 1;
-           // Counting published characters
-           len:= 0;
-           while (c < length(tmp)) do begin
-                 if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
-           inc(c);
-           end;
-           len:= length(tmp) - len;
+        // Starting word wrapping
 
-           // Starting word wrapping
-           if (length(tmp) > w) then begin
-              c:= w;
-
+        // Counting published characters
+        len:= 0;
+        c:= length(tmp);
+        while (c < length(tmp)) do begin
+              if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
+              dec(c);
+        end;
+        len:= length(tmp) - len;
 
            // Word wrapping for lines and hypertext
+           c:= w;
               while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                    and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 1) do dec(c);
+                    and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
 
+           if c = 0 then c:= w;
+
+           if c < w then
+           if (len > w) then begin
+              c:= w;
               tmp2:= tmp;
 
+              // Counting published characters
+              len:= 0;
+              c:= length(tmp);
+              while (c < length(tmp)) do begin
+                    if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
+                    dec(c);
+              end;
+              len:= length(tmp2) - len;
 
-                 {
+              // Word wrapping for lines and hypertext
+              c:= w;
+                 while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
+                       and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
+
+              {
                  // Removing char(3)
                  tmp2:= tmp;
                  if (pos(char(3), tmp2) = 1) then begin
@@ -2686,6 +2709,8 @@ begin
                     if tmp <> '' then
                        k:= k + ',' + tmp;
                  end;
+           //if (pos('6,15', k) > 0) then ShowMessage(k);
+
 
            if not (k[2] in ['0'..'9']) then begin
               bco:= clnone;
@@ -4840,12 +4865,14 @@ begin
      if Notebook1.Page[Notebook1.PageIndex].ControlCount > 1 then
         //ShowMessage(inttostr(Notebook1.Page[TreeView1.Selected.AbsoluteIndex].ControlCount));
      while (n < Notebook1.Page[Notebook1.PageIndex].ControlCount) do begin
-           if Notebook1.Page[Notebook1.PageIndex].Controls[n] is tedit then
+           if (Notebook1.Page[Notebook1.PageIndex].Controls[n] is tedit) and
+              (Notebook1.Page[Notebook1.PageIndex].IsVisible) then
               //if assigned(Notebook1.page[Notebook1.PageIndex].Controls[n]) then
               tedit(Notebook1.page[Notebook1.PageIndex].Controls[n]).setfocus;
            //ShowMessage('count ' + inttostr(Notebook1.PageCount));
      inc(n);
      end;
+
 end;
 
 procedure Tfmainc.mstatusChange(Sender: TObject);
@@ -4926,5 +4953,6 @@ end;
 //m1:= nil;
 
 end.
+
 
 
