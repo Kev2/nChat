@@ -253,7 +253,7 @@ end;
 procedure connex.connect(co: smallint; createnode: boolean);
 var
    n:    smallint = 0; // Node absolute index to get the memo for MOTD
-   m:    smallint;
+   m:    smallint = 0;
    r:    string;
    tmp:  string;
    mess: string;
@@ -274,6 +274,16 @@ begin
              fmainc.txp(co, server, fserv.nick1.Caption, true, true, true);
      end;
 
+     // Getting TreeNode and Getting MOTD
+
+        while (fmainc.TreeView1.Items[n].Index < num) do begin
+              n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
+        end;
+        //if fmainc.TreeView1.Items.Count = 2 then n:= 1;
+        fmainc.TreeView1.Items[n].Selected:= true;
+
+        n:= fmainc.cnode(5,n,0,'');
+
      if fserv.nick1.Caption <> '' then
         if not fserv.globalc.Checked then
            nick:= fserv.nick1.Caption else
@@ -284,15 +294,21 @@ begin
      //Tloop.Create(true); // Connecting
      //Tloop.Start;
      conn.SetRemoteSin('','');
-     while (conn.GetRemoteSinIP = '') do begin
-           conn.Connect(servadd, fserv.Port.Caption);
+
+     if (conn.GetRemoteSinIP = '') then begin
+        conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
-           if (conn.LastError <> 0) then begin
-              //ShowMessage('connex: ' + conn.GetRemoteSinIP);
-              conn.SetRemoteSin('','');
+           while not (conn.CanRead(2000)) and (m < 5) do begin
+           //ShowMessage('connex: ' + inttostr(m));
+              if m = 5 then begin
+              conn.CloseSocket;
+              //conn:= TTCPBlockSocket.Create;
               //if conn.LastErrorDesc <> '' then
            end;
+           inc(m);
+           end;
+     if m = 5 then m0[n].Append(server + ' is unreachable');
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
@@ -318,26 +334,16 @@ begin
 
         // Deleting parenthesis
         if createnode = false then begin
-            while (fmainc.TreeView1.Items[n].Index < num) do
-                  n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
+            while (fmainc.TreeView1.Items[m].Index < num) do
+                  m:= fmainc.TreeView1.Items[m].GetNextSibling.AbsoluteIndex;
 
-              fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, '(', '', [rfReplaceAll]);
-              fmainc.TreeView1.Items[n].Text:= StringReplace(fmainc.TreeView1.Items[n].Text, ')', '', [rfReplaceAll]);
-        server:= fmainc.TreeView1.Items[n].Text;
+              fmainc.TreeView1.Items[m].Text:= StringReplace(fmainc.TreeView1.Items[m].Text, '(', '', [rfReplaceAll]);
+              fmainc.TreeView1.Items[m].Text:= StringReplace(fmainc.TreeView1.Items[m].Text, ')', '', [rfReplaceAll]);
+        server:= fmainc.TreeView1.Items[m].Text;
         end;
-        n:= 0;
 
+   if conn.SocksResponse then output(clnone, 'Connected... now logging in', n);
 
-// Getting TreeNode and Getting MOTD
-
-   while (fmainc.TreeView1.Items[n].Index < num) do begin
-         n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
-   end;
-   //if fmainc.TreeView1.Items.Count = 2 then n:= 1;
-
-   if conn.GetRemoteSinIP <> '' then output(clnone, 'Connected... now logging in', n);
-
-   fmainc.TreeView1.Items[n].Selected:= true;
    //m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
    //fmainc.createlog(co, server);
 
@@ -431,7 +437,8 @@ end;
 
 procedure connex.reconn;
 begin
-     //conn.AbortSocket;
+     conn.CloseSocket;
+     conn.SetRemoteSin('','');
      num:= num -1;
      connect(num, false);
 end;
@@ -1049,12 +1056,17 @@ begin
      end;
      }
 
-     if (pos(':', r) = 1) then
-     delete(r, 1, 1); // First colon
+     if (pos(':', r) = 1) or (pos(' :', r) = 1) then
+     delete(r, 1, pos(':', r)); // First colon
 
-     if (pos('PING ', r) > 0) then begin
+     try
+        n:= strtoint(r);
+     except
+     end;
+
+     if (pos('PING ', r) > 0) or (n <> 0) then begin
         conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
-        //ShowMessage('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
+        //ShowMessage('PONG ' + copy (r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
         r:= '';
      end;
 
@@ -1156,8 +1168,9 @@ begin
 
      // Getting Tree bounds
      n:= 0;
+     //fmainc.Label1.Caption:= 'num ' + inttostr(num);
      while (fmainc.TreeView1.Items[n].Index < num) do begin
-           //ShowMessage(fmainc.TreeView1.Items[n].Text);
+           //fmainc.label1.Caption:= fmainc.TreeView1.Items[n].Text;
            if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
            n:= fmainc.TreeView1.Items[n].GetNextSibling.AbsoluteIndex;
            //while (n <> m0[n].node) do inc(n);
@@ -1197,6 +1210,9 @@ case s of
         fmainc.Timer1.Interval:= 2000;
 
         if (r <> '') or (mess <> '') then begin
+
+        n:= fmainc.cnode(5,n,0,'');
+        //ShowMessage('0 ' + inttostr(n) + sLineBreak + inttostr(m));
 
         // Searching channel
         if (pos('#', cname) > 0) then begin
@@ -1585,9 +1601,10 @@ case s of
                 s:= fmainc.cnode(5, n, 0, '');
 
                 if (fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1)) or
-                   ( (assigned(lb0[n])) and
-                   (fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, n) = 'true') ) then begin
+                   ( (assigned(lb0[s])) and
+                   (fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, s) = 'true') ) then begin
 
+                //ShowMessage('true ' + inttostr(s));
                 fmainc.createlog(num, copy(m0[s].chan, pos('#', m0[s].chan), length(m0[s].chan)));
 
                 //ShowMessage('quit nor_' + mess);
@@ -2097,7 +2114,7 @@ begin
         r:= 'TNTease: ♪ღ♪░H░A░P░P░Y░ B░I░R░T░H░D░A░Y░░♪ღ♪';
         r:= 'JustAKiss: 😀☺';
         r:= 'JustaKiss: ⛄';
-     }
+
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2116,6 +2133,7 @@ begin
      //r:= char(3) + '4*`' + char(3) + '3_' + char(3) + '`~' + char(3) + '6;.' + char(3) + '8`,' + char(3) + '9*,<' + char(3) + '11+''.' + char(3) + '12".*' + char(3) + '13,''.*';
      //r:= char(3) + '2.*'':' + char(3) + '3.;~' + char(3) +'4+,''' + char(3) + '5*`.''' + char(3) + '6.*~`''.' + char(3) + '7,;''' + char(3) + '8*.';
      //r:= gtopic(r);
+     //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
      //c:= clgreen;
      end;
 
@@ -2123,7 +2141,7 @@ begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-
+     }
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2180,12 +2198,12 @@ begin
            //ShowMessage('tre');
            m0[o].last:= m0[o].Lines.Count -1;
         shw:= false;
+        m0[o].Modified:= true;
+        fmainc.TreeView1.Refresh;
      end; // else m0[o].last:= 0;
      //if assigned(m0[1]) then (m0[1].Lines.Add(inttostr(m0[1].TopLine)));
 
      // If it is modified and notebook page is not visible then color the tree item
-     m0[o].Modified:= true;
-     fmainc.TreeView1.Refresh;
 
      r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
      m0[o].procstring(r); // To file
@@ -2233,7 +2251,8 @@ begin
      l:= Lines.Count-1;
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
-     w:=   Width div (font.Height div 2) - 25; // Nimbus
+     //w:=   Width div (font.Height div 2) - 25; // Nimbus
+     w:=   Width div (font.Height div 2) -28; // Monospace
      //if lines.Count > 1 then
 
      //Searching for the original string to not process all the lines
@@ -2334,35 +2353,27 @@ begin
         // Counting published characters
         len:= 0;
         c:= length(tmp);
-        while (c < length(tmp)) do begin
+        while (c > 0) do begin
               if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
               dec(c);
         end;
         len:= length(tmp) - len;
 
-           // Word wrapping for lines and hypertext
-           c:= w;
-              while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                    and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
+        // Word wrapping for lines and hypertext
+        c:= length(tmp);
+           while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
+                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
 
            if c = 0 then c:= w;
 
-           if c < w then
+           //if c > w then
            if (len > w) then begin
+              //ShowMessage(inttostr(w));
               c:= w;
               tmp2:= tmp;
 
-              // Counting published characters
-              len:= 0;
-              c:= length(tmp);
-              while (c < length(tmp)) do begin
-                    if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
-                    dec(c);
-              end;
-              len:= length(tmp2) - len;
-
               // Word wrapping for lines and hypertext
-              c:= w;
+              //c:= length(tmp);
                  while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
                        and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
 
@@ -3200,9 +3211,9 @@ begin
       inc(s);
       end;
       }
-                                        //ShowMessage('hey 2');
+      //ShowMessage('txp: ' + inttostr(i));
       // Select created node except when you get a private message
-      if TreeView1.Items.Count > 1 then
+      if TreeView1.Items.Count > 0 then
       if r = true then
       TreeView1.items.GetLastNode.Selected:= true
       else if go = true then
@@ -3212,7 +3223,7 @@ begin
 
       //ShowMessage(inttostr(TreeView1.Items.GetLastNode.AbsoluteIndex));
 
-      createlog(con, TreeView1.Selected.Text);
+      //createlog(con, TreeView1.Selected.Text);
       //if length(com) = 1 then
       //SetLength(com, TreeView1.Items.Count, 20);
       //ed0[TreeView1.Selected.AbsoluteIndex].SetFocus;
@@ -3278,6 +3289,7 @@ begin
      //lb0[a].Left:= 783;
      lb0[a].Width:= 190;
      //m0[a].Color:= RGBToColor(255,251,240);
+     font.Name:= 'Monospace';
      lb0[a].Font.Size:= 8;
      lb0[a].Style:= lbOwnerDrawFixed;
      lb0[a].OnMouseUp:=  @lbmouseup;
@@ -3338,9 +3350,10 @@ begin
         Ubuntu Mono}
 
           //Name:= 'Ubuntu Mono';
-          name:= 'Nimbus Mono L';
+          //name:= 'Nimbus Mono L';
+          name:= 'Monospace';
           //CanUTF8;
-          height:= 12;
+          height:= 10;
           Color:= clBlack;
           Style:= [];
           //BkColor:= clWhite;
@@ -3521,9 +3534,10 @@ begin
      // adobe-courier-medium-r-normal-*-*-100-*-*-m-*-iso10646-1
      with m0[a].Font do begin
           //Name:= 'Ubuntu Mono';
-          name:= 'Nimbus Mono L';
+          //name:= 'Nimbus Mono L';
+          name:= 'Monospace';
           //CanUTF8;
-          Height:= 12;
+          Height:= 10;
           Color:= clBlack;
           Style:= [];
      end;
@@ -4421,7 +4435,7 @@ begin
       if Button = mbRight then
          if TreeView1.GetNodeAt(x, y) <> nil then begin
          rc:= (TreeView1.GetNodeAt(x, y).AbsoluteIndex);
-         treepop.PopUp;
+         if TreeView1.Items.Count > 1 then treepop.PopUp;
       end;
 end;
 
@@ -4618,7 +4632,8 @@ begin
 
      // Deleting Tree Nodes
      n:= rc;
-     if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true else Items[rc].Selected:= true;
+     if Items[rc].GetNextSibling <> nil then Items[rc].GetNextSibling.Selected:= true else
+        if (rc > 0) then Items[rc-1].Selected:= true;
      //num:= Items.Item[n].Index; // Saving index to get the connection
      //TreeView1.Items.Item[n].Text:= '(' + TreeView1.Items.Item[n].Text + ')';
      TreeView1.Items.Item[n].Delete;
@@ -4836,7 +4851,7 @@ begin
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
-     if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
@@ -4876,6 +4891,7 @@ begin
 end;
 
 procedure Tfmainc.mstatusChange(Sender: TObject);
+{This procedure is not used anymore}
 var
    arr:    smallint = 0;
    n:      smallint = 0;
