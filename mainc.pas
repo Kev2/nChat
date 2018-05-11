@@ -1377,8 +1377,12 @@ case s of
                    //s:= strtoint(copy(m0[s].Name, pos('_', m0[s].Name)+1, length(m0[s].Name)));
                    // Changing nick in tree
 
-                if fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1) then
+                if fmainc.TreeView1.Items[n].Text = copy(r, 1, pos('!', r)-1) then begin
                    fmainc.TreeView1.Items[n].Text := mess;
+                   fmainc.cnode(9,0,0, m0[s].chan + '/' + inttostr(num) + mess);
+                   m0[s].chan:= inttostr(num) + mess;
+                end;
+
 
                    fmainc.createlog(num, copy(m0[s].chan, length(inttostr(num))+1,length(m0[s].chan)));
 
@@ -1444,9 +1448,9 @@ case s of
           end;
           }
           mess:= copy(r, 1, pos('!', r) -1) + ': '  + mess; // nick: message
+          //ShowMessage('cname: ' + cname + ' chan: ' + m0[n].chan + sLineBreak + inttostr(n) + ' ' + inttostr(m));
 
           if (pos('#', cname) = 0) then begin
-          s:= 0;
           if fmainc.TreeView1.Items.Count > 1 then
           while (lowercase(fmainc.TreeView1.Items.Item[n].Text) <> lowercase(cname)) and (n < m) do inc(n);
                 //ShowMessage(fmainc.TreeView1.Items.Item[s].Text);
@@ -1462,13 +1466,12 @@ case s of
                 end;
           end;
 
-      //ShowMessage('cname: ' + cname + ' chan: ' + m0[n].chan);
-
       //if (pos('#',cname) = 0) then
-         cname:= inttostr(num) + cname;
+      //cname:= inttostr(num) + cname;
 
       // Getting the right memo
-      n:= fmainc.cnode(2,0,0, cname);
+      n:= fmainc.cnode(2,0,0, inttostr(num) + cname);
+      //ShowMessage(inttostr(num) + cname);
 
       delete(cname, 1, 1);
       fmainc.createlog(num, cname);
@@ -1814,6 +1817,7 @@ case s of
               //ShowMessage(r + sLineBreak + mess);
        // Getting user
           // mcclane!* MODE user +i
+          //irc-can.icq-chat.com MODE StrangerKev -x
        if r[length(r)] = ' ' then delete(r, length(r), 1);
        tmp:= r;
        while (tmp[length(tmp)] = ' ') do delete(tmp, length(tmp), 1);
@@ -1929,13 +1933,18 @@ case s of
              output(clMaroon, mess, n);
 
        end else begin // Any channel mode or user mode
-                          //ShowMessage(r +sLineBreak + 'tmp: ' + tmp + sLineBreak + 'mess: ' + mess);
+       //ShowMessage(r +sLineBreak + 'tmp: ' + tmp + sLineBreak + 'mess: ' + mess + sLineBreak + 'cname: ' + cname);
+       //irc-can.icq-chat.com MODE StrangerKev -x
        r:= r + ' ' + mess;
 
        //tmp:= r;
        // Making tmp = nick
        if (pos('!', r) > 0) then
-          tmp:= copy(r, 1, pos('!', r)-1); // else tmp:= copy(tmp, 1, pos(' ', tmp)-1);
+          tmp:= copy(r, 1, pos('!', r)-1) else begin
+                                               tmp:= r;
+                                               delete(tmp, 1, pos('MODE ', tmp)+4);
+                                               delete(tmp, pos(' ', tmp), length(tmp));
+                                               end;
 
        if (pos('+',r) > 0) or (pos('-',r) > 0) or (pos('mode', lowercase(r)) > 0) then begin
           mess:= r;
@@ -2252,7 +2261,7 @@ begin
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
      //w:=   Width div (font.Height div 2) - 25; // Nimbus
-     w:=   Width div (font.Height div 2) -28; // Monospace
+     w:=   Width div (font.Height div 2) -33; // Monospace
      //if lines.Count > 1 then
 
      //Searching for the original string to not process all the lines
@@ -2376,6 +2385,7 @@ begin
               //c:= length(tmp);
                  while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
                        and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
+              c:= c - len;
 
               {
                  // Removing char(3)
@@ -2618,15 +2628,28 @@ begin
         if (pos('bkcol', BStrings[BStrings.Count-1]) = 1) then begin //ShowMessage(BStrings[BStrings.Count-1]);
            k:= copy(BStrings[BStrings.Count-1], 6, pos('-', BStrings[BStrings.Count-1])-6);
            lines[l]:= k + lines[l];
+           //ShowMessage(k);
         end;
 
      // Multiline (decreases l to not process all the lines)
-     if (app) and (lines.Count > 0) then begin
-        l:= Lines.Count-1; // Last line
+     if (app) and (lines.Count > 1) then begin
+        //ShowMessage(lines[l] + '_');
+
         if (pos('bkcol', BStrings[bl]) = 1) then
-        while (pos(copy(lines[l], length(k)+1, length(lines[l])), copy(BStrings[bl], pos('-', BStrings[bl])+1, length(lines[l])-length(k)+1)) <> 1 ) and (l > 0) do dec(l) else
-           while (pos(lines[l], BStrings[bl]) <> 1) and (l > 0) do dec(l);
-        //ShowMessage(lines[l] + sLineBreak + BStrings[bl]);
+        while (pos(copy(tmp, length(k)+1, length(tmp)-length(k)+1),
+              copy(BStrings[bl], pos('-', BStrings[bl])+1, length(tmp)-length(k)+1) ) <> 1 ) do begin
+        //ShowMessage(tmp);
+        dec(l);
+        tmp:= lines[l];
+        tmp:= StringReplace(tmp, char(1), '', [rfReplaceAll])
+        end else
+           while (pos(tmp, BStrings[bl]) <> 1) do begin
+           tmp:= lines[l];
+           tmp:= StringReplace(tmp, char(1), '', [rfReplaceAll]);
+
+           dec(l);
+           end;
+           //ShowMessage(lines[l] + sLineBreak + BStrings[bl]);
      end;
 
      if app = false then hl.ClearAllTokens;
@@ -3289,7 +3312,6 @@ begin
      //lb0[a].Left:= 783;
      lb0[a].Width:= 190;
      //m0[a].Color:= RGBToColor(255,251,240);
-     font.Name:= 'Monospace';
      lb0[a].Font.Size:= 8;
      lb0[a].Style:= lbOwnerDrawFixed;
      lb0[a].OnMouseUp:=  @lbmouseup;
@@ -3610,7 +3632,8 @@ function  Tfmainc.cnode(task,nod,ord: smallint; chan: string) :smallint;
  If task = 3 or 4, returns array and node from array position
  If task = 5 given a node, then return the array
  Tasks 6 and 7 are called from closen (delete network)
- If task = 8 then return the node from a given array}
+ If task = 8 then return the node from a given array
+ If task = 9 then change an channel}
 
 var
    n:     smallint = 0;
@@ -3747,6 +3770,11 @@ begin
           8: begin // Returns the node from an array
              for n:= 0 to length(chanod)-1 do
                  if (chanod[n].arr = ord) then result:= chanod[n].node;
+          end;
+
+          9: begin // Changes a channel
+             for n:= 0 to length(chanod)-1 do
+                 if (chanod[n].chan = copy(chan, 1, pos('/', chan)-1) ) then chanod[n].chan:= copy(chan, pos('/', chan)+1, length(chan));
           end;
 
 end; // task
