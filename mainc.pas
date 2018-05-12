@@ -2266,7 +2266,7 @@ begin
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
      //w:=   Width div (font.Height div 2) - 25; // Nimbus
-     w:=   Width div (font.Height div 2) - 28; // Monospace
+     w:=   Width div (font.Height div 2) - 36; // Monospace
      //if lines.Count > 1 then
 
      //Searching for the original string to not process all the lines
@@ -2286,7 +2286,7 @@ begin
      if lines.Count > 0 then
      while (l < Lines.Count) do begin
            tmp:= lines[l];
-           w:=   Width div (font.Height div 2) - 32; // Monospace
+           w:=   Width div (font.Height div 2) - 36; // Monospace
      {
      tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
      if (pos('bkcol', BStrings[l1]) = 1) then
@@ -2401,7 +2401,7 @@ begin
                  and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') ) do dec(c);
             dec(c);
             end;
-            if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
+            if not (tmp[c-1] = ' ') then if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
            //if (assigned(m0[1])) then ShowMessage(copy(tmp, 1, c));
            if c = 1 then c:= w;
 
