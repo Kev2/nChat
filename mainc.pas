@@ -1205,7 +1205,7 @@ begin
 case s of
      0: Begin // MOTD
 
-        if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 100 else
+        if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 50 else
         //if (mess <> '') then fmainc.Timer1.Interval:= 50 else
         fmainc.Timer1.Interval:= 2000;
 
@@ -2126,7 +2126,7 @@ begin
 
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= 'http://hola.net';
@@ -2135,7 +2135,7 @@ begin
      //r:= 'McClane: https://www.google.com.au/search?q=riviera+75+boat&newwindow=1&client=firefox-b&dcr=0&source=lnms&tbm=isch&sa=X&ved=0ahUKEwif-oKBk57aAhXCJpQKHdByAg0Q_AUICigB&biw=1450&bih=697';
      //r:= 'DH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGEDH-BLOWFISH and DH-AES is no longer supported. If you are using any of these, please switch to either PLAIN or ECDSA-NIST256p-CHALLENGE';
      //r:= 'ot!water@2001470:67:866:ae81:ca:7413:4111 PRIVMSG #pastaspalace :The duck escapes.     ·°''°-.,žž.·°''' + char(3);
-     r:= char(3) +'4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
+     //r:= char(3) +'4This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text This a test text ';
      //r:= char(3) + '2 did ' + char(3) + '6â' + char(8)+char(9)+char(3)+'6,6 ' + char(3) + '0,0 ' + char(3)+'6,1Kevster'+ char(3) + '0,0 '+ char(3)+ '6,6 ' + char(15) + char(3) + '6â' + char(8)+char(9) + char(15)+char(3) + '2 go out smoking?';
      //r:= 'Topic for #moon is: ' + char(15) + char(2) + char(29) + char(3) + '7~~~Very good May Day weekend to all~~~';
      //r:= char(3) + '4,14<' + char(3) + '5,15H' + char(3) + '4,14>' + char(3) + '9,14<' + char(3) + '3,15A'  + char(3) + '9,14>' + char(3) + '12,14<' + char(3) + '2,15P' + char(3) + '12,14>' + char(3) + '13,14<' + char(3) + '6,15P' + char(3) + '13,14>' + char(3) + '8,14<' + char(3) + '7,15Y' + char(3) + '8,14>' + char(3) + '4,14<' + char(3) + '5,15B' + char(3) + '4,14>' + char(3) + '9<' + char(3) + '3,15I' + char(3) + '9,14>' + char(3) + '12<' + char(3) + '2,15R' + char(3) + '12,14>' + char(3) + '13<' + char(3) + '6,15T' + char(3) + '13,14>' + char(3) + '8<' + char(3) + '7,15H' + char(3) + '8,14>' + char(3) + '4<' + char(3) + '5,15D' + char(3) + '4,14>' + char(3) + '9<' + char(3) + '3,15A' + char(3) + '9,14>' + char(3) + '12<' + char(3) + '2,15Y' + char(3) + '12,14> ' + char(3) + '13<' + char(3) + '6,15 to colin-carpenter ' + char(3) + '13,14>';
@@ -2143,6 +2143,9 @@ begin
      //r:= char(3) + '2.*'':' + char(3) + '3.;~' + char(3) +'4+,''' + char(3) + '5*`.''' + char(3) + '6.*~`''.' + char(3) + '7,;''' + char(3) + '8*.';
      //r:= gtopic(r);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
+     r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
+     //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
+     //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //c:= clgreen;
      end;
 
@@ -2254,6 +2257,8 @@ var
    r1:                boolean = false;
    col:               boolean = false; // Colored line
    nd:                string = ' ,()[]';     // Hypertext end
+   ec:                string = char(1) + char(2) + char(3) + char(15) + char(31);     // Empty Characters
+   cc:                smallint = 0;    // Counting empty characters
 begin
 
      l1:= BStrings.Count-1;
@@ -2261,7 +2266,7 @@ begin
 
      //w:=   m0[o].Width div (font.Height div 2) -5; // Ubuntu
      //w:=   Width div (font.Height div 2) - 25; // Nimbus
-     w:=   Width div (font.Height div 2) -33; // Monospace
+     w:=   Width div (font.Height div 2) - 28; // Monospace
      //if lines.Count > 1 then
 
      //Searching for the original string to not process all the lines
@@ -2281,7 +2286,7 @@ begin
      if lines.Count > 0 then
      while (l < Lines.Count) do begin
            tmp:= lines[l];
-
+           w:=   Width div (font.Height div 2) - 32; // Monospace
      {
      tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
      if (pos('bkcol', BStrings[l1]) = 1) then
@@ -2357,36 +2362,54 @@ begin
            //ShowMessage(BStrings[l1] + sLineBreak + lines[l])
            end;
 
-        // Starting word wrapping
 
-        // Counting published characters
-        len:= 0;
-        c:= length(tmp);
-        while (c > 0) do begin
-              if (tmp[c] = char(2)) or (tmp[c] = char(3)) or (tmp[c] = char(15)) or (tmp[c] = char(31)) then inc(len);
-              dec(c);
+        // Starting word wrapping
+        // Cleaning text
+        c:= 0;
+        cc:= 0;
+        tmp2:= tmp;
+        while (c <= length(tmp2)) do begin
+
+              k:= '';
+              if (tmp2[c] = char(3)) then begin
+              //Getting colors
+              k:= tmp2[c];
+                  while (tmp2[c+length(k)] in ['0'..'9']) or (tmp2[c+length(k)] = ',') do k:= copy(tmp2, c, length(k)+1);
+                  //while (k[length(k)] = ',') do delete(k, 1, length(k));
+              end;
+              //if k <> '' then ShowMessage(k);
+              if (k <> '') then begin
+                 delete(tmp2, c, length(k));
+                 c:= c - length(k);
+              end;
+              cc:= cc + length(k);
+
+              if (pos(tmp2[c], ec) > 0) and not (tmp2[c] = char(3)) then begin
+                 inc(cc);
+                 delete(tmp2, c, 1);
+                 dec(c);
+              end;
+        inc(c);
         end;
-        len:= length(tmp) - len;
+        if (cc > 0) then w:= w + cc;
+        len:= length(tmp);
 
         // Word wrapping for lines and hypertext
         c:= length(tmp);
-           while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
+            while (c > w) do begin
+                 while (c > 0) and ( not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
+                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') ) do dec(c);
+            dec(c);
+            end;
+            if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
+           //if (assigned(m0[1])) then ShowMessage(copy(tmp, 1, c));
+           if c = 1 then c:= w;
 
-           if c = 0 then c:= w;
-
-           //if c > w then
+           //len:= length(tmp) - len;
            if (len > w) then begin
-              //ShowMessage(inttostr(w));
-              c:= w;
               tmp2:= tmp;
-
-              // Word wrapping for lines and hypertext
-              //c:= length(tmp);
-                 while not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                       and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') and (c > 0) do dec(c);
-              c:= c - len;
-
+              //c:= c - len;
+              //ShowMessage(inttostr(c));
               {
                  // Removing char(3)
                  tmp2:= tmp;
@@ -2428,12 +2451,14 @@ begin
                  //len:= len - length(lines[l]) - length(k);
                  len:= c;
 
+                 // Append
                  if (l < lines.count-1) then begin //and (l+1 < lines.Count) then begin
                     lines.insert(l+1, copy(tmp, c+1, length(tmp)) );
                     //inc(l);
                  end else
                     lines.add(copy(tmp, c+1, length(tmp)) );
-                                //ShowMessage(inttostr(len));
+                 //ShowMessage(inttostr(len));
+
                  {
                  // Adding color;
                  if (pos(k, tmp) > 0) then col:= true;
@@ -2516,7 +2541,7 @@ begin
                              //try
 
                              k1:= copy(tmp2, c, 1);
-                             while ( (tmp2[c+length(k1 )] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') )
+                             while ( (tmp2[c+length(k1)] in ['0'..'9'] ) or (tmp2[c+length(k1)] = ',') )
                                    and (c+length(k1) < length(tmp2))
                                    do k1:= copy(tmp2, c, length(k1)+1);
 
@@ -3013,8 +3038,8 @@ begin
         //CaretY:= y1;
 
 
-     x1:= (x div 7);
-     y1:= (y div (LineHeight) + TopLine) -1;
+     x1:= (x div 6);
+     y1:= (y div (LineHeight) + TopLine)-1;
 
      str:= Lines[y1];
      tmp:= str;
@@ -3029,25 +3054,28 @@ begin
      s:= x1;
      while (pos(str[s], chr) = 0) and (s > 0) do begin
            //ShowMessage(lines[y1]);
-           if (pos(str[s],chr ) = 0) and (s = 1) and (y1 >= 0) then begin
+           if (pos(str[s],chr ) = 0) and (s = 1) and (y1 > 0) then begin
               dec(y1);
               str:= lines[y1];
               s:= length(lines[y1]);
+              //ShowMessage(lines[y1]);
            end;
      dec(s);
      end; // s = space
-     //ShowMessage(inttostr(x1) + ' ' + inttostr(y1) + ' s_' + inttostr(s));
+     //ShowMessage(inttostr(x1) + ' ' + inttostr(y1) + ' s_' + inttostr(s) + sLineBreak + str[s+1]);
 
      // Getting string
      // Searching forward from caret position to find a space or bracket
      e:= x1+1;
      if e < s then e:= e+s;
+     if e > length(str) then e:= s+1;
+     //ShowMessage(str + sLineBreak + inttostr(e));
      //y1:= CaretY;
      while (pos(str[e], chr) = 0) and (str[e] <> '*') do begin
            //if (str[e] = '/') or (str[e] = '%') and (e = x1+1) then e:= s+e;
            //if not (str[e] in ['a'..'z']) and not (str[e] in ['A'..'Z']) then
            if (e = length(str)) then if (pos(str[e], chr) = 0) then if ( (str[e] = '/') or (str[e] = '%') or (str[e] = '=')
-               or (str[e] = '+') )
+              or (str[e] = '+') )
               and (y1 < lines.Count) then begin
               inc(y1);
               str:= str + lines[y1];
@@ -3055,8 +3083,6 @@ begin
            end;
      inc(e);
      end;
-
-
      //if (str[e] <> ' ') then dec(e);
      //ShowMessage('e '+ copy(str, s, e-s));
      //if e < s then e:= s+2;
