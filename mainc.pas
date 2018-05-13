@@ -30,7 +30,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1138,7 +1137,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
                     // Sending to test file
@@ -2374,7 +2373,8 @@ begin
               if (tmp2[c] = char(3)) then begin
               //Getting colors
               k:= tmp2[c];
-                  while (tmp2[c+length(k)] in ['0'..'9']) or (tmp2[c+length(k)] = ',') do k:= copy(tmp2, c, length(k)+1);
+                  while (tmp2[c+length(k)] in ['0'..'9']) or (tmp2[c+length(k)] = ',')
+                        and (c+length(k) < length(tmp2)) do k:= copy(tmp2, c, length(k)+1);
                   //while (k[length(k)] = ',') do delete(k, 1, length(k));
               end;
               //if k <> '' then ShowMessage(k);
@@ -2401,7 +2401,8 @@ begin
                  and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') ) do dec(c);
             dec(c);
             end;
-            if not (tmp[c-1] = ' ') then if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
+            inc(c);
+            if not (tmp[c] = ' ') then if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
            //if (assigned(m0[1])) then ShowMessage(copy(tmp, 1, c));
            if c = 1 then c:= w;
 
