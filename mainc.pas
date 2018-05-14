@@ -30,6 +30,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -1137,7 +1138,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
                     // Sending to test file
@@ -1472,7 +1473,7 @@ case s of
       n:= fmainc.cnode(2,0,0, inttostr(num) + cname);
       //ShowMessage(inttostr(num) + cname);
 
-      delete(cname, 1, 1);
+      //delete(cname, 1, 1);
       fmainc.createlog(num, cname);
 
       //if (pos('Bastian', r) > 0) or (pos('action', lowercase(r)) > 0) then WriteLn(t, r + #13 + mess + #13);
@@ -1749,6 +1750,7 @@ case s of
        //writeln(t, mess);
        output(clgreen, '< ' + cname + ' > ' + mess, n);
        closefile(t);
+       //if not (fmainc.Notebook1.page[m].IsVisible) then
        fmainc.TrayIcon1.Icon:= i;
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
     end;
@@ -1932,6 +1934,7 @@ case s of
              output(clMaroon, mess, n);
 
        end else begin // Any channel mode or user mode
+
        //ShowMessage(r +sLineBreak + 'tmp: ' + tmp + sLineBreak + 'mess: ' + mess + sLineBreak + 'cname: ' + cname);
        //irc-can.icq-chat.com MODE StrangerKev -x
        r:= r + ' ' + mess;
@@ -2111,11 +2114,11 @@ begin
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7aughs ' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7ut ' + char(3) + '5' + char(2) + char(15) + 'L' + char(15) + char(2) + char(3) + '7oud' + char(3);
         r:= char(3) + '7' + char(3) + '5' + char(2) + char(15) + 'O' + char(15) + char(2) + char(3) + '7h ' + char(3) + '5' + char(2) + char(15) + 'M' + char(15) + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + char(15) + 'G' + char(15) + char(2) + char(3) + '7awd' + char(3) + ' glad i dont have it';
         r:= 'Devilish: ' + char(3) + '6' + char(3) + '14' + char(2) + 'W' + char(2) + char(3) + '6elcome ' + char(3) + '14' + char(2) + 'B' + char(3) + '6ack ' + char(3) + 'StrangerKev';
-        r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3);
+        r:= 'Jupiter8: ' + char(3) + '12hey Sherbet - :)' + char(3)+1;
         r:= char(3) + '4' + char(2) + '2018 minus 3 days away If you have anyone that cant join #Chat because of our modes.. please tell him to register his/her nickname and its gonna be fine :D :P For help come to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #helpcome to #help';
         //r:= 'magic dragon: ' + char(3) + '7' + char(3) + '5' + char(2) + 'R' + char(2) + char(3) + '7olling ' + char(3) + '5' + char(2) + 'O' + char(2) + char(3) + '7n ' + char(3) + '5' + char(2) +  'T' + char(2) + char(3) + '7he ' + char(3) + '5' + char(2) + 'F' + char(2) + char(3) + '7loor' + char(3) + '5' + char(2) + 'L' + char(2) + char(3) + '7aughing ' + char(3) + '5' + char(2) + 'M' + char(2) + char(3) + '7y ' + char(3) + '5' + char(2) + 'A' + char(2) + char(3) + '7scii ' + char(3) + '5 ' + char(2) + 'O' + char(2) + char(3) + '7ff' + char(3) + '155';
         //r:= 'Rita: ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12augh ' + char(2) + char(3) + '6,0O' + char(2) + char(3) + '12ut ' + char(2) + char(3) + '6,0L' + char(2) + char(3) + '12oud' + char(3);
-        //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+        r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
         r:= 'DJ_Tease: Now playing on #Radio: ' + char(3) + '14,1[' + char(3) + '15DJ_Tease is playing C+C Music Factory - Things That Make You Go Hmmm..' + char(3) + '14]';
         r:= 'Diane: hands colin-carpenter an ice cold ' + char(3) + '15,15' + char(3) + '14,14' + char(3)+'2,14BUD LIGHT' + char(3) + '14,14' + char(3)+ '15,15, sorry that''s all we got!';
         r:= 'TNTease: *•♪ღ♪*•.¸¸¸.•*¨¨*•.¸¸¸.•*•♪¸.•*¨¨*•.¸¸¸.•*•♪ღ♪•«';
@@ -2145,6 +2148,7 @@ begin
      r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
+     r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
      //c:= clgreen;
      end;
 
@@ -2204,13 +2208,14 @@ begin
      // Making last line <> 0 to paint the marker line if the page is not visible
      //if (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].visible) then shw:= true;
 
-     if not (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].visible) then begin
+     if not (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].IsVisible) then begin
         if shw = true then
            //ShowMessage('tre');
            m0[o].last:= m0[o].Lines.Count -1;
         shw:= false;
         m0[o].Modified:= true;
         fmainc.TreeView1.Refresh;
+
      end; // else m0[o].last:= 0;
      //if assigned(m0[1]) then (m0[1].Lines.Add(inttostr(m0[1].TopLine)));
 
@@ -2749,7 +2754,7 @@ begin
 
            //str:= StringReplace(str, char(3) + ' ', ' ', [rfReplaceAll]);
            k:= copy(str, ch, 1);
-           while ( (str[ch+length(k )] in ['0'..'9'] ) or (str[ch+length(k)] = ',') ) and ((ch + length(k)) < length(str))
+           while ( (str[ch+length(k )] in ['0'..'9'] ) or (str[ch+length(k)] = ',') ) and ((ch + length(k)) <= length(str))
                  do k:= copy(str, ch, length(k)+1);
                  while( k[length(k)] = ',' ) do delete(k, length(k), 1);
                  while(pos(',,', k) > 0) do k:= StringReplace(k, ',,',',',[rfReplaceAll]);
@@ -3700,7 +3705,7 @@ begin
           end;
           SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
-          //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan + ' ' + chan);
+          //for n:= 0 to length(chanod) do ShowMessage(inttostr(chanod[n].node) + sLineBreak + inttostr(chanod[n].arr) + ' ' + chanod[n].chan + ' ' + chan + sLineBreak + inttostr(length(chanod)));
           end; // Delete
 
           2: begin // Search channel by name
@@ -4790,8 +4795,8 @@ begin
      if Notebook1.PageCount > 0 then
         for arr:= 0 to length(chanod)-1 do begin
 
-        n:= cnode(3,0,arr, '');
-        m:= cnode(4,0,arr, '');
+        n:= cnode(3,0,arr, ''); // Array
+        m:= cnode(4,0,arr, ''); // Node
 
         //if m = 3 then m0[0].Append(inttostr(m));
 
@@ -4802,7 +4807,7 @@ begin
 
            if assigned(m0[n]) then
 
-              if (m0[n].Modified) and not (m = Notebook1.PageIndex) then
+              if (m0[n].Modified) and not (Notebook1.page[m].IsVisible) then
                  //ShowMessage(TNotebook(m0[n].Parent.Parent).Name);
               //then
 
@@ -4835,7 +4840,7 @@ begin
                   if (mess[m] = false) then
                   sender.Canvas.Font.Color:= clMaroon;
 
-              if (m = Notebook1.PageIndex) then begin
+              if (Notebook1.Page[m].Visible) then begin
                  blue[m]:= false;
                  mess[m]:= false;
                  m0[n].Modified:= false;
