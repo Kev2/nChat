@@ -2149,6 +2149,7 @@ begin
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+     r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
      //c:= clgreen;
      end;
 
@@ -2374,18 +2375,30 @@ begin
         tmp2:= tmp;
         while (c <= length(tmp2)) do begin
 
-              k:= '';
+              k:= ''; tmp3:= '';
               if (tmp2[c] = char(3)) then begin
               //Getting colors
               k:= tmp2[c];
                   while (tmp2[c+length(k)] in ['0'..'9']) or (tmp2[c+length(k)] = ',')
-                        and (c+length(k) < length(tmp2)) do k:= copy(tmp2, c, length(k)+1);
+                        and (c+length(k) <= length(tmp2)) do k:= copy(tmp2, c, length(k)+1);
                   //while (k[length(k)] = ',') do delete(k, 1, length(k));
               end;
               //if k <> '' then ShowMessage(k);
+              if (pos(',', k) > 0) then begin
+                 tmp3:= copy(k, pos(',', k)+1, length(k));
+                 try
+                 while ( strtoint (tmp3) > 15 ) do delete(tmp3, length(tmp3),1);
+                 except
+                 end;
+              end;
+              delete(k, pos(',', k)+1, length(k)); k:= k + tmp3;
               if (k <> '') then begin
+                 try
+                 while ( strtoint ( copy(k, 2, length(k)) ) > 15 ) do delete(k, length(k), 1);
+                 except
+                 end;
                  delete(tmp2, c, length(k));
-                 c:= c - length(k);
+                 c:= c - length(k)+1;
               end;
               cc:= cc + length(k);
 
