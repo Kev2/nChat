@@ -524,7 +524,7 @@ begin
      //einput.SetFocus;
      TrayIcon1.Show;
      if not assigned(m0[0]) then begin
-        fserv.Show;
+     fserv.Show;
 
         for n:= 1 to 6 do begin
             gr[n]:= TPortableNetworkGraphic.Create;
@@ -1216,7 +1216,7 @@ case s of
 
         // Searching channel
         if (pos('#', cname) > 0) then begin
-           //ShowMessage(r + sLineBreak + mess);
+           //if (assigned(m0[1])) then ShowMessage(r + sLineBreak + mess);
            m:= fmainc.cnode(2,0,0,cname);
            if (m >= 0) then if (assigned(m0[m])) then n:= m;
            //ShowMessage('0: ' + inttostr(n));
@@ -1538,7 +1538,7 @@ case s of
        end;
        m:= fmainc.cnode(5, m, 0, '');
        n:= fmainc.cnode(5,n,0,'');
-               //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
+       //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
        //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
        if (m >= 0) and (m < 21) then if (assigned(m0[m])) then n:= m;
@@ -1547,6 +1547,8 @@ case s of
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
        //if (assigned(m0[2])) or (assigned(m0[3])) then ShowMessage('s ' + inttostr(m));
+       ShowMessage('n' + inttostr(n));
+
 
        if (m >= 0) and (m < 21) then if assigned(m0[m]) then
        if assigned(lb0[m]) then begin
@@ -1612,8 +1614,8 @@ case s of
 
                 //ShowMessage('quit nor_' + mess);
                 if length(mess) > 0 then
-                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit (' + mess + ')', s) else
-                                  output(clmaroon, copy(r, 1, pos('!', r) -1) + ' has quit', s);
+                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') has quit (' + mess + ')', s) else
+                                  output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') has quit', s);
 
                 //gnicks(chan[n]);
                 //lb0[n].Clear;
@@ -2125,10 +2127,11 @@ begin
         r:= 'TNTease: ♪ღ♪░H░A░P░P░Y░ B░I░R░T░H░D░A░Y░░♪ღ♪';
         r:= 'JustAKiss: 😀☺';
         r:= 'JustaKiss: ⛄';
+        r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
 
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
-     r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
+     //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
      //r:= '(http://salt-lake-server.myautodj.com:8164/listen.pls/stream)';
      //r:= char(3) + '00,01Hola  este es un texto de ' + char(3) + '6prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= 'http://hola.net';
@@ -2145,11 +2148,12 @@ begin
      //r:= char(3) + '2.*'':' + char(3) + '3.;~' + char(3) +'4+,''' + char(3) + '5*`.''' + char(3) + '6.*~`''.' + char(3) + '7,;''' + char(3) + '8*.';
      //r:= gtopic(r);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
-     r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
+     //r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
-     r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
-     r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
+     //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+
+     r:= 'TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTea';
      //c:= clgreen;
      end;
 
@@ -2416,7 +2420,8 @@ begin
         c:= length(tmp);
             while (c > w) do begin
                  while (c > 0) and ( not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+') ) do dec(c);
+                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+')
+                 and not (tmp[c] = '>') and not (tmp[c] = '<') ) do dec(c);
             dec(c);
             end;
             inc(c);
@@ -3307,7 +3312,7 @@ begin
          Notebook1.Pages.Add('Page' + inttostr(i))
       else
          Notebook1.Pages.Insert(i, 'Page' + inttostr(i));
-      //Notebook1.Pages.Add('Page' + inttostr(i));
+         //Notebook1.Pages.Add('Page' + inttostr(i));
 
      //Notebook1.Page[i].Name:= 'x' + inttostr(i);
 
@@ -3737,7 +3742,7 @@ begin
           //end;
           end; // Search
 
-          4: begin // Search node from array index
+          4: begin // array-node
           //for n:= 0 to length(chanod)-1 do begin
               //if (chanod[n].node = nod) then
               result:= chanod[ord].node;
@@ -4459,7 +4464,6 @@ begin
            while (pos(last[p], stat) > 0) do inc(p);
                  if (pos(last[p], stat) > 0) then
                     last:= copy(last, p+1, length(last)) else last:= copy(last, p, length(last));
-
            if (pos(lowercase(test), lowercase(last)) = 1) then begin
               if last <> '' then result:= last + ' ';
               f:= true;
@@ -4542,6 +4546,7 @@ begin
      net[conn].conn.SendString('PART ' + room + ' Leaving' + #13#10);
      //timer1.Enabled:= false;
 
+
      // Deleting components on deleted page
      c:= cnode(5,rc,0, '');
      if assigned(lb0[c]) then begin
@@ -4550,19 +4555,17 @@ begin
            FreeAndNil(splt[c]);
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
-        //if not assigned(m0[conn]) then ShowMessage('5: ' + inttostr(conn));
+        //if not assigned(m0[c]) then ShowMessage('5: ' + inttostr(c));
 
      // Deleting chan and node
      //cnode(1, rc, 0, '');
      //ShowMessage(inttostr(conn-1));
      cnode(1, rc, rc, inttostr(conn-1) + room);
 
-     {
      // Testing
-     for c:= 0 to length(chanod)-1 do begin
+     for c:= 0 to length(chanod) do begin
          m0[0].Append(chanod[c].chan + ' a: ' + inttostr(chanod[c].arr) + ' n: ' + inttostr(chanod[c].node));
      end;
-     }
 
      // Arranging Notebook pages?
      count:= rc;
@@ -4572,7 +4575,6 @@ begin
            Pages[count]:= pages[count +1];
      inc(count);
      end; pages.Delete(rc);
-
 
      // Deleting Tree Node
      //TreeView1.Items[rc].Parent.Selected:= true;
@@ -4853,7 +4855,7 @@ begin
                   if (mess[m] = false) then
                   sender.Canvas.Font.Color:= clMaroon;
 
-              if (Notebook1.Page[m].Visible) then begin
+              if (Notebook1.Page[m].isVisible) then begin
                  blue[m]:= false;
                  mess[m]:= false;
                  m0[n].Modified:= false;
@@ -4924,17 +4926,17 @@ begin
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
-     //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
      //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
      if TreeView1.Items.Count > 0 then
      for p:= 0 to length(chanod)-1 do begin
-         n:= cnode(3,0,p,'');
+         n:= cnode(3,0,p,''); // array-array
          if assigned(m0[n]) then
          //if m0[n].Visible then ShowMessage(inttostr(m0[n].node));
-         if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin
+         if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin // array-node
             //Notebook1.PageIndex:= n;
          m0[n].Modified:= false;
          m0[n].shw:= true;
