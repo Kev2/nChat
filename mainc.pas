@@ -845,7 +845,7 @@ begin
            //if assigned(m0[3]) then ShowMessage(copy(m0[n].chan,2,length(m0[n].chan)));
 
            if (pos('(', TreeView1.Selected.Text) = 0) then
-              net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + s + #13#10);
+              net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' : ' + s + #13#10);
 
            if (pos('(', TreeView1.Selected.Text) = 0) then
               net[ne].output(clnone, net[ne].nick + ': ' + s, n) else
@@ -1542,12 +1542,12 @@ case s of
        //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
        if (m >= 0) and (m < 21) then if (assigned(m0[m])) then n:= m;
+              ShowMessage('n' + inttostr(n)); // ?
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
 
        //if (assigned(m0[2])) or (assigned(m0[3])) then ShowMessage('s ' + inttostr(m));
-       ShowMessage('n' + inttostr(n));
 
 
        if (m >= 0) and (m < 21) then if assigned(m0[m]) then
@@ -2128,7 +2128,7 @@ begin
         r:= 'JustAKiss: 😀☺';
         r:= 'JustaKiss: ⛄';
         r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
-
+     }
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2152,8 +2152,7 @@ begin
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
-
-     r:= 'TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTease>TNTea';
+     r:= char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '1,16D~~ ' +char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '16,5[_]' +char(2) + char(3) + '1,16D~~ ' + char(2) + char(3) + '8,5Coffee Anyone??' + char(3) + '16,16';
      //c:= clgreen;
      end;
 
@@ -2161,7 +2160,7 @@ begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-     }
+
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2327,11 +2326,11 @@ begin
                         end;
 
                         if tmp3 <> '' then
-                           while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
+                           while (strtoint(tmp3) > 16) do delete(tmp3, length(tmp3), 1);
 
                         if length(k) > 1 then begin
-                           if strtoint(copy(k, 2, length(k))) > 15 then tmp3:= '';
-                           while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                           if strtoint(copy(k, 2, length(k))) > 16 then tmp3:= '';
+                           while (strtoint(copy(k, 2, length(k))) > 16) do delete(k, length(k), 1);
                            if tmp3 <> '' then
                               k:= k + ',' + tmp3; tmp3:= '';
                         end;
@@ -2391,14 +2390,14 @@ begin
               if (pos(',', k) > 0) then begin
                  tmp3:= copy(k, pos(',', k)+1, length(k));
                  try
-                 while ( strtoint (tmp3) > 15 ) do delete(tmp3, length(tmp3),1);
+                 while ( strtoint (tmp3) > 16 ) do delete(tmp3, length(tmp3),1);
                  except
                  end;
               end;
               delete(k, pos(',', k)+1, length(k)); k:= k + tmp3;
               if (k <> '') then begin
                  try
-                 while ( strtoint ( copy(k, 2, length(k)) ) > 15 ) do delete(k, length(k), 1);
+                 while ( strtoint ( copy(k, 2, length(k)) ) > 16 ) do delete(k, length(k), 1);
                  except
                  end;
                  delete(tmp2, c, length(k));
@@ -2578,11 +2577,11 @@ begin
                              end;
 
                              if tmp3 <> '' then
-                                while (strtoint(tmp3) > 15) do delete(tmp3, length(tmp3), 1);
+                                while (strtoint(tmp3) > 16) do delete(tmp3, length(tmp3), 1);
 
                              if length(k1) > 1 then begin
-                                if strtoint(copy(k1, 2, length(k1))) > 15 then tmp3:= '';
-                                   while (strtoint(copy(k1, 2, length(k1))) > 15) do delete(k1, length(k1), 1);
+                                if strtoint(copy(k1, 2, length(k1))) > 16 then tmp3:= '';
+                                   while (strtoint(copy(k1, 2, length(k1))) > 16) do delete(k1, length(k1), 1);
                                 if tmp3 <> '' then
                                    k1:= k1 + ',' + tmp3;
                                 tmp3:= '';
@@ -2784,11 +2783,11 @@ begin
                  end;
 
                  if tmp <> '' then
-                    while (strtoint(tmp) > 15) do delete(tmp, length(tmp), 1);
+                    while (strtoint(tmp) > 16) do delete(tmp, length(tmp), 1);
 
                  if length(k) > 1 then begin
-                    if strtoint(copy(k, 2, length(k))) > 15 then tmp:= '';
-                       while (strtoint(copy(k, 2, length(k))) > 15) do delete(k, length(k), 1);
+                    if strtoint(copy(k, 2, length(k))) > 16 then tmp:= '';
+                       while (strtoint(copy(k, 2, length(k))) > 16) do delete(k, length(k), 1);
                     if tmp <> '' then
                        k:= k + ',' + tmp;
                  end;
@@ -2826,7 +2825,7 @@ begin
                  //bk:= copy(k, pos(',',k)+1, length(k));
                  if (length(bk) = 2) and (bk[1] = '0') then bk:= copy(bk, 2, 1);
                  if length(bk) > 2 then
-                    if strtoint(bk) > 15 then bk:= copy(k, pos(',', k)+1, 1);
+                    if strtoint(bk) > 16 then bk:= copy(k, pos(',', k)+1, 1);
                  bco:= colors(bk);
               end;
 
@@ -2838,7 +2837,7 @@ begin
                  delete(fr, pos(',', fr), length(fr));
                  if (fr[1] = '0') and (length(fr) > 1) then fr:= fr[2];
 
-                 if (length(fr) > 2) then if strtoint(fr) > 15 then delete(k, length(k), 1);
+                 if (length(fr) > 2) then if strtoint(fr) > 16 then delete(k, length(k), 1);
                  f:= colors(fr);
               end;
 
@@ -2985,11 +2984,11 @@ begin
                      //if k[2] = ',' then k:= k[1] + '0' + copy(k, 2, length(k));
 
                if (pos(',',k) > 2) then
-                  while (StrToInt(copy(k, 2, pos(',',k)-2)) > 15) do delete(k, length(k), 1);
+                  while (StrToInt(copy(k, 2, pos(',',k)-2)) > 16) do delete(k, length(k), 1);
                if (pos(',',k) > 0) then
-                  while (StrToInt(copy(k, pos(',',k)+1, length(k))) > 15) do (delete(k, length(k), 1)) else
+                  while (StrToInt(copy(k, pos(',',k)+1, length(k))) > 16) do (delete(k, length(k), 1)) else
                   if length(k) > 2 then
-                  while (strtoint(copy(k, 2, length(k))) > 15) do (delete(k, length(k), 1));
+                  while (strtoint(copy(k, 2, length(k))) > 16) do (delete(k, length(k), 1));
 
            //if assigned(m0[1]) then ShowMessage(k);
            delete(r, c, length(k)); // Replace
@@ -3317,6 +3316,7 @@ begin
      //Notebook1.Page[i].Name:= 'x' + inttostr(i);
 
      while assigned(m0[a]) do inc(a);
+     //ShowMessage('a ' +inttostr(a));
 
      // Splitter
      splt[a]:= TSplitter.Create(fmainc);
@@ -3437,7 +3437,8 @@ begin
      m0[a].nnick:= nick;
 
      // Adding chan and node to chanode
-     //ShowMessage('nb ' + inttostr(con));
+     // nb 1 a 0
+     //ShowMessage('nb ' + inttostr(i) + ' a ' + inttostr(a));
      cnode(0, i, a, inttostr(con) + c);
 
      m0[a].AnchorToNeighbour(akTop,0, Notebook1.Page[i]);
@@ -3705,7 +3706,7 @@ begin
           chanod[length(chanod)-1].chan:= chan;
           chanod[length(chanod)-1].node:= nod;
           chanod[length(chanod)-1].arr:= ord;
-          //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan);
+          //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].arr) + ' ' + chanod[n].chan + ' ' + inttostr(chanod[n].node));
           end; // Add
 
           1: Begin // Delete
@@ -3755,12 +3756,11 @@ begin
               if (chanod[n].node = nod) then
               result:= chanod[n].arr;
           end;
-          //ShowMessage('5' + inttostr(result));
           end; // Search
 
           6: Begin // Delete a connection. Delete nodes and update channels
 
-          for n:= 0 to length(chanod) -1 do begin
+          for n:= 0 to length(chanod) do begin
               //if (n+1) < length(chanod) then
               if (chanod[n].node >= nod) and (chanod[n].node <= ord) then
                  chanod[n].node:= 100;
@@ -3807,7 +3807,7 @@ begin
               if (chanod[n].node > ord) then
                  chanod[n].node:= chanod[n].node - (ord - nod +1);
 
-          //ShowMessage('conn: ' + conn + sLineBreak+ 'las: ' + chanod[n].chan + sLineBreak + ' arr: ' +inttostr(chanod[n].arr));
+          //ShowMessage('conn: ' + conn + sLineBreak+ 'las: ' + chanod[n].chan + sLineBreak + ' arr: ' +inttostr(chanod[n].arr) + sLineBreak + 'node: ' +  inttostr(chanod[n].node));
           end; // for
 
           end; // 6
@@ -4549,23 +4549,18 @@ begin
 
      // Deleting components on deleted page
      c:= cnode(5,rc,0, '');
+     //ShowMessage('c ' +inttostr(c));
      if assigned(lb0[c]) then begin
            freeandnil(lab0[c]); freeandnil(gb0[c]);
            freeandnil(lb0[c]);
            FreeAndNil(splt[c]);
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
-        //if not assigned(m0[c]) then ShowMessage('5: ' + inttostr(c));
 
      // Deleting chan and node
      //cnode(1, rc, 0, '');
-     //ShowMessage(inttostr(conn-1));
      cnode(1, rc, rc, inttostr(conn-1) + room);
 
-     // Testing
-     for c:= 0 to length(chanod) do begin
-         m0[0].Append(chanod[c].chan + ' a: ' + inttostr(chanod[c].arr) + ' n: ' + inttostr(chanod[c].node));
-     end;
 
      // Arranging Notebook pages?
      count:= rc;
