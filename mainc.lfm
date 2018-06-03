@@ -7238,14 +7238,6 @@ object fmainc: Tfmainc
       ParentShowHint = False
       ShowHint = True
     end
-    object Label1: TLabel
-      Left = 41
-      Height = 15
-      Top = 2
-      Width = 40
-      Caption = 'Label1'
-      ParentColor = False
-    end
   end
   object Splitter1: TSplitter
     AnchorSideLeft.Side = asrBottom

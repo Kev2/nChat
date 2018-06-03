@@ -30,7 +30,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -197,10 +196,10 @@ Type
   var
      nnick,chan:   string;
      node:         smallint;
-     first:        string;
+     first:        smallint;
      last:         smallint;        // The last line. Used to set the marker line
      shw:          boolean;         // If it is not visible, saves the last line for the marker line
-     lc:            integer;        // When reach 100 lines becomes true
+     lc:           integer;        // When reach 100 lines becomes true. It's a lines counter.
   //   lin:          TBitmap;
      com:          array of string; // Command history
      comn:         integer;         // Command position
@@ -1138,7 +1137,7 @@ begin
      //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
 
                     // TEST
-                    IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
+                    //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
                     // Sending to test file
@@ -1538,11 +1537,13 @@ case s of
        end;
        m:= fmainc.cnode(5, m, 0, '');
        n:= fmainc.cnode(5,n,0,'');
+
        //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
        //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
        if (m >= 0) and (m < 21) then if (assigned(m0[m])) then n:= m;
-              ShowMessage('n' + inttostr(n)); // ?
+       //ShowMessage('n' + inttostr(n)); // ?
+
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
@@ -2128,7 +2129,9 @@ begin
         r:= 'JustAKiss: 😀☺';
         r:= 'JustaKiss: ⛄';
         r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
-     }
+        r:= char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '1,16D~~ ' +char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '16,5[_]' +char(2) + char(3) + '1,16D~~ ' + char(2) + char(3) + '8,5Coffee Anyone??' + char(3) + '16,16';
+        r:= char(3) + '4 hangs' +char(3) + '10 a' +char(3) + '13 string' + char(3) + '2 of' +char(3) + '5 party' +char(3) + '10 lights' +char(3) + '9 out' +char(3) + '7 for' +char(3) + '9Ai.*A*.' +char(3) + '8Ai. *A*.' +char(3) + '10Ai.*A*' +char(3) + '1Capt^Goodvib es *A*.' +char(3) + '12Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '8Ai.*A*' +char(3) + '1 Capt^Goodvibes *A*.' +char(3) + '9Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '14Ai.*' +char(3) + '1 Capt^Goodvibes *.' +char(3) + '2Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '9Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '8Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '5Ai.*A*.' +char(3) + '8Ai.' +char(1);
+
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2149,10 +2152,9 @@ begin
      //r:= gtopic(r);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
      //r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
-     //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
+     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
-     r:= char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '1,16D~~ ' +char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '16,5[_]' +char(2) + char(3) + '1,16D~~ ' + char(2) + char(3) + '8,5Coffee Anyone??' + char(3) + '16,16';
      //c:= clgreen;
      end;
 
@@ -2160,13 +2162,13 @@ begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-
+     }
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
 
      // counting lines. When reaches 100, writes all of them
-     inc(m0[o].lc);
+     inc(m0[o].lc); // Lines counter
 
      while m0[o].Lines.count >= 100 do begin
         //m0[o].Lines.Add('100 !!!');
@@ -2182,6 +2184,9 @@ begin
         //r:= ISO_8859_15ToUTF8(r);
         //r:= ConvertEncoding(r, 'UTF8', 'ISO8859-1', false);
 
+     // Getting first line before adding
+     l:= m0[o].lines.count - m0[o].LinesInWindow;
+
      m0[o].Lines.Add(r);
 
      if c = clnone then m0[o].BStrings.Add(r) else
@@ -2189,11 +2194,11 @@ begin
 
 
      if m0[o].lines.Count >= 100 then begin
-        l:= m0[o].TopLine;
+        m0[o].first:= m0[o].TopLine;
         m0[o].unwr;
         m0[o].wr(false);
         m0[o].fcolors(false, clnone, '');
-        m0[o].TopLine:= l;
+        m0[o].TopLine:= m0[o].first;
         //m0[o].Append(inttostr(l));
         //ShowMessage('no a');
         m0[o].lc:= 0;
@@ -2205,9 +2210,8 @@ begin
      // Autoscroll
      with m0[o] do begin
      //if (o > 0) then ShowMessage(inttostr(font.Height));
-     l:= lines.count-1 - (m0[o].Height div (LineHeight)) ;
      //if o = 1 then m0[0].Append('Top ' + inttostr(TopLine) + ' L: ' + inttostr(l));
-     if (m0[o].TopLine >= l) then TopLine:= lines.Count;
+     if (TopLine >= l) then TopLine:= lines.Count-1;
 
      // Making last line <> 0 to paint the marker line if the page is not visible
      //if (fmainc.Notebook1.Page[fmainc.cnode(8,0,o, '')].visible) then shw:= true;
@@ -2217,7 +2221,7 @@ begin
            //ShowMessage('tre');
            m0[o].last:= m0[o].Lines.Count -1;
         shw:= false;
-        m0[o].Modified:= true;
+        //m0[o].Modified:= true;
         fmainc.TreeView1.Refresh;
 
      end; // else m0[o].last:= 0;
@@ -2239,8 +2243,6 @@ begin
             lines.Add(inttostr(l));
             BStrings.Add(inttostr(l));
         end;
-     CaretY:= lines.Count;
-     //m0[0].Append(inttostr(m0[1].TopLine));
      end;
      //end;
      }
@@ -2666,7 +2668,6 @@ var
   bco:          TColor = clnone;
   fr, bk:       string;
 begin
-     if first = '' then first:= lines[0];
      l:= Lines.Count-1; // Last line
      bl:= BStrings.count-1;
 
@@ -4549,7 +4550,6 @@ begin
 
      // Deleting components on deleted page
      c:= cnode(5,rc,0, '');
-     //ShowMessage('c ' +inttostr(c));
      if assigned(lb0[c]) then begin
            freeandnil(lab0[c]); freeandnil(gb0[c]);
            freeandnil(lb0[c]);
@@ -4557,19 +4557,20 @@ begin
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
 
+     ShowMessage('5 ' +inttostr(c));
      // Deleting chan and node
      //cnode(1, rc, 0, '');
      cnode(1, rc, rc, inttostr(conn-1) + room);
 
-
      // Arranging Notebook pages?
-     count:= rc;
+     {count:= rc;
      while (count < PageCount-1) do begin
         // Deleting items. Finding item array from m0[x].node
-        if count < pages.Count-1 then
+        if count > rc then
            Pages[count]:= pages[count +1];
      inc(count);
-     end; pages.Delete(rc);
+     end;}
+     pages.Delete(rc);
 
      // Deleting Tree Node
      //TreeView1.Items[rc].Parent.Selected:= true;
@@ -4675,14 +4676,15 @@ begin
      cnode(6, rc, maxnode, ''); // nod: rc, maxnode: ord
      //cnode(7, 0, 0, '');
 
+
      // Deleting NoteBook pages
      p:= Notebook1.PageCount;
      n:= rc;
      while (n <= maxnode) do begin
            //ShowMessage('p ' + inttostr(n));
            Notebook1.Pages.Delete(rc);
-           Notebook1.PageIndex:= Notebook1.PageIndex +1;
-           Notebook1.PageIndex:= Notebook1.PageIndex -1;
+           //Notebook1.PageIndex:= Notebook1.PageIndex +1;
+           //Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
      //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
@@ -4805,8 +4807,9 @@ begin
      if Notebook1.PageCount > 0 then
         for arr:= 0 to length(chanod)-1 do begin
 
-        n:= cnode(3,0,arr, ''); // Array
-        m:= cnode(4,0,arr, ''); // Node
+        n:= chanod[arr].arr; // Array
+        m:= chanod[arr].node; // Node
+        //ShowMessage('node: ' + inttostr(m));
 
         //if m = 3 then m0[0].Append(inttostr(m));
 
@@ -4928,10 +4931,11 @@ begin
      //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
      if TreeView1.Items.Count > 0 then
      for p:= 0 to length(chanod)-1 do begin
-         n:= cnode(3,0,p,''); // array-array
+         n:= chanod[p].arr; // array-array
          if assigned(m0[n]) then
          //if m0[n].Visible then ShowMessage(inttostr(m0[n].node));
-         if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin // array-node
+         //if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin // array-node
+         if (chanod[p].node = Notebook1.PageIndex) then begin // array-node
             //Notebook1.PageIndex:= n;
          m0[n].Modified:= false;
          m0[n].shw:= true;
