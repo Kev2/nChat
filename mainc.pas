@@ -30,6 +30,7 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
+    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -4557,7 +4558,7 @@ begin
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
 
-     ShowMessage('5 ' +inttostr(c));
+     //ShowMessage('5 ' +inttostr(c));
      // Deleting chan and node
      //cnode(1, rc, 0, '');
      cnode(1, rc, rc, inttostr(conn-1) + room);
