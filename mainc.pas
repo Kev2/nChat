@@ -4703,7 +4703,7 @@ begin
            Notebook1.Pages.Delete(rc);
      inc(n);
      end;
-     Notebook1.Update;
+     Notebook1.PageIndex:= rc;
 
      {
      p:= 0;
