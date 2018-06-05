@@ -169,8 +169,7 @@ Type
   num:     smallint;
   conn:    TTCPBlockSocket;
   nick:    string;
-  nicknew: string;
-  nick3:   string;
+  fast:    boolean; // Connection fast (MOTD)
 
   public
   server:  string;
@@ -312,6 +311,7 @@ begin
      end;
      //if conn.GetRemoteSinIP <> '' then ShowMessage(conn.GetRemoteSinIP);
      fmainc.timer1.Interval:= 50;
+     fast:= true;
 
      if conn.GetRemoteSinIP <> '' then
 
@@ -924,7 +924,7 @@ begin
      key:= 0;
      end else // ssctl
          // Setting focus on TRichMemo when RPage and APage are pressed
-         if (key = 33) or (key = 34) then m0[n].SetFocus;
+         m0[n].SetFocus;
      end; // Fmainc
      ctrl:= 0;
      while not (Notebook1.Page[pin].Controls[ctrl] is TEdit) do inc(ctrl);
@@ -1205,7 +1205,9 @@ begin
 case s of
      0: Begin // MOTD
 
-        if (r <> '') or (mess <> '') then fmainc.Timer1.Interval:= 50 else
+        if (r <> '') or (mess <> '') then begin
+           fmainc.Timer1.Interval:= 50;
+        end else
         //if (mess <> '') then fmainc.Timer1.Interval:= 50 else
         fmainc.Timer1.Interval:= 2000;
 
@@ -1232,7 +1234,10 @@ case s of
         r:= r + mess;
         if (r <> '') then output(clnone, r, n);
 
-           if (pos('End of', mess) > 0) then fmainc.Timer1.Interval:= 2000;
+           if (pos('End of', r) > 0) then begin
+              fmainc.Timer1.Interval:= 2000;
+              fast:= false;
+           end;
            closefile(t);
         end;
      end;
@@ -5021,6 +5026,7 @@ end;
 procedure tfmainc.TimerOnTimer(sender: TObject);
 const ping: integer = 0;
 var
+      f:    smallint = 1;
       n:    smallint = 1;
 begin
      {
@@ -5033,16 +5039,16 @@ begin
      end else begin
      }
 
-     while (assigned(net[n])) and (assigned(net[n].conn)) do begin
-
-     {
-     if (timer1.Interval = 50) then begin
-        while (Assigned(net[n])) do inc(n);
-        dec(n);
+     while (assigned(net[n])) do begin
+           if (net[n].fast = true) then f:= n;
+     inc(n);
      end;
-     }
+     n:= f;
+
+     //while (assigned(net[n])) and (assigned(net[n].conn)) do begin
+     while (assigned(net[n])) do begin
+
      net[n].loop;
-     //if assigned(net[2]) then ShowMessage(inttostr(n));
 
      if timer1.Interval = 2000 then
      ping:= ping + 2000;
@@ -5051,6 +5057,7 @@ begin
         ping:= 0;
      end;
 
+     if net[n].fast = true then n:= 11;
      inc(n);
      end;
 end;
