@@ -108,7 +108,7 @@ Type
 
     procedure einputKeyPress(Sender: TObject; var Key: char);
     procedure einputKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure SynEdit1KeyPress(Sender: TObject; var Key: char);
 
     procedure joinmClick(Sender: TObject);
     procedure createlog(con: smallint; chann: string);
@@ -502,6 +502,16 @@ begin
      s:= dconmClick(rconm);
      net[s].conn.CloseSocket;
      net[s].connect(s-1, false);
+end;
+
+procedure Tfmainc.SynEdit1KeyPress(Sender: TObject; var Key: char);
+var n: smallint = 0;
+begin
+     with fmainc do begin
+          if Notebook1.Page[Notebook1.PageIndex].ControlCount > 1 then
+             while not (Notebook1.Page[Notebook1.PageIndex].Controls[n] is TEdit) do inc(n);
+             tedit(Notebook1.Page[Notebook1.PageIndex].Controls[n]).SetFocus;
+     end;
 end;
 
 
@@ -985,14 +995,6 @@ begin
      end; // Key 9 (tab)
 end;
 
-procedure Tfmainc.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-var n: smallint = 0;
-begin
-     with fmainc do begin
-          if Notebook1.Page[Notebook1.PageIndex].ControlCount > 1 then
-             while not (Notebook1.Page[Notebook1.PageIndex].Controls[n] is TEdit) do inc(n);
-             tedit(Notebook1.Page[Notebook1.PageIndex].Controls[n]).SetFocus;     end;
-end;
 
 procedure tfmainc.raw(r: string);
 var ro: TextFile;
@@ -3409,7 +3411,7 @@ begin
      m0[a].ScrollBars:= ssAutoVertical;
      m0[a].Modified:= false;
      //m0[a].OnChange:= @mstatusChange;
-     m0[a].OnKeyUp:= @Memo1KeyUp;
+     m0[a].OnKeyPress:= @SynEdit1KeyPress;
      m0[a].OnMouseMove:= @tsynMouseMove;
      m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
      m0[a].OnPaint:= @tsynPaint;
@@ -3604,7 +3606,7 @@ begin
      m0[a].ReadOnly:= true;
      m0[a].Modified:= false;
      //m0[a].OnChange:= @mstatusChange;
-     m0[a].OnKeyUp:= @Memo1KeyUp;
+     m0[a].OnKeyPress:= @SynEdit1KeyPress;
      m0[a].OnMouseMove:= @tsynMouseMove;
      m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
      m0[a].OnPaint:= @tsynPaint;
