@@ -1209,9 +1209,12 @@ case s of
 
         if (r <> '') or (mess <> '') then begin
            fmainc.Timer1.Interval:= 50;
-        end else
+           fast:= true;
+        end else begin
         //if (mess <> '') then fmainc.Timer1.Interval:= 50 else
-        fmainc.Timer1.Interval:= 2000;
+             fmainc.Timer1.Interval:= 2000;
+             fast:= false;
+        end;
 
         if (r <> '') or (mess <> '') then begin
 
@@ -1236,10 +1239,7 @@ case s of
         r:= r + mess;
         if (r <> '') then output(clnone, r, n);
 
-           if (pos('End of', r) > 0) then begin
-              fmainc.Timer1.Interval:= 2000;
-              fast:= false;
-           end;
+        //if (pos('End of', r) > 0) then begin fmainc.Timer1.Interval:= 2000;
            closefile(t);
         end;
      end;
@@ -4679,10 +4679,10 @@ begin
            p:= cnode(5,n,0, '');
            //ShowMessage('5 ' + inttostr(p));
               if assigned(lb0[p]) then begin
-              FreeAndNil(splt[p]);
               FreeAndNil(lab0[p]);
               FreeAndNil(gb0[p]);
               FreeAndNil(lb0[p]);
+              FreeAndNil(splt[p]);
            end;
 
            freeandnil(m0[p]);
@@ -4695,18 +4695,15 @@ begin
      cnode(6, rc, maxnode, ''); // nod: rc, maxnode: ord
      //cnode(7, 0, 0, '');
 
-
      // Deleting NoteBook pages
      p:= Notebook1.PageCount;
      n:= rc;
      while (n <= maxnode) do begin
            //ShowMessage('p ' + inttostr(n));
            Notebook1.Pages.Delete(rc);
-           Notebook1.PageIndex:= Notebook1.PageIndex +1;
-           Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
-     //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
+     Notebook1.Update;
 
      {
      p:= 0;
@@ -4727,12 +4724,14 @@ begin
         if (rc > 0) then Items[rc-1].Selected:= true;
      //num:= Items.Item[n].Index; // Saving index to get the connection
      //TreeView1.Items.Item[n].Text:= '(' + TreeView1.Items.Item[n].Text + ')';
+
+     // Making num match the connection
+     num:= TreeView1.Items[rc].Index+1;
+
      TreeView1.Items.Item[n].Delete;
 
      end; // TreeView
 
-     // Making num match the connection
-     num:= rc+1;
      //ShowMessage('rc ' + inttostr(num));
 
      // 3. Close network
@@ -4743,7 +4742,7 @@ begin
      //if assigned(net[num]) then ShowMessage(net[num].server);
      net[num]:= nil;
 
-     for p:= 1 to length(net)-1 do
+     for p:= 1 to length(net)-2 do
          if not (assigned(net[p])) then begin
 
             if (assigned(net[p+1])) then
