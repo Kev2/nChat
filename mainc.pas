@@ -30,7 +30,6 @@ Type
     Image1: TImage;
     Image2: TImage;
     ImageList1: TImageList;
-    Label1: TLabel;
     Label2: TLabel;
     MainMenu1: TMainMenu;
     filem: TMenuItem;
@@ -103,7 +102,8 @@ Type
     procedure servm1Click(Sender: TObject);
     procedure clistmClick(Sender: TObject);
     procedure banlmClick(Sender: TObject);
-    procedure closemClick(Sender: TObject); // Delete Tree Item and leave a channel
+    procedure LeaveRoom(task: smallint);
+    procedure closeRMClick(Sender: TObject); // Delete Tree Item and leave a channel
     procedure closenClick(rc: smallint; c: string); // Delete Tree Items and TNotebook pages and close network
 
     procedure einputKeyPress(Sender: TObject; var Key: char);
@@ -1536,13 +1536,13 @@ case s of
              m:= s;
              end;
        end;
-       m:= fmainc.cnode(5, m, 0, '');
+       if m = s then m:= fmainc.cnode(5, m, 0, '');
        n:= fmainc.cnode(5,n,0,'');
 
        //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
        //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
-       if (m >= 0) and (m < 21) then if (assigned(m0[m])) then n:= m;
+       if (m >= 0) then n:= m;
        //ShowMessage('n' + inttostr(n)); // ?
 
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
@@ -1552,11 +1552,11 @@ case s of
        //if (assigned(m0[2])) or (assigned(m0[3])) then ShowMessage('s ' + inttostr(m));
 
 
-       if (m >= 0) and (m < 21) then if assigned(m0[m]) then
-       if assigned(lb0[m]) then begin
+       if (m >= 0) then begin
           lb0[m].Clear;
           lab0[m].Caption:= '';
-       end;
+       end else
+               fmainc.LeaveRoom(1);
 
     end;
 
@@ -2222,11 +2222,11 @@ begin
            //ShowMessage('tre');
            m0[o].last:= m0[o].Lines.Count -1;
         shw:= false;
-        //m0[o].Modified:= true;
+        m0[o].Modified:= true;
         fmainc.TreeView1.Refresh;
-
      end; // else m0[o].last:= 0;
      //if assigned(m0[1]) then (m0[1].Lines.Add(inttostr(m0[1].TopLine)));
+
 
      // If it is modified and notebook page is not visible then color the tree item
 
@@ -3713,12 +3713,12 @@ begin
 
           1: Begin // Delete
           while (n < length(chanod)-1) do begin
-                if (chanod[n].chan = chan) then begin
+                if (chanod[n].node = nod) then begin
                    tmp:= chanod[n];
                    chanod[n]:= chanod[n+1];
                    chanod[n+1]:= tmp;
                 end;
-                if (chanod[n].node > ord) then chanod[n].node:= chanod[n].node-1;
+                if (chanod[n].node >= nod) then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
                    //ShowMessage('1: ' + inttostr(cnode(5,nod,0,'')));
@@ -4518,11 +4518,16 @@ begin
       end;
 end;
 
-procedure Tfmainc.closemClick(Sender: TObject);
+procedure Tfmainc.closeRmClick(Sender: TObject);
+begin
+     if TreeView1.Items[rc].Parent = nil then closenclick(rc, TreeView1.Items[rc].Text) else
+     LeaveRoom(0);
+end;
+
+procedure Tfmainc.LeaveRoom(task: smallint);
 {This procedure comes from right click on the tree. It provides RC which is the
 node selected for deletion.
 1. Delete Notebook page.
-2. Copy Next Notebook page to deleted page.
 3. Delete tree node.
 4. Leave the room
 }
@@ -4533,22 +4538,31 @@ var
    count:   smallint = 0;
 
 begin
-     if TreeView1.Items[rc].Parent = nil then closenclick(rc, TreeView1.Items[rc].Text) else
 
      with Notebook1 do begin
-     timer1.Enabled:= false;
-     TreeView1.Items[rc-1].Selected:= true;
+
+
+case task of
+
+     0: Begin
+     TreeView1.Items[rc].Parent.Selected:= true;
 
      // Getting connection from TTreeView
      conn:= TreeView1.Items[rc].Parent.Index +1;
      // Room = Node name
      room:= TreeView1.Items[rc].Text;
 
+     // Deleting Tree Node
+     TreeView1.Items[rc].Delete;
+
      if (pos('#', room) > 0) and (pos('(', room) = 0) then
      net[conn].conn.SendString('PART ' + room + ' Leaving' + #13#10);
      //timer1.Enabled:= false;
+     end; // Case 0
 
 
+     1: Begin
+     //ShowMessage('1 ' + inttostr(rc));
      // Deleting components on deleted page
      c:= cnode(5,rc,0, '');
      if assigned(lb0[c]) then begin
@@ -4558,10 +4572,10 @@ begin
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
 
-     //ShowMessage('5 ' +inttostr(c));
+
      // Deleting chan and node
-     //cnode(1, rc, 0, '');
-     cnode(1, rc, rc, inttostr(conn-1) + room);
+     //cnode(1, rc, rc, inttostr(conn-1) + room);
+     cnode(1, rc, 0, '');
 
      // Arranging Notebook pages?
      {count:= rc;
@@ -4573,13 +4587,10 @@ begin
      end;}
      pages.Delete(rc);
 
-     // Deleting Tree Node
-     //TreeView1.Items[rc].Parent.Selected:= true;
-     TreeView1.Items[rc].Delete;
-     //TreeView1.Refresh;
-     //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
+     end; // Case 1
 
-     timer1.Enabled:= true;
+     //timer1.Enabled:= true;
+     end; // task
      end; // Notebook
 end;
 
@@ -4684,8 +4695,8 @@ begin
      while (n <= maxnode) do begin
            //ShowMessage('p ' + inttostr(n));
            Notebook1.Pages.Delete(rc);
-           //Notebook1.PageIndex:= Notebook1.PageIndex +1;
-           //Notebook1.PageIndex:= Notebook1.PageIndex -1;
+           Notebook1.PageIndex:= Notebook1.PageIndex +1;
+           Notebook1.PageIndex:= Notebook1.PageIndex -1;
      inc(n);
      end;
      //Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
@@ -4773,16 +4784,16 @@ procedure Tfmainc.TreeView1CustomDrawItem(Sender: TCustomTreeView;
   Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
 const mess: array of boolean = nil;
       blue: array of boolean = nil;
-      r: array of boolean = nil;
+
 var arr:  smallint = 0; // tmemos assigned
     m:    smallint = 0; // tmemos assigned
     n:    smallint = 0;
     i:    TIcon;
     s:    string;
+    r:    boolean = false;
 begin
      SetLength(mess, TreeView1.Items.Count);
      SetLength(blue, TreeView1.Items.Count);
-     SetLength(r, TreeView1.Items.Count);
      //SetLength(blue, TreeView1.Items.Count);
      //SetLength(mess, TreeView1.Items.Count);
 
@@ -4808,11 +4819,11 @@ begin
      if Notebook1.PageCount > 0 then
         for arr:= 0 to length(chanod)-1 do begin
 
-        n:= chanod[arr].arr; // Array
-        m:= chanod[arr].node; // Node
+        n:= cnode(3,0,arr, ''); // Array
+        m:= cnode(4,0,arr, ''); // Node
         //ShowMessage('node: ' + inttostr(m));
 
-        //if m = 3 then m0[0].Append(inttostr(m));
+        //if m = 1 then m0[0].Append(inttostr(m));
 
         if assigned(m0[n]) then
            if (m0[n].Lines <> nil) then
@@ -4832,33 +4843,38 @@ begin
                  then begin
                  sender.Canvas.Font.Color:= clBlue;
                  blue[m]:= true;
-                 r[m]:= true;
                  TrayIcon1.Icon:= i;
               end else
 
-              if (blue[m] = false ) then
+              if (blue[m] = false) then
               if (pos('quit', lowercase(s)) = 0) and (pos('quit:', lowercase(s)) = 0)
                  and (pos('part', lowercase(s)) = 0)
                  and (pos('has joined #', lowercase(s)) = 0)
                  and (pos(':', s) > 0)
-                 or mess[m] = true
+                 or (mess[m] = true)
 
               then begin
                    mess[m]:= true;
                    sender.Canvas.Font.Color:= clred;
                    //if blue[m] = false then
-                      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
-                   TrayIcon1.Icon:= i;
+                 if (r = false) then begin
+                    i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
+                    TrayIcon1.Icon:= i;
+                 end;
+
               end else
 
                   if (mess[m] = false) then
                   sender.Canvas.Font.Color:= clMaroon;
 
+              if (blue[m] = true) then r:= true;
+
               if (Notebook1.Page[m].isVisible) then begin
                  blue[m]:= false;
                  mess[m]:= false;
                  m0[n].Modified:= false;
-                 r[m]:= false;
+                 //if (blue[m] = false) then r:= false;
+                 //r:= false;
               end;
      end;
 
@@ -4925,18 +4941,18 @@ begin
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
-     if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
+     //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
      Notebook1.PageIndex:= TreeView1.Selected.AbsoluteIndex;
 
      //ShowMessage('count: ' + inttostr(Notebook1.PageCount));
      if TreeView1.Items.Count > 0 then
      for p:= 0 to length(chanod)-1 do begin
-         n:= chanod[p].arr; // array-array
+         n:= cnode(3,0,p,''); // array-array
          if assigned(m0[n]) then
          //if m0[n].Visible then ShowMessage(inttostr(m0[n].node));
-         //if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin // array-node
-         if (chanod[p].node = Notebook1.PageIndex) then begin // array-node
+         if (cnode(4,0,p,'') = Notebook1.PageIndex) then begin // array-node
+         //if (chanod[p].node = Notebook1.PageIndex) then begin // array-node
             //Notebook1.PageIndex:= n;
          m0[n].Modified:= false;
          m0[n].shw:= true;
