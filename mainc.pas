@@ -1839,6 +1839,7 @@ case s of
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
 
        delete(r, pos(tmp, r), length(tmp));
+       delete(r, length(r), 1);
        //ShowMessage(r + sLineBreak + tmp);
        //if fmainc.TreeView1.Items[n].HasChildren then
 
@@ -1978,7 +1979,7 @@ case s of
           delete(mess, pos(' ',mess), length(mess));
           end;
 
-          if (pos('!', r) = 0) then tmp:= copy(r, pos('mode', lowercase(r))+5, length(r)) else
+          if (pos('!', r) = 0) then tmp:= copy(r, pos('mode', lowercase(r))+5, length(r)-1) else
              tmp:= copy(r, 1, pos('!', r)-1);
 
           if (pos('#', r) > 0) then
