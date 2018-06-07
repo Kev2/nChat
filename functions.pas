@@ -145,7 +145,7 @@ begin
      end;
 
      // INVITE SENT                            // mcclane #chan
-     if (pos(lowercase('sinvite'), r) = 1) then begin
+     if (pos(lowercase('invite'), r) = 1) then begin
         delete(r, 1, pos(' ', r)); delete(r, 1, pos(' ', r));
         r:= 'You have invited ' + copy(r, 1, pos(' ' , r)) + copy(r, pos('#', r), length(r));
      end;
@@ -297,6 +297,7 @@ begin
      if c = '13' then result:= clFuchsia;
      if c = '14' then result:= clGray;
      if c = '15' then result:= clSilver;
+     if c = '16' then result:= clWhite;
 end;
 
 function icolors(c: TColor): smallint;

@@ -1832,17 +1832,23 @@ case s of
        // Getting user
           // mcclane!* MODE user +i
           //irc-can.icq-chat.com MODE StrangerKev -x
-       if r[length(r)] = ' ' then delete(r, length(r), 1);
+
        tmp:= r;
+
+       if mess = '' then begin
+          bak:= r;
+          while (pos(' ', bak) > 0) do begin
+                delete(bak, 1, pos(' ', bak));
+          end;
+       end;
+       delete(r, length(r) - length(bak), length(r));
+       //ShowMessage(r + '_' + sLineBreak + tmp);
+
+       if r[length(r)] = ' ' then delete(r, length(r), 1);
        while (tmp[length(tmp)] = ' ') do delete(tmp, length(tmp), 1);
        delete(tmp, 1, pos('MODE', tmp) + 4);
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
 
-       if mess = '' then begin
-          delete(r, pos(tmp, r), length(tmp));
-          delete(r, length(r), 1);
-       end;
-       //ShowMessage(r + sLineBreak + tmp);
        //if fmainc.TreeView1.Items[n].HasChildren then
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
@@ -4317,11 +4323,14 @@ begin
 Case task of
      0: Begin // append
         lb0[a].items.Insert(p, nick1);
+        lb0[a].Selected[p];
+        lb0[a].Selected[p]:= false;
      end; // 0 Append
 
      1: begin // Remove
         lb0[a].Items.Delete(p);
      end;     // 1 Remove
+
 
      2: Begin // Change
               //ShowMessage('a ' + arstat(st + newnick));
