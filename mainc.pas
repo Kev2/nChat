@@ -1117,6 +1117,7 @@ begin
      }
 
      //if (pos('JOIN', r) > 0) then ShowMessage(m0[n].nnick);
+     //r:= 'irc-can.icq-chat.com MODE StrangerKev -x';
 
      if (pos(nick + '!', r) > 0) and (pos('JOIN', r) > 0)  then s:= 1;
      //if (pos('328', r) > 0)  then s:= 1;
@@ -1132,7 +1133,7 @@ begin
      //if (pos('#', r) > 0) and (pos('MODE', r) > 0) and (pos('MODES',r) = 0) then s:= 8;
      //if assigned(m0[1]) then ShowMessage(r);
      if (pos('TOPIC #', tmp) > 0) or (pos('331 ' + nick, tmp) > 0) or (pos('332 ' + nick, tmp) > 0) or (pos('333 ' + nick, tmp) > 0) then s:= 8;
-     if (pos('INVITE',r) > 0) then s:= 9; //and (pos('341', r) > 0) then s:= 9;
+     if (pos('INVITE',r) > 0) or (pos('341', r) > 0) then s:= 9;
      if ( (pos('MODES',r) = 0) and (pos('MODE', r) > 0) ) or ( (pos('KICK ',r) > 0) and (pos('=', r) = 0) ) then s:= 10;
      if (pos('367 ' + nick, r) > 0) then s:= 11;
      //if (pos('#', r) > 0) and (pos(nick, r) > 0) and (pos('=', r) = 0) then s:= 12; // Messages
@@ -1803,7 +1804,7 @@ case s of
     end;     // TOPIC
 
     9: Begin // INVITE
-       if (pos('#', mess) > 0) then // Spotchat puts the channel after : (colon)
+       if (pos('#', r) > 0) then // Spotchat puts the channel after : (colon)
           cname:= copy(r, pos('#', r), length(r)) else cname:= copy(mess, pos('#', mess), length(mess));
 
        // :server sollo mcclane chan
@@ -1814,7 +1815,7 @@ case s of
 
               delete(r, 1, pos(' ', r)); delete(r, 1, pos(' ', r)); delete(r, 1, pos(' ', r));
 
-          mess:= 'You have invited ' + copy(r, 1, pos(' ', r)-1) + ' to ' + copy(cname, 2, length(cname)) +
+          mess:= 'You have invited ' + copy(r, 1, pos(' ', r)-1) + ' to ' + cname +
                  ' (' + server + ')';
        end;
 
@@ -1826,7 +1827,8 @@ case s of
 
     10: Begin // MODE
        fmainc.Timer1.Interval:= 50;
-              //ShowMessage(r + sLineBreak + mess);
+       //ShowMessage('r ' + r);
+       //ShowMessage(r + sLineBreak + mess);
        // Getting user
           // mcclane!* MODE user +i
           //irc-can.icq-chat.com MODE StrangerKev -x
@@ -1836,6 +1838,8 @@ case s of
        delete(tmp, 1, pos('MODE', tmp) + 4);
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
 
+       delete(r, pos(tmp, r), length(tmp));
+       //ShowMessage(r + sLineBreak + tmp);
        //if fmainc.TreeView1.Items[n].HasChildren then
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
@@ -1948,42 +1952,48 @@ case s of
 
        //ShowMessage(r +sLineBreak + 'tmp: ' + tmp + sLineBreak + 'mess: ' + mess + sLineBreak + 'cname: ' + cname);
        //irc-can.icq-chat.com MODE StrangerKev -x
-       r:= r + ' ' + mess;
+       //ShowMessage(r + sLineBreak + mess);
+       //r:= r + ' ' + mess;
 
+       {
        //tmp:= r;
        // Making tmp = nick
        if (pos('!', r) > 0) then
-          tmp:= copy(r, 1, pos('!', r)-1) else begin
+       tmp:= copy(r, 1, pos('!', r)-1) else begin
                                                tmp:= r;
                                                delete(tmp, 1, pos('MODE ', tmp)+4);
                                                delete(tmp, pos(' ', tmp), length(tmp));
                                                end;
+       }
+       //ShowMessage('r: ' + r);
 
        if (pos('+',r) > 0) or (pos('-',r) > 0) or (pos('mode', lowercase(r)) > 0) then begin
-          mess:= r;
+          mess:= tmp;
           while (mess[length(mess)] = ' ') do delete(mess, length(mess), 1);
           while (pos(' ', mess) > 0) do delete(mess, 1, pos(' ', mess));
-          //ShowMessage('mess: ' + mess);
-
+          //ShowMessage(r +sLineBreak+ mess);
           if (pos('+', mess) = 0) and (pos('-', mess) = 0) then begin
           delete(mess, 1, pos('#',mess));
           delete(mess, 1, pos(' ',mess));
           delete(mess, pos(' ',mess), length(mess));
           end;
+
+          if (pos('!', r) = 0) then tmp:= copy(r, pos('mode', lowercase(r))+5, length(r)) else
+             tmp:= copy(r, 1, pos('!', r)-1);
+
           if (pos('#', r) > 0) then
-             mess:= ' sets mode ' + mess + ' to ' + copy(cname, 2, length(cname)) else
-             mess:= ' sets mode ' + mess + ' to ' + tmp;
+             mess:= tmp + ' sets mode ' + mess + ' to ' + copy(cname, 2, length(cname)) else
+             mess:= tmp + ' sets mode ' + mess + ' to ' + tmp;
                                               //ShowMessage(r +sLineBreak+ mess);
              //r:= copy(r, 1, pos('!' ,r)-1); // Kicker
-             mess:= tmp + mess;
 
              output(clMaroon, mess, n);
        end;
        end;
 
        // Updating nick list
-       //if pos('@',r) = 0 then
-                               //ShowMessage(r + sLineBreak + tmp);
+       if (pos('gives',mess) > 0) or (pos('removes',mess) > 0) then begin
+                               //ShowMessage('lb ' + r + sLineBreak + tmp);
        if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 3, n, num+1);
        //if (pos('gives',mess) > 0) and (pos('voice',mess) > 0) then gnicks(copy(cname, 2, length(cname)));
        if (pos('removes',mess) > 0) and (pos('voice',mess) > 0) then fmainc.lbchange(tmp, '+', 4, n, num+1);
@@ -2005,7 +2015,7 @@ case s of
        // Channel Admin
        if (pos('+a',mess) > 0) then fmainc.lbchange(tmp, '&', 3, n, num+1);
        if (pos('-a',mess) > 0) then fmainc.lbchange(tmp, '&', 4, n, num+1);
-
+       end;
 
        CloseFile(t);
        end;
@@ -2028,7 +2038,7 @@ case s of
     end;
 
     12: Begin // Messages to channel
-        ShowMessage(r + ' ' + mess);
+        //ShowMessage(r + ' ' + mess);
         n:= fmainc.cnode(2,0,0, copy(cname, length(inttostr(num))+1, length(cname)));
             output(clnone, mess ,n);
     end;
