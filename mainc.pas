@@ -832,8 +832,7 @@ begin
               //if (pos('/ban', s) = 0) and (pos('/kb', s) = 0) then begin
 
                  net[ne].conn.SendString(replce(s + ' :' + chan))
-                 //ShowMessage(replce(s + ':' + chan))
-                 //ShowMessage(replce(s + ' :' + chan))
+                 //ShowMessage(replce(s +  ' :' + chan))
               else
                   if (pos('/me', lowercase(s)) = 1) then
                   net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
@@ -1827,22 +1826,17 @@ case s of
 
     10: Begin // MODE
        fmainc.Timer1.Interval:= 50;
-       //ShowMessage('r ' + r);
-       //ShowMessage(r + sLineBreak + mess);
+       //ShowMessage('mess ' + r);
        // Getting user
           // mcclane!* MODE user +i
           //irc-can.icq-chat.com MODE StrangerKev -x
 
        tmp:= r;
 
-       if mess = '' then begin
           bak:= r;
-          while (pos(' ', bak) > 0) do begin
-                delete(bak, 1, pos(' ', bak));
-          end;
-       end;
-       delete(r, length(r) - length(bak), length(r));
-       //ShowMessage(r + '_' + sLineBreak + tmp);
+          while (pos(' ', bak) > 0) do delete(bak, 1, pos(' ', bak));
+       delete(r, length(r) - length(bak), length(bak)+1);
+       //ShowMessage(r + '_' + sLineBreak + bak);
 
        if r[length(r)] = ' ' then delete(r, length(r), 1);
        while (tmp[length(tmp)] = ' ') do delete(tmp, length(tmp), 1);
@@ -1850,6 +1844,7 @@ case s of
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
 
        //if fmainc.TreeView1.Items[n].HasChildren then
+       tmp:= bak;
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
        fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1, length(m0[n].chan)));
@@ -4112,7 +4107,7 @@ begin
         delete(com, 1,1);
         tmp:= com;
         delete(tmp, 1, pos(' ', tmp));
-
+                      // /ban 3 mcclane fuera de aqui
         delete(com, pos(' ', com), length(com));   // Command
 
         if (pos('1', tmp) = 1) or (pos('2', tmp) = 1) or (pos('3', tmp) = 1) then begin
@@ -4128,8 +4123,9 @@ begin
 
         if pos(' ', tmp) > 0 then begin
         delete(tmp, 1, pos(' ', tmp));
-        mess:= copy(tmp, 1, length(tmp));          // Message
+        mess:= ':' + copy(tmp, 1, length(tmp));          // Message
         end;
+        //ShowMessage('mess ' + mess);
 
      // Querying who
         net[con].conn.SendString('WHOIS ' + nick + #13#10);

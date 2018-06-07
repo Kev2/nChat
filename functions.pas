@@ -212,12 +212,29 @@ begin
 
      // KICK
      if (pos(lowercase('kick'), r) = 1) then begin
-        r:= StringReplace(r, 'kick', 'KICK ' + copy(r, pos('#',r), pos(':',r)-1), [rfReplaceAll]);
-        delete(r, pos(':',r)-1, length(r));
+        // /kick mcclane fuera de aqui :#nvz
+        // /kick #nvz mcclane fuera de aqui :#nvz
         chan:= r;
-        delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan)); delete(chan, 1, pos(' ',chan));
-        chan:= chan;
-        r:= StringReplace(r, chan, ':'+chan, [rfReplaceAll]);
+        delete(chan, 1, pos(' ', chan));
+        if (pos('#', chan) = 1) then delete(chan, pos(' ', chan), length(chan)) else begin
+           while (pos(':', chan) > 0) do delete(chan, 1, pos(':', chan));
+        end;
+
+        tmp:= r;
+        while (pos(':', tmp) > 0) do delete(tmp, 1, pos(':', tmp));
+        delete(r, length(r)-(length(tmp)+1), length(tmp)+2);
+
+        //while (r[length(r)] = ':') or (r[length(r)] = ' ') do delete(r, length(r), 1);
+
+        // Kick #chan mcclane fuera de aqui
+        tmp:= r; // Kick #nvz mcclane
+        delete(tmp, 1, pos(' ', tmp));
+        if (pos('#', tmp) = 1) then delete(tmp, 1, pos(' ', tmp));
+        chan:= chan + ' ' + copy(tmp, 1, pos(' ', tmp));   // Channel + nick
+        delete(tmp, 1, pos(' ', tmp));
+        //delete(r, length(r) - length(tmp)+1, length(tmp)+2);
+
+        r:= 'KICK ' + chan + ':' + tmp;
      end;
 
      // BAN
