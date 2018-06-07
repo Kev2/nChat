@@ -1838,8 +1838,10 @@ case s of
        delete(tmp, 1, pos('MODE', tmp) + 4);
        while (pos(' ', tmp) > 0) do delete(tmp, 1, pos(' ', tmp));
 
-       delete(r, pos(tmp, r), length(tmp));
-       delete(r, length(r), 1);
+       if mess = '' then begin
+          delete(r, pos(tmp, r), length(tmp));
+          delete(r, length(r), 1);
+       end;
        //ShowMessage(r + sLineBreak + tmp);
        //if fmainc.TreeView1.Items[n].HasChildren then
 
@@ -1969,7 +1971,7 @@ case s of
        //ShowMessage('r: ' + r);
 
        if (pos('+',r) > 0) or (pos('-',r) > 0) or (pos('mode', lowercase(r)) > 0) then begin
-          mess:= tmp;
+          if (pos('+',mess) = 0) and (pos('-',mess) = 0) then mess:= tmp;
           while (mess[length(mess)] = ' ') do delete(mess, length(mess), 1);
           while (pos(' ', mess) > 0) do delete(mess, 1, pos(' ', mess));
           //ShowMessage(r +sLineBreak+ mess);
@@ -1979,7 +1981,7 @@ case s of
           delete(mess, pos(' ',mess), length(mess));
           end;
 
-          if (pos('!', r) = 0) then tmp:= copy(r, pos('mode', lowercase(r))+5, length(r)-1) else
+          if (pos('!', r) = 0) then tmp:= copy(r, pos('mode', lowercase(r))+5, length(r)) else
              tmp:= copy(r, 1, pos('!', r)-1);
 
           if (pos('#', r) > 0) then
@@ -3885,8 +3887,7 @@ begin
      p:= 0; s:= 0; a:= '';
 
      // Getting connection
-     s:= cnode(5, TreeView1.Selected.AbsoluteIndex, 0, ''); // Returns TSyn array
-     s:= StrToInt( copy(m0[s].chan, 1, 1) ) +1;
+        s:= TreeView1.Selected.Parent.Index +1; // Returns TSyn array
 
      // Querying who
      if (task = true) then net[s].conn.SendString('WHO ' + nick + #13#10);
