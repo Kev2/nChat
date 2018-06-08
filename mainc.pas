@@ -2153,7 +2153,7 @@ begin
         r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
         r:= char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '1,16D~~ ' +char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '16,5[_]' +char(2) + char(3) + '1,16D~~ ' + char(2) + char(3) + '8,5Coffee Anyone??' + char(3) + '16,16';
         r:= char(3) + '4 hangs' +char(3) + '10 a' +char(3) + '13 string' + char(3) + '2 of' +char(3) + '5 party' +char(3) + '10 lights' +char(3) + '9 out' +char(3) + '7 for' +char(3) + '9Ai.*A*.' +char(3) + '8Ai. *A*.' +char(3) + '10Ai.*A*' +char(3) + '1Capt^Goodvib es *A*.' +char(3) + '12Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '8Ai.*A*' +char(3) + '1 Capt^Goodvibes *A*.' +char(3) + '9Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '14Ai.*' +char(3) + '1 Capt^Goodvibes *.' +char(3) + '2Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '9Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '8Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '5Ai.*A*.' +char(3) + '8Ai.' +char(1);
-
+     }
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2174,9 +2174,10 @@ begin
      //r:= gtopic(r);
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
      //r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
-     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
+     //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
+     r:= 'llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll';
      //c:= clgreen;
      end;
 
@@ -2184,7 +2185,7 @@ begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-     }
+
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2288,6 +2289,7 @@ var
    hy:                boolean = false; // hyperlink
    r1:                boolean = false;
    col:               boolean = false; // Colored line
+   chc:               string = ' <>/\&%=+';     // Cut the line
    nd:                string = ' ,()[]';     // Hypertext end
    ec:                string = char(1) + char(2) + char(3) + char(15) + char(31);     // Empty Characters
    cc:                smallint = 0;    // Counting empty characters
@@ -2442,13 +2444,12 @@ begin
         // Word wrapping for lines and hypertext
         c:= length(tmp);
             while (c > w) do begin
-                 while (c > 0) and ( not (tmp[c] = ' ') and not (tmp[c] = '/') and not (tmp[c] = '%')
-                 and not (tmp[c] = '&') and not (tmp[c] = '=') and not (tmp[c] = '+')
-                 and not (tmp[c] = '>') and not (tmp[c] = '<') ) do dec(c);
+                 while (c > 1) and ( pos(tmp[c], chc) = 0 ) do dec(c);
             dec(c);
             end;
             inc(c);
             if not (tmp[c] = ' ') then if (tmp[c+1] = '/') or (tmp[c+1] = '%') then inc(c);
+
            //if (assigned(m0[1])) then ShowMessage(copy(tmp, 1, c));
            if c = 1 then c:= w;
 
