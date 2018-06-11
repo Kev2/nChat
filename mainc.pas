@@ -342,7 +342,11 @@ begin
         server:= fmainc.TreeView1.Items[m].Text;
         end;
 
-   if conn.SocksResponse then output(clnone, 'Connected... now logging in', n);
+   if conn.SocksResponse then begin
+      output(clnone, 'Connected... now logging in', n);
+      fmainc.servm.Enabled:= true;
+      fmainc.chanm.Enabled:= true;
+   end;
 
    //m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
    //fmainc.createlog(co, server);

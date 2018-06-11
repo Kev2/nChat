@@ -7345,6 +7345,7 @@ object fmainc: Tfmainc
     end
     object servm: TMenuItem
       Caption = '&Server'
+      Enabled = False
       object servm1: TMenuItem
         Caption = 'Servers &List'
         Bitmap.Data = {
@@ -7555,6 +7556,7 @@ object fmainc: Tfmainc
     end
     object chanm: TMenuItem
       Caption = 'C&hannel'
+      Enabled = False
       object banlm: TMenuItem
         Caption = '&Bans List'
         Bitmap.Data = {
