@@ -3053,6 +3053,7 @@ var c:  smallint = 1;
     k:  string;
 begin
      r:= StringReplace(r, char(2), '', [rfReplaceAll]);
+     r:= StringReplace(r, char(3), '', [rfReplaceAll]);
      r:= StringReplace(r, char(15), '', [rfReplaceAll]);
      r:= StringReplace(r, char(31), '', [rfReplaceAll]);
      r:= StringReplace(r, char(13), '', [rfReplaceAll]);
