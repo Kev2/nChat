@@ -7233,6 +7233,7 @@ object fmainc: Tfmainc
       Hint = 'Join'
       Top = 2
       Caption = '&Join'
+      Enabled = False
       ImageIndex = 2
       MenuItem = joinm
       ParentShowHint = False
@@ -7299,6 +7300,7 @@ object fmainc: Tfmainc
           0000000000000000000000000000000000000000000000000000
         }
         ImageIndex = 6
+        OnClick = openmClick
       end
       object quitm: TMenuItem
         Caption = 'E&xit'
@@ -7345,7 +7347,6 @@ object fmainc: Tfmainc
     end
     object servm: TMenuItem
       Caption = '&Server'
-      Enabled = False
       object servm1: TMenuItem
         Caption = 'Servers &List'
         Bitmap.Data = {
@@ -7390,6 +7391,7 @@ object fmainc: Tfmainc
       end
       object clistm: TMenuItem
         Caption = '&Channel List'
+        Enabled = False
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -7431,6 +7433,7 @@ object fmainc: Tfmainc
       end
       object joinm: TMenuItem
         Caption = '&Join'
+        Enabled = False
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000FFFFFF00FFFF
@@ -7473,6 +7476,7 @@ object fmainc: Tfmainc
       end
       object dconm: TMenuItem
         Caption = '&Disconnect'
+        Enabled = False
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -7640,6 +7644,7 @@ object fmainc: Tfmainc
           0000000000000000000000000000000000000000000000000000
         }
         ImageIndex = 8
+        OnClick = optmClick
       end
     end
     object hlpm: TMenuItem

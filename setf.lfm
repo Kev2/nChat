@@ -1,0 +1,80 @@
+object fsett: Tfsett
+  Left = 486
+  Height = 240
+  Top = 232
+  Width = 320
+  Caption = 'Lemon Chat - Settings'
+  ClientHeight = 240
+  ClientWidth = 320
+  Color = 12901315
+  OnClose = FormClose
+  LCLVersion = '1.6.4.0'
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 220
+    Top = 10
+    Width = 300
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 10
+    ClientHeight = 220
+    ClientWidth = 300
+    TabOrder = 0
+    object chg1: TCheckGroup
+      Left = 16
+      Height = 71
+      Top = 8
+      Width = 180
+      AutoFill = True
+      AutoSize = True
+      Caption = 'Settings'
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.TopBottomSpacing = 6
+      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      ClientHeight = 54
+      ClientWidth = 176
+      Items.Strings = (
+        'Show join / part messages'
+        'Log to disk'
+      )
+      TabOrder = 0
+      Data = {
+        020000000202
+      }
+    end
+    object pathl: TLabeledEdit
+      AnchorSideLeft.Control = chg1
+      AnchorSideTop.Control = chg1
+      AnchorSideTop.Side = asrBottom
+      Left = 16
+      Height = 25
+      Top = 112
+      Width = 272
+      Anchors = [akLeft]
+      AutoSize = False
+      BorderSpacing.Top = 10
+      EditLabel.AnchorSideLeft.Control = pathl
+      EditLabel.AnchorSideTop.Side = asrCenter
+      EditLabel.AnchorSideRight.Control = pathl
+      EditLabel.AnchorSideRight.Side = asrBottom
+      EditLabel.AnchorSideBottom.Control = pathl
+      EditLabel.Left = 16
+      EditLabel.Height = 15
+      EditLabel.Top = 87
+      EditLabel.Width = 272
+      EditLabel.Caption = 'Logs path'
+      EditLabel.ParentColor = False
+      TabOrder = 1
+    end
+  end
+end

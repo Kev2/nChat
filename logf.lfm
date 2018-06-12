@@ -1,0 +1,115 @@
+object flogr: Tflogr
+  Left = 339
+  Height = 579
+  Top = 85
+  Width = 683
+  Caption = 'Lemon Chat - Log Reader'
+  ClientHeight = 560
+  ClientWidth = 683
+  Color = 12901315
+  KeyPreview = True
+  Menu = MainMenu1
+  Position = poMainFormCenter
+  LCLVersion = '1.6.4.0'
+  object memlog: TMemo
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = srchl
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 10
+    Height = 505
+    Top = 45
+    Width = 663
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Around = 10
+    OnKeyPress = memlogKeyPress
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
+  object srchl: TLabeledEdit
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = casebox
+    Left = 444
+    Height = 25
+    Top = 10
+    Width = 120
+    Anchors = [akTop, akRight]
+    BorderSpacing.Around = 10
+    EditLabel.AnchorSideTop.Control = srchl
+    EditLabel.AnchorSideTop.Side = asrCenter
+    EditLabel.AnchorSideRight.Control = srchl
+    EditLabel.AnchorSideBottom.Control = srchl
+    EditLabel.AnchorSideBottom.Side = asrBottom
+    EditLabel.Left = 371
+    EditLabel.Height = 15
+    EditLabel.Top = 15
+    EditLabel.Width = 63
+    EditLabel.Caption = 'Search text'
+    EditLabel.ParentColor = False
+    LabelPosition = lpLeft
+    TabOrder = 1
+    OnKeyPress = memlogKeyPress
+  end
+  object casebox: TCheckBox
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 574
+    Height = 21
+    Top = 10
+    Width = 99
+    Anchors = [akTop, akRight]
+    BorderSpacing.Around = 10
+    Caption = 'Case sensitive'
+    TabOrder = 2
+  end
+  object MainMenu1: TMainMenu
+    left = 8
+    top = 8
+    object filem: TMenuItem
+      Caption = '&File'
+      object openm: TMenuItem
+        Caption = '&Open'
+        ImageIndex = 6
+        OnClick = openmClick
+      end
+      object savm: TMenuItem
+        Caption = '&Save'
+        ImageIndex = 10
+        OnClick = savmClick
+      end
+      object quitm: TMenuItem
+        Caption = 'E&xit'
+        ImageIndex = 5
+        OnClick = quitmClick
+      end
+    end
+    object setm: TMenuItem
+      Caption = 'S&ettings'
+      object optm: TMenuItem
+        Caption = '&Options'
+        ImageIndex = 8
+      end
+    end
+    object hlpm: TMenuItem
+      Caption = '&Help'
+      object abm: TMenuItem
+        Caption = 'A&bout'
+        ImageIndex = 4
+        ShortCut = 112
+      end
+    end
+  end
+  object logd: TOpenDialog
+    left = 64
+    top = 8
+  end
+  object savd: TSaveDialog
+    left = 112
+    top = 8
+  end
+end

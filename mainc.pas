@@ -12,7 +12,7 @@ uses
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, ssl_openssl, ssl_openssl_lib,
     SynEdit, SynHighlighterPosition, crt,
-    dateutils, abform, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
+    dateutils, IniFiles, abform, setf, logf, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
 Type
@@ -89,9 +89,16 @@ Type
     procedure FormResize(Sender: TObject);
     procedure Splitter1Moved(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
+
+    procedure openmClick(Sender: TObject);
+    procedure optmClick(Sender: TObject);
     procedure abmClick(Sender: TObject);
     procedure quitmClick(Sender: TObject);
+    procedure servm1Click(Sender: TObject);
+    procedure clistmClick(Sender: TObject);
+    procedure banlmClick(Sender: TObject);
 
+    procedure joinmClick(Sender: TObject);
     function dconmClick(Sender: TObject): smallint;
     procedure rconmClick(Sender: TObject);
     procedure TimerOnTimer(sender: TObject);
@@ -99,9 +106,6 @@ Type
     function srchtree(nod: string):boolean; // Function which search duplicates rooms
     procedure mstatusChange(Sender: TObject);
 
-    procedure servm1Click(Sender: TObject);
-    procedure clistmClick(Sender: TObject);
-    procedure banlmClick(Sender: TObject);
     procedure LeaveRoom(task: smallint);
     procedure closeRMClick(Sender: TObject); // Delete Tree Item and leave a channel
     procedure closenClick(rc: smallint; c: string); // Delete Tree Items and TNotebook pages and close network
@@ -110,7 +114,7 @@ Type
     procedure einputKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure SynEdit1KeyPress(Sender: TObject; var Key: char);
 
-    procedure joinmClick(Sender: TObject);
+
     procedure createlog(con: smallint; chann: string);
     function nicktab(ch: smallint; test: string):string;
     procedure raw(r: string);
@@ -168,8 +172,9 @@ Type
   public
   num:     smallint;
   conn:    TTCPBlockSocket;
+  active:  boolean;          // Connection is active
+  fast:    boolean;          // Connection fast (MOTD)
   nick:    string;
-  fast:    boolean; // Connection fast (MOTD)
 
   public
   server:  string;
@@ -214,6 +219,7 @@ Type
 
 var
   fmainc: Tfmainc;
+  ini:      TIniFile;
   net:      array[1..10] of connex;
   //conn:     array[0..9] of TTCPBlockSocket;
   log:      array of string; // Log file names
@@ -342,12 +348,6 @@ begin
         server:= fmainc.TreeView1.Items[m].Text;
         end;
 
-   if conn.SocksResponse then begin
-      output(clnone, 'Connected... now logging in', n);
-      fmainc.servm.Enabled:= true;
-      fmainc.chanm.Enabled:= true;
-   end;
-
    //m0[n].chan:= inttostr(num) + fmainc.TreeView1.Items[n].Text;
    //fmainc.createlog(co, server);
 
@@ -429,6 +429,16 @@ begin
            //mstatus.SetHtml(conn.LastErrorDesc);
      end;
 
+     if conn.CanRead(2000) then begin
+        //output(clnone, 'Connected... now logging in', n);
+        fmainc.clistm.Enabled:= true;
+        fmainc.joinm.Enabled:= true;
+          fmainc.ToolButton2.Enabled:= true;
+        fmainc.dconm.Enabled:= true;
+        fmainc.chanm.Enabled:= true;
+        active:= true;
+     end;
+
 {
      fmainc.txp('none', true, true);
      fmainc.txp('none', false, false);
@@ -464,36 +474,35 @@ end;
 
 function Tfmainc.dconmClick(Sender: TObject): smallint;
 var
-   s:   smallint = 0;
-   n:   smallint = 0;
+   conn: smallint = 0; // Connection
+   n:    smallint = 0; // Parent
+   m:    smallint = 0; // Last child
+   no:   smallint = 0; // Object (array)
 begin
-     if (TreeView1.Selected.Parent = nil) then s:= TreeView1.Selected.AbsoluteIndex else
-        s:= TreeView1.Selected.Parent.AbsoluteIndex;
-        n:= s;
+     if (TreeView1.Selected.Parent = nil) then n:= TreeView1.Selected.AbsoluteIndex else
+        n:= TreeView1.Selected.Parent.AbsoluteIndex;
+        if TreeView1.Items[n].HasChildren then m:= TreeView1.Items[n].GetLastChild.AbsoluteIndex;
 
-     //if not (sender = rconm) then
-     repeat
-           if (pos('(', TreeView1.Items[n].Text) = 0) and (pos('#', TreeView1.Items[n].Text) > 0) then begin
+        //net[n+1].conn.SendString('KILL' + #13#10);
+        //net[s+1].conn.SendString('KILL ' + net[s+1].nick + #13#10);
+        conn:= TreeView1.Items[n].Index +1;
+        net[conn].conn.CloseSocket;
+        net[conn].active:= false;
+
+        result:= conn;
+
+     while (n <= m) do begin
+           no:= cnode(5,n,0,'');
+           if (pos('(', TreeView1.Items[n].Text) = 0) then
            TreeView1.Items[n].Text:= '(' + TreeView1.Items[n].Text + ')';
-           m0[n].Append('Disconnected');
-           end;
-           if assigned(lb0[n]) then begin
-              lb0[n].Clear;
-              lab0[n].Caption:= '';
+           m0[no].Append('Disconnected');
+
+           if assigned(lb0[no]) then begin
+              lb0[no].Clear;
+              lab0[no].Caption:= '';
            end;
      inc(n);
-     if (n < TreeView1.Items.Count) then
-        if (TreeView1.Items[n].Parent = nil) then n:= TreeView1.Items.Count;
-     until (n = TreeView1.Items.Count);
-
-     if (TreeView1.Selected.Parent = nil) then s:= TreeView1.Selected.Index else
-        s:= TreeView1.Selected.Parent.Index;
-
-     //net[s+1].conn.SendString('KILL' + #13#10);
-     //net[s+1].conn.SendString('KILL ' + net[s+1].nick + #13#10);
-     net[s+1].conn.CloseSocket;
-     //ShowMessage(net[s+1].conn.SocksIP:= '');
-     result:= s+1;
+     end;
 end;
 
 procedure Tfmainc.rconmClick(Sender: TObject);
@@ -532,7 +541,8 @@ end;
 // Starting date thu 2016-sep-08
 // 4500 lines 2017-nov-24
 procedure Tfmainc.FormActivate(Sender: TObject);
-var n: smallint = 0;
+var n:     smallint = 0;
+    iniv:  TStrings;
 begin
      caption:= 'n-chat';
      //einput.SetFocus;
@@ -556,6 +566,37 @@ begin
       blue   = op
       green  = half op
       voice  = orange}
+
+      // ini.file
+      iniv:= TStringList.Create;
+      if FileExists(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat' + DirectorySeparator + 'Lemon.ini') then begin
+      ini:= TIniFile.Create(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat' + DirectorySeparator + 'Lemon.ini');
+      ini.ReadSectionValues('Settings', iniv);
+      for n:= 0 to iniv.Count-1 do begin
+          //ShowMessage(iniv[n]);
+          if iniv[0] = 'Traffic=yes' then fsett.chg1.Checked[0]:= true;
+          if iniv[1] = 'Log=yes' then fsett.chg1.Checked[1]:= true;
+      end;
+      iniv.Clear;
+
+      ini.ReadSectionValues('Path', iniv);
+      if iniv[0] <> '' then fsett.pathl.Caption:= copy(iniv[0], pos('=', iniv[0])+1, length(iniv[0]));
+      end;
+
+      if (fsett.pathl.Caption = '') then begin
+
+      {$ifdef Windows}
+      fsett.pathl.Caption:= GetEnvironmentVariable('MyDocs') + DirectorySeparator + 'LemonChat Logs';
+      mkdir(fsett.pathl.Caption);
+      {$endif}
+
+      {$ifdef unix}
+      fsett.pathl.Caption:= GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat/Logs';
+      mkdir(fsett.pathl.Caption);
+      {$endif}
+      end;
+
+iniv.Free;
 end;
 
 procedure Tfmainc.abmClick(Sender: TObject);
@@ -566,6 +607,7 @@ end;
 
 procedure Tfmainc.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var i: smallint = 0;
+    path: string;
 begin
      while (i < length(log)) do begin
            AssignFile(t, log[i]);
@@ -578,6 +620,8 @@ begin
      inc(i);
      end;
      for i:= 1 to 6 do gr[i].Free;
+
+     fsett.Close;
 end;
 
 
@@ -613,10 +657,21 @@ begin
 end;
 
 
+
 // Menus
 procedure Tfmainc.servm1Click(Sender: TObject);
 begin
      fserv.Show;
+end;
+
+procedure Tfmainc.openmClick(Sender: TObject);
+begin
+     flogr.openmClick(fmainc);
+end;
+
+procedure Tfmainc.optmClick(Sender: TObject);
+begin
+  fsett.show;
 end;
 
 procedure Tfmainc.clistmClick(Sender: TObject);
@@ -663,7 +718,7 @@ var
    i:             smallint = 0;
    path:          string;
 begin
-     path:= ExtractFilePath(paramstr(0)) + 'logs/';
+     path:= fsett.pathl.Caption + DirectorySeparator;
      if not DirectoryExists(path) then mkdir(path);
 
      {
@@ -1590,11 +1645,13 @@ case s of
 
        if pos('JOIN', r) > 0 then begin
           //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
+          if fsett.chg1.Checked[0] then
           output(clgreen, copy(r, 1, pos('!', r)-1) + ' (' + cname + ')' + ' has joined ' +
           copy(m0[n].chan, 2, length(m0[n].chan)), n);
        end;
 
        if (pos('PART', r) > 0) then begin
+       if fsett.chg1.Checked[0] then
           if assigned(m0[n]) then
           if mess <> '' then
              output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') parts. ' + '(' + mess + ')', n) else
@@ -1626,6 +1683,8 @@ case s of
                 fmainc.createlog(num, copy(m0[s].chan, pos('#', m0[s].chan), length(m0[s].chan)));
 
                 //ShowMessage('quit nor_' + mess);
+                if fsett.chg1.Checked[0] then
+
                 if length(mess) > 0 then
                    output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') has quit (' + mess + ')', s) else
                                   output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') has quit', s);
@@ -5051,6 +5110,7 @@ const ping: integer = 0;
 var
       f:    smallint = 1;
       n:    smallint = 1;
+      a:    boolean = false; // At least one connection is active
 begin
      {
      if timer1.Interval = 50 then begin
@@ -5064,9 +5124,17 @@ begin
 
      while (assigned(net[n])) do begin
            if (net[n].fast = true) then f:= n;
+           if net[n].active = true then a:= true;
      inc(n);
      end;
      n:= f;
+     if a = false then begin
+     fmainc.clistm.Enabled:= false;
+     fmainc.joinm.Enabled:= false;
+       fmainc.ToolButton2.Enabled:= false;
+     fmainc.dconm.Enabled:= false;
+     fmainc.chanm.Enabled:= false;
+     end;
 
      //while (assigned(net[n])) and (assigned(net[n].conn)) do begin
      while (assigned(net[n])) do begin
