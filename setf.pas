@@ -50,7 +50,7 @@ begin
   path:= GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat';
   if not DirectoryExists(path) then mkdir(path);
   ini:= TIniFile.Create(path + DirectorySeparator + 'Lemon.ini');
-  path:= path + '/Logs';
+  path:= path + '/Logs/';
   {$endif}
 
   if pathl.Caption <> '' then path:= pathl.Caption else pathl.Caption:= path;
@@ -65,7 +65,7 @@ begin
      ini.WriteString('Settings', 'Log', 'yes') else ini.WriteString('Settings', 'Log', 'no');
 
   if fsett.pathl.Caption = '' then
-     ini.WriteString('Path', 'LogPath', path + DirectorySeparator + 'Logs') else ini.WriteString('Path', 'LogPath', fsett.pathl.Caption);
+     ini.WriteString('Path', 'LogPath', path + DirectorySeparator + 'Logs/') else ini.WriteString('Path', 'LogPath', fsett.pathl.Caption);
 
 end;
 

@@ -29,7 +29,7 @@ object fsett: Tfsett
       Left = 16
       Height = 71
       Top = 8
-      Width = 180
+      Width = 179
       AutoFill = True
       AutoSize = True
       Caption = 'Settings'
@@ -42,9 +42,9 @@ object fsett: Tfsett
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
       ClientHeight = 54
-      ClientWidth = 176
+      ClientWidth = 175
       Items.Strings = (
-        'Show join / part messages'
+        'Hide  join / part messages'
         'Log to disk'
       )
       TabOrder = 0

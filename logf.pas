@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  StdCtrls, ExtCtrls, functions, srchf;
+  StdCtrls, ExtCtrls, functions, setf;
 
 type
 
@@ -72,6 +72,8 @@ var  line:   string;
      p:      boolean = false;
      f:      TextFile;
 begin
+  logd.FileName:= fsett.pathl.Caption;
+  logd.DoSelectionChange;
 
      repeat
         p:= true;
