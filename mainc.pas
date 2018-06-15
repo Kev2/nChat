@@ -1202,6 +1202,7 @@ begin
                     //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
+
                     // Sending to test file
                     //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
                     if r <> '' then begin
@@ -1645,13 +1646,13 @@ case s of
 
        if pos('JOIN', r) > 0 then begin
           //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
-          if fsett.chg1.Checked[0] then
+          if not fsett.chg1.Checked[0] then
           output(clgreen, copy(r, 1, pos('!', r)-1) + ' (' + cname + ')' + ' has joined ' +
           copy(m0[n].chan, 2, length(m0[n].chan)), n);
        end;
 
        if (pos('PART', r) > 0) then begin
-       if fsett.chg1.Checked[0] then
+       if not fsett.chg1.Checked[0] then
           if assigned(m0[n]) then
           if mess <> '' then
              output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') parts. ' + '(' + mess + ')', n) else
@@ -1683,7 +1684,7 @@ case s of
                 fmainc.createlog(num, copy(m0[s].chan, pos('#', m0[s].chan), length(m0[s].chan)));
 
                 //ShowMessage('quit nor_' + mess);
-                if fsett.chg1.Checked[0] then
+                if not fsett.chg1.Checked[0] then
 
                 if length(mess) > 0 then
                    output(clmaroon, copy(r, 1, pos('!', r) -1) + ' (' + cname + ') has quit (' + mess + ')', s) else
