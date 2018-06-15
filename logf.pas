@@ -121,6 +121,7 @@ begin
                  inc(l);
                  end;
 
+                 Caption:= logd.FileName;
               closefile(f);
               end;
      end;
@@ -362,7 +363,7 @@ var ch:  integer = 0;
     c:  integer = 0;
 begin
   //if (key >= 37) and (key <= 40) then begin
-  for ch:= 0 to memlog.CaretPos.y-1 do c:= c + length(memlog.Lines[ch]) +1;
+  for ch:= 0 to memlog.CaretPos.y-1 do c:= c + length(UTF8ToISO_8859_15(memlog.Lines[ch])) +1;
       c:= c + memlog.CaretPos.x;
      linel.Caption:= 'line: ' + inttostr(memlog.CaretPos.y);
      coll.Caption:= 'col: ' + inttostr(memlog.CaretPos.x);
