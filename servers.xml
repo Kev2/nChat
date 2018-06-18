@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Networks>
   <axxGlobal>
-    <n1>fre</n1>
-    <n2>JMcClane</n2>
+    <n1></n1>
+    <n2></n2>
     <n3></n3>
-    <u>Sollo</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </axxGlobal>
   <a2600Net>
     <s1 name="server">irc.2600.net/6667</s1>
-    <n1>Solloo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </a2600Net>
   <a7-Indonesia>
     <s1 name="server">irc.7-indonesia.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </a7-Indonesia>
   <AccessIRC>
     <s1 name="server">accessirc.net/6668</s1>
     <s2 name="server">eu.accessirc.net/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </AccessIRC>
   <AfterNET>
     <s1 name="server">irc.afternet.org/6667</s1>
     <s2 name="server">us.afternet.org/6667</s2>
     <s3 name="server">eu.afternet.org/6667</s3>
-    <n1>Solloo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>Solloo</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </AfterNET>
   <Aitvaras>
     <s1 name="server">irc.data.lt/+6668</s1>
@@ -53,21 +53,21 @@
     <s8 name="server">irc.takas.lt</s8>
     <s9 name="server">irc.5ci.net</s9>
     <s10 name="server">irc.kis.lt</s10>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Aitvaras>
   <AmigaNet>
     <s1 name="server">irc.amiganet.org/666</s1>
     <s2 name="server">uk.amiganet.org/6667</s2>
     <s3 name="server">us.amiganet.org/6667</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </AmigaNet>
   <ARCNet>
     <s1 name="server">se1.arcnet.vapor.com/6667</s1>
@@ -83,166 +83,166 @@
     <s11 name="server">uk1.arcnet.vapor.com/6667</s11>
     <s12 name="server">uk2.arcnet.vapor.com/6667</s12>
     <s13 name="server">fr1.arcnet.vapor.com/6667</s13>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ARCNet>
   <Astrolink>
     <s1 name="server">irc.astrolink.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Astrolink>
   <AustNet>
     <s1 name="server">au.austnet.org/6667</s1>
     <s2 name="server">ca.austnet.org/6667</s2>
     <s3 name="server">us.austnet.org/6667</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </AustNet>
   <AzzurraNet>
     <s1 name="server">irc.azurra.org/6667</s1>
     <s2 name="server">crypto.azurra.org/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </AzzurraNet>
   <Beirut>
     <s1 name="server">irc.beirut.com/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Beirut>
   <ChatJunkies>
     <s1 name="server">irc.chatjunkies.org/6667</s1>
     <s2 name="server">nl.chatjunkies.org/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChatJunkies>
   <ChatNet>
     <s1 name="server">us.chatnet.org/6667</s1>
     <s2 name="server">eu.chatnet.org/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChatNet>
   <ChatSociety>
     <s1 name="server">us.chatsociety.net/6667</s1>
     <s2 name="server">eu.chatsociety.net/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChatSociety>
   <ChatSpike>
     <s1 name="server">irc.chatspike.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChatSpike>
   <ChattingAway>
     <s1 name="server">irc.chattingaway.com/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChattingAway>
   <ChillFactory>
     <s1 name="server">irc.chillfactory.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </ChillFactory>
   <CoolChat>
     <s1 name="server">irc.coolchat.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </CoolChat>
   <Criten>
     <s1 name="server">irc.criten.net/6667</s1>
     <s2 name="server">irc.eu.criten.net/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Criten>
   <Dalnet>
     <s1 name="server">irc.dal.net/6667</s1>
     <s2 name="server">irc.eu.dal.net/6667</s2>
-    <n1>Solloo</n1>
-    <n2></n2>
-    <n3></n3>
-    <u>Hat</u>
-    <rn>John McClane</rn>
-  </Dalnet>
-  <DarkMyst>
-    <s1 name="server">irc.darkmyst.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
+  </Dalnet>
+  <DarkMyst>
+    <s1 name="server">irc.darkmyst.org/6667</s1>
+    <n1></n1>
+    <n2></n2>
+    <n3></n3>
+    <u></u>
+    <rn></rn>
   </DarkMyst>
   <Dark-Tou-Net>
     <s1 name="server">irc.d-t-net.de/6667</s1>
     <s2 name="server">bw.d-t-net.de/6667</s2>
     <s3 name="server">nc.d-t-net.de/6667</s3>
     <s4 name="server">wakka.d-t-net.de/6667</s4>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Dark-Tou-Net>
   <Debian-Servers>
     <s1 name="server">irc.debian.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Debian-Servers>
   <DeepIRC>
     <s1 name="server">irc.deepirc.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </DeepIRC>
   <DeltaAnime>
     <s1 name="server">irc.deltaanime.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </DeltaAnime>
   <EFnet>
     <s1 name="server">irc.blackened.com/6667</s1>
@@ -254,19 +254,19 @@
     <s7 name="server">irc.mindspring.com/6667</s7>
     <s8 name="server">irc.easynews.com/6667</s8>
     <s9 name="server">irc.servercentral.net/6667</s9>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </EFnet>
   <EnterTheGame>
     <s1 name="server">irc.enterthegame.com/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </EnterTheGame>
   <EUIrc>
     <s1 name="server">irc.euirc.net/6667</s1>
@@ -278,132 +278,132 @@
     <s7 name="server">irc.vie.at.euirc.net/6667</s7>
     <s8 name="server">irc.inn.at.euirc.net/6667</s8>
     <s9 name="server">irc.bas.ch.euirc.net/6667</s9>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </EUIrc>
   <EU-IRC>
     <s1 name="server">irc.eu-irc.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </EU-IRC>
   <EuropNet>
     <s1 name="server">irc.europnet.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </EuropNet>
   <FDFNet>
     <s1 name="server">irc.fdfnet.net/6667</s1>
     <s2 name="server">irc.eu.fdfnet.net/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </FDFNet>
   <FEFNet>
     <s1 name="server">irc.fef.net/6667</s1>
     <s2 name="server">irc.ggn.net/6667</s2>
     <s3 name="server">irc.vendetta.com/6667</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </FEFNet>
   <Freenode>
     <s1 name="server">irc.freenode.net/6667</s1>
-    <n1>Sollo</n1>
-    <n2></n2>
-    <n3></n3>
-    <u>McClane</u>
-    <rn>John McClane</rn>
-  </Freenode>
-  <GalaxyNet>
-    <s1 name="server">irc.galaxynet.org/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
+  </Freenode>
+  <GalaxyNet>
+    <s1 name="server">irc.galaxynet.org/6667</s1>
+    <n1></n1>
+    <n2></n2>
+    <n3></n3>
+    <u></u>
+    <rn></rn>
   </GalaxyNet>
   <GamesNET>
     <s1 name="server">irc.gamesnet.net/6667</s1>
     <s2 name="server">irc.ca.gamesnet.net/6667</s2>
     <s3 name="server">irc.eu.gamesnet.net/6667</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </GamesNET>
   <GeekShed>
     <s1 name="server">irc.geekshed.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </GeekShed>
   <German-Elite>
     <s1 name="server">dominion.german-elite.net/6667</s1>
     <s2 name="server">comatu.german-elite.net/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </German-Elite>
   <GimpNet>
     <s1 name="server">irc.gimp.org/6667</s1>
     <s2 name="server">irc.us.gimp.org/6667</s2>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </GimpNet>
   <HabberNet>
     <s1 name="server">irc.habber.net/6667</s1>
     <s2 name="server">irc.ggn.net/6667</s2>
     <s3 name="server">irc.vendetta.com/6667</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </HabberNet>
   <Hashmark>
     <s1 name="server">irc.hashmark.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Hashmark>
   <ICQ>
     <s1 name="server">irc.icq-chat.com/6697</s1>
-    <n1>StrangerK</n1>
-    <n2></n2>
-    <n3></n3>
-    <u>StrangerKev</u>
-    <rn>Kevin</rn>
-  </ICQ>
-  <IdleMonkeys>
-    <s1 name="server">irc.idlemonkeys.net/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
+  </ICQ>
+  <IdleMonkeys>
+    <s1 name="server">irc.idlemonkeys.net/6667</s1>
+    <n1></n1>
+    <n2></n2>
+    <n3></n3>
+    <u></u>
+    <rn></rn>
   </IdleMonkeys>
   <IrcLink>
     <s1 name="server">irc.irclink.net</s1>
@@ -411,11 +411,11 @@
     <s3 name="server">Oslo.no.eu.irclink.net</s3>
     <s4 name="server">frogn.no.eu.irclink.net</s4>
     <s5 name="server">tonsberg.no.eu.irclink.net</s5>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </IrcLink>
   <IRCNet>
     <s1 name="server">irc.ircnet.com</s1>
@@ -425,120 +425,120 @@
     <s5 name="server">random.ircd.de</s5>
     <s6 name="server">ircnet.netvision.net.il</s6>
     <s7 name="server">irc.cs.hut.fi</s7>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </IRCNet>
   <Opera>
     <s1 name="server">irc.opera.com/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Opera>
   <Irctoo.net>
     <s1 name="server">irc.irctoo.net</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Irctoo.net>
   <iZ-smart.net>
     <s1 name="server">irc.iz-smart.net/6667</s1>
     <s2 name="server">irc.iz-smart.net/6668</s2>
     <s3 name="server">irc.iz-smart.net/6669</s3>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </iZ-smart.net>
   <Krstarica>
     <s1 name="server">irc.krstarica.com/6667</s1>
-    <n1>Sollo</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
     <u></u>
-    <rn>John McClane</rn>
+    <rn></rn>
   </Krstarica>
   <Latinchat>
     <s1 name="server">irc.irc-hispano.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Latinchat>
   <Librenet>
     <s1 name="server">irc.librenet.net/6667</s1>
     <s2 name="server">ielf.fr.librenet.net/6667</s2>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Librenet>
   <LinkNet>
     <s1 name="server">irc.link-net.org/6667</s1>
     <s2 name="server">irc.no.link-net.org/6667</s2>
     <s3 name="server">irc.bahnhof.se/6667</s3>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </LinkNet>
   <MagicStar>
     <s1 name="server">irc.magicstar.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </MagicStar>
   <Magistic>
     <s1 name="server">irc.majistic.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Magistic>
   <MindForge>
     <s1 name="server">irc.mindforge.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </MindForge>
   <MintIRC>
     <s1 name="server">irc.mintirc.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </MintIRC>
   <MIXXnet>
     <s1 name="server">irc.mixxnet.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </MIXXnet>
   <netsplit>
     <s1 name="server">irc.netsplit.de/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </netsplit>
   <NeverNET>
     <s1 name="server">irc.nevernet.net/6667</s1>
@@ -547,11 +547,11 @@
     <s4 name="server">universe.nevernet.net/6667</s4>
     <s5 name="server">wayland.nevernet.net/6667</s5>
     <s6 name="server">forte.nevernet.net/6667</s6>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </NeverNET>
   <NixHelpNet>
     <s1 name="server">irc.nixhelp.org/6667</s1>
@@ -564,43 +564,43 @@
     <s8 name="server">us.co.nixhelp.org/6667</s8>
     <s9 name="server">us.ca.nixhelp.org/6667</s9>
     <s10 name="server">us.pa.nixhelp.org/6667</s10>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </NixHelpNet>
   <NullusNet>
     <s1 name="server">irc.nullus.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </NullusNet>
   <Oceanius>
     <s1 name="server">irc.oceanius.com/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Oceanius>
   <OFTC>
     <s1 name="server">irc.oftc.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </OFTC>
   <OtherNet>
     <s1 name="server">irc.othernet.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </OtherNet>
   <OzNet>
     <s1 name="server">irc.oz.org/6667</s1>
@@ -611,20 +611,20 @@
     <s6 name="server">rockhampton.oz.org/6667</s6>
     <s7 name="server">wollongong.oz.org/6667</s7>
     <s8 name="server">waix.oz.org/6667</s8>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </OzNet>
   <PTlink>
     <s1 name="server">irc.PTlink.net/6667</s1>
     <s2 name="server">aaia.PTlink.net/6667</s2>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </PTlink>
   <PTNet-ISPs>
     <s1 name="server">irc.PTNet.org/6667</s1>
@@ -637,11 +637,11 @@
     <s8 name="server">esoterica.PTnet.org/6667</s8>
     <s9 name="server">ip-hub.ptnet.org/6667</s9>
     <s10 name="server">nortenet.PTnet.org/6667</s10>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </PTNet-ISPs>
   <PTNet-UNI>
     <s1 name="server">irc.PTNet.org/6667</s1>
@@ -659,11 +659,12 @@
     <s13 name="server">utad.PTnet.org/6667</s13>
     <s14 name="server">iscte.PTnet.org/6667</s14>
     <s15 name="server">ubi.PTnet.org/6667</s15>
-    <n1>JMcClane</n1>
+    <s16 name="server">JMcClane</s16>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </PTNet-UNI>
   <QuakeNet>
     <s1 name="server">irc.quakenet.org/6667</s1>
@@ -675,19 +676,19 @@
     <s7 name="server">irc.uk.quakenet.org/6667</s7>
     <s8 name="server">irc.de.quakenet.org/6667</s8>
     <s9 name="server">irc.it.quakenet.org/6667</s9>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </QuakeNet>
   <RebelChat>
     <s1 name="server">irc.rebelchat.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </RebelChat>
   <RizeNET>
     <s1 name="server">irc.rizenet.org/6667</s1>
@@ -695,19 +696,19 @@
     <s3 name="server">evelance.rizenet.org/6667</s3>
     <s4 name="server">lisa.rizenet.org/6667</s4>
     <s5 name="server">scott.rizenet.org/6667</s5>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </RizeNET>
   <Rizon>
     <s1 name="server">irc.rizon.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Rizon>
   <RusNet>
     <s1 name="server">irc.tomsk.net/6667</s1>
@@ -715,92 +716,92 @@
     <s3 name="server">irc.run.net/6667</s3>
     <s4 name="server">irc.ru/6667</s4>
     <s5 name="server">irc.lucky.net/6667</s5>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </RusNet>
   <SceneNet>
     <s1 name="server">irc.scene.org/6667</s1>
     <s2 name="server">irc.eu.scene.org/6667</s2>
     <s3 name="server">irc.us.scene.org/6667</s3>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SceneNet>
   <SeilEn.de>
     <s1 name="server">irc.seilen.de/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SeilEn.de>
   <SlashNET>
     <s1 name="server">irc.slashnet.org/6667</s1>
     <s2 name="server">area51.slashnet.org/6667</s2>
     <s3 name="server">moo.slashnet.org/6667</s3>
     <s4 name="server">radon.slashnet.org/6667</s4>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SlashNET>
   <SexNet>
     <s1 name="server">irc.sexnet.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SexNet>
   <Sohbet.Net>
     <s1 name="server">irc.sohbet.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Sohbet.Net>
   <SolidIRC>
     <s1 name="server">irc.solidirc.com/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SolidIRC>
   <SorceryNet>
     <s1 name="server">irc.sorcery.net/9000</s1>
     <s2 name="server">irc.us.sorcery.net/9000</s2>
     <s3 name="server">irc.eu.sorcery.net/9000</s3>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </SorceryNet>
   <Spidernet>
     <s1 name="server">us.spidernet.org/6667</s1>
     <s2 name="server">eu.spidernet.org/6667</s2>
     <s3 name="server">irc.spidernet.org/6667</s3>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Spidernet>
   <Spotchat>
     <s1 name="server">irc.spotchat.org/6667</s1>
-    <n1>MadMaxx</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>MadMax</u>
-    <rn>Mad Max</rn>
+    <u></u>
+    <rn></rn>
   </Spotchat>
   <StarChat>
     <s1 name="server">irc.starchat.net/6667</s1>
@@ -810,46 +811,46 @@
     <s5 name="server">revenge.starchat.net/6667</s5>
     <s6 name="server">tahoma.starchat.net/6667</s6>
     <s7 name="server">neo.starchat.net/6667</s7>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </StarChat>
   <TNI3>
     <s1 name="server">irc.tni3.com/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </TNI3>
   <TURLINet>
     <s1 name="server">irc.turli.net/6667</s1>
     <s2 name="server">irc.servx.ru/6667</s2>
     <s3 name="server">irc.gavnos.ru/6667</s3>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </TURLINet>
   <Ubuntu-Servers>
     <s1 name="server">irc.ubuntu.com/8001</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Ubuntu-Servers>
   <UnderNet>
     <s1 name="server">us.undernet.org/6667</s1>
     <s2 name="server">eu.undernet.org/6667</s2>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </UnderNet>
   <UniBG>
     <s1 name="server">irc.lirex.com/6667</s1>
@@ -858,44 +859,44 @@
     <s4 name="server">irc.techno-link.com/6667</s4>
     <s5 name="server">irc.telecoms.bg/6667</s5>
     <s6 name="server">irc.tu-varna.edu/6667</s6>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </UniBG>
   <Whiffle>
     <s1 name="server">irc.whiffle.org/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Whiffle>
   <WorldNet>
     <s1 name="server">irc.worldnet.net/6667</s1>
     <s2 name="server">irc.fr.worldnet.net/6667</s2>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </WorldNet>
   <XXXChatters>
     <s1 name="server">xxxchatters.com/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </XXXChatters>
   <Xentonix.net>
     <s1 name="server">irc.xentonix.net/6667</s1>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </Xentonix.net>
   <XWorld>
     <s1 name="server">Buffalo.NY.US.XWorld.org/6667</s1>
@@ -903,10 +904,10 @@
     <s3 name="server">Rochester.NY.US.XWorld.org/6667</s3>
     <s4 name="server">Bayern.DE.EU.XWorld.Org/6667</s4>
     <s5 name="server">Chicago.IL.US.XWorld.Org/6667</s5>
-    <n1>JMcClane</n1>
+    <n1></n1>
     <n2></n2>
     <n3></n3>
-    <u>JMcClane</u>
-    <rn>John McClane</rn>
+    <u></u>
+    <rn></rn>
   </XWorld>
 </Networks>
