@@ -666,6 +666,7 @@ end;
 
 procedure Tfmainc.openmClick(Sender: TObject);
 begin
+     flogr.Show;
      flogr.openmClick(fmainc);
 end;
 
