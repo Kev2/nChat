@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  StdCtrls, ExtCtrls, functions, srchf, LConvEncoding;
+  StdCtrls, ExtCtrls, functions, LConvEncoding;
 
 type
 
@@ -59,9 +59,6 @@ procedure Tflogr.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState)
 begin
   if (key <> 13) then srchl.SetFocus;
   if (key = 13) then begin
-     if memlog.Lines.Count = 0 then
-    //memlog.Lines.LoadFromFile('/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/Spotchat/#linuxmint_help');
-     logd.FileName:= '/home/nor/APT/test2';
 
      if (srchl.Caption <> '') then begin
         srch;
@@ -107,17 +104,8 @@ begin
 
                  while (not EOF(f)) do begin
                        ReadLn(f, line);
-                       //ShowMessage(inttostr(length(line)));
-                       //line:= Utf8ToAnsi(line);
-                       //ShowMessage(line);
 
-                       {
-                       // Treating line
-                       for ch:= 1 to length(line) do
-                           if not (line[ch] in ['a'..'z']) and not (line[ch] in ['A'..'Z']) and not (line[ch] in ['0'..'9']) and
-                              (pos(line[ch], spec) = 0) then line[ch]:= char(249);
-                       }
-                       memlog.lines[l]:= line;
+                       memlog.Lines[l]:= line;
                  inc(l);
                  end;
 
@@ -217,18 +205,7 @@ case scan of
 
              //if (pos('’', lin) > 0) then
              //ShowMessage(inttostr(length(UTF8ToISO_8859_15(lin))));
-             {
-             lines[l]:= StringReplace(lines[l], 'â', 'â', [rfReplaceAll]);
-             lines[l]:= StringReplace(lines[l], '¢', '€', [rfReplaceAll]);
 
-             lin:= StringReplace(lin, '’', '*', [rfReplaceAll]);
-             lin:= StringReplace(lin, '''', '*', [rfReplaceAll]);
-             lin:= StringReplace(lin, 'äs', 'ä', [rfReplaceAll]);
-             //lin:= StringReplace(lin, '•', char(249), [rfReplaceAll]);
-             //lines[l]:= StringReplace(lines[l], '…', '...', [rfReplaceAll]);
-             }
-             //lin:= StringReplace(lin, '¡A', '¡A', [rfReplaceAll]);
-             //lin:= StringReplace(lin, '’', '*', [rfReplaceAll]);
 
            ch:= 1;
            del:= 0;
@@ -276,22 +253,9 @@ case scan of
 
            inc(ch);
            end;
-     //if (pos(char(124), lin) > 0) then ShowMessage(inttostr(ord((char('​'))));
-     //if (pos(char(124), lin) > 0) then ShowMessage(inttostr(ord(char('a'))));
-     //if (length(lin) > 0) then
-     //if (length(lines[l]) > (ch-1)) then dec(car);
+
      car:= car + length(UTF8ToISO_8859_15(lin)) +1;
 
-     //if (pos('я', lin) > 0) then ShowMessage(lin);
-     //if length(lin) = 0 then ShowMessage(lin);
-     //if length(lin) = 0 then ShowMessage('0');
-     //if (pos(char(13), lin) > 0) then ShowMessage('');
-     //car:= car + (length(lin))-1 else car:= car + (length(lin))+1;
-        //if (pos(char(10), lin) > 0) then car:= car+3;
-     //if (pos(char(124), lin) > 0) then car:= car-1;
-     //if length(lin) = 0 then car:= car+1;
-     {if ( pos(char(10), lin) > 0 ) then ShowMessage('10');
-     if ( pos(char(13), lin) > 0 ) then ShowMessage('13');}
      inc(l);
      end;
 
@@ -300,9 +264,11 @@ case scan of
           SelStart:= res[r];
           SelLength:= length(stxt);
           //if (nof = false) then SelLength:= length(stxt)-1 else
+          {
           linel.Caption:= 'line: ' + inttostr(memlog.CaretPos.y);
           coll.Caption:= 'col: ' + inttostr(memlog.CaretPos.x);
           charl.Caption:= 'character: ' + inttostr(res[r]);
+          }
        if (not CheckGroup1.Checked[1]) then inc(r) else dec(r);
        end;
 
@@ -313,11 +279,6 @@ case scan of
 
         SelStart:= res[r];
         SelLength:= length(stxt);
-
-          linel.Caption:= 'line: ' + inttostr(memlog.CaretPos.y);
-          coll.Caption:= 'col: ' + inttostr(memlog.CaretPos.x);
-          charl.Caption:= 'character: ' + inttostr(res[r]);
-
         end;
      if r < length(res)-1 then inc(r) else r:= 0;
      end; // 1
@@ -327,9 +288,6 @@ case scan of
         SelStart:= res[r];
         SelLength:= length(stxt);
 
-          linel.Caption:= 'line: ' + inttostr(memlog.CaretPos.y);
-          coll.Caption:= 'col: ' + inttostr(memlog.CaretPos.x);
-          charl.Caption:= 'character: ' + inttostr(res[r]);
         end;
      if r > 0 then dec(r) else r:= length(res);
      end; // 1
@@ -347,9 +305,6 @@ end;
 procedure Tflogr.srchlKeyPress(Sender: TObject; var Key: char);
 begin
   if (key = #13) then begin
-     if memlog.Lines.Count = 0 then
-    //memlog.Lines.LoadFromFile('/home/nor/Lazarus/n-chat3/enchat synedit.nix/logs/Spotchat/#linuxmint_help');
-     logd.FileName:= '/home/nor/APT/test2';
 
      if (srchl.Caption <> '') then begin
         srch;
