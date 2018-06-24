@@ -515,10 +515,10 @@ begin
            n:= TreeView1.Items[n].GetNextSibling.Index;
      end;
      if fmainc.TreeView1.Items[0].Text <> 'Server' then inc(n);
-     close;
      net[n+1]:= connex.create;
      net[n+1].connect(n, True);
      //nick1.Text:= 'coccco';
+     close;
 end;
 
 

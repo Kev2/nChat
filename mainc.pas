@@ -10,7 +10,7 @@ uses
     cmem, // the c memory manager is on some systems much faster for multi-threading
     {$endif}}
     {$IFDEF Windows}
-    shlojb,
+    shlobj,
     {$ENDIF}
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, // ssl_openssl, ssl_openssl_lib,
@@ -297,7 +297,7 @@ begin
         if not fserv.globalc.Checked then
            nick:= fserv.nick1.Caption else
            nick:= fserv.gnick1.Caption else
-           nick:= 'Lemon1';
+           nick:= 'nchat1';
 
      //TTCBlockSocket.Create;
      //Tloop.Create(true); // Connecting
