@@ -1,7 +1,7 @@
 object fmainc: Tfmainc
-  Left = 241
+  Left = 232
   Height = 594
-  Top = 110
+  Top = 86
   Width = 1103
   HorzScrollBar.Page = 129
   HorzScrollBar.Range = 129
@@ -10,7 +10,7 @@ object fmainc: Tfmainc
   VertScrollBar.Visible = False
   Anchors = [akLeft]
   Caption = 'n-Chat'
-  ClientHeight = 575
+  ClientHeight = 594
   ClientWidth = 1103
   Color = 12901315
   Font.Height = -12
@@ -19,24 +19,28 @@ object fmainc: Tfmainc
   OnActivate = FormActivate
   OnClose = FormClose
   OnResize = FormResize
-  LCLVersion = '1.6.4.0'
+  LCLVersion = '1.8.4.0'
   object TreeView1: TTreeView
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Notebook1
     AnchorSideRight.Control = Splitter1
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Notebook1
     AnchorSideBottom.Side = asrBottom
     Left = 5
-    Height = 548
+    Height = 547
     Top = 22
-    Width = 155
+    Width = 150
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 5
     BackgroundColor = clCream
     BorderStyle = bsNone
-    DefaultItemHeight = 16
-    Font.Height = 10
-    Font.Name = 'Sans'
+    Color = clCream
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -13
+    Font.Name = 'Arial Narrow'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
     Images = ImageList1
     ParentFont = False
     ReadOnly = True
@@ -64,10 +68,10 @@ object fmainc: Tfmainc
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 165
-    Height = 548
+    Left = 155
+    Height = 547
     Top = 22
-    Width = 933
+    Width = 943
     PageIndex = 0
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Right = 5
@@ -81,9 +85,9 @@ object fmainc: Tfmainc
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Server0
         AnchorSideBottom.Side = asrBottom
-        Left = 843
+        Left = 853
         Height = 90
-        Top = 458
+        Top = 457
         Width = 90
         Anchors = [akRight, akBottom]
         Picture.Data = {
@@ -4056,7 +4060,7 @@ object fmainc: Tfmainc
     AnchorSideBottom.Side = asrBottom
     Left = 5
     Height = 60
-    Top = 510
+    Top = 509
     Width = 60
     Anchors = [akLeft, akBottom]
     Picture.Data = {
@@ -7195,8 +7199,8 @@ object fmainc: Tfmainc
     AnchorSideTop.Control = Image1
     Left = 85
     Height = 15
-    Top = 530
-    Width = 44
+    Top = 529
+    Width = 36
     BorderSpacing.Left = 20
     BorderSpacing.Top = 20
     Caption = 'n-chat'
@@ -7246,13 +7250,12 @@ object fmainc: Tfmainc
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 160
-    Height = 553
+    Left = 150
+    Height = 552
     Top = 22
     Width = 5
     Align = alNone
     Anchors = [akTop, akBottom]
-    OnMoved = Splitter1Moved
     ResizeAnchor = akRight
   end
   object MainMenu1: TMainMenu
@@ -7260,7 +7263,7 @@ object fmainc: Tfmainc
     left = 1008
     top = 8
     object filem: TMenuItem
-      Caption = '&File'
+      Caption = '&Log'
       object openm: TMenuItem
         Caption = '&Logs Reader'
         Bitmap.Data = {

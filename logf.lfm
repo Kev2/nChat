@@ -56,15 +56,15 @@ object flogr: Tflogr
     OnKeyPress = srchlKeyPress
   end
   object CheckGroup1: TCheckGroup
-    AnchorSideLeft.Control = srchl
+    AnchorSideLeft.Control = srchb
     AnchorSideLeft.Side = asrBottom
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 142
+    Left = 202
     Height = 58
     Top = 492
-    Width = 125
+    Width = 136
     Anchors = [akLeft, akBottom]
     AutoFill = True
     AutoSize = True
@@ -78,13 +78,14 @@ object flogr: Tflogr
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 54
-    ClientWidth = 121
+    ClientWidth = 132
     Font.Height = -9
     Font.Name = 'Sans'
     Items.Strings = (
       'Case sensitive'
       'Search backwards'
     )
+    OnItemClick = CheckGroup1ItemClick
     ParentFont = False
     TabOrder = 2
     Data = {
@@ -108,11 +109,12 @@ object flogr: Tflogr
     TabOrder = 3
     object linel: TLabel
       AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
       AnchorSideBottom.Control = Owner
       AnchorSideBottom.Side = asrBottom
-      Left = 10
+      Left = 92
       Height = 15
       Top = 18
       Width = 33
@@ -126,7 +128,7 @@ object flogr: Tflogr
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
       AnchorSideBottom.Side = asrBottom
-      Left = 63
+      Left = 145
       Height = 15
       Top = 18
       Width = 29
@@ -141,7 +143,7 @@ object flogr: Tflogr
       AnchorSideTop.Control = Panel1
       AnchorSideTop.Side = asrCenter
       AnchorSideBottom.Side = asrBottom
-      Left = 102
+      Left = 184
       Height = 15
       Top = 18
       Width = 37
@@ -150,8 +152,28 @@ object flogr: Tflogr
       ParentColor = False
     end
   end
+  object srchb: TButton
+    AnchorSideLeft.Control = srchl
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = srchl
+    AnchorSideTop.Side = asrCenter
+    Left = 142
+    Height = 25
+    Top = 509
+    Width = 50
+    Caption = 'Search'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -9
+    Font.Name = 'Sans'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    OnClick = srchbClick
+    ParentFont = False
+    TabOrder = 4
+  end
   object MainMenu1: TMainMenu
-    left = 8
+    Images = fmainc.ImageList1
+    left = 32
     top = 8
     object filem: TMenuItem
       Caption = '&File'
@@ -184,15 +206,16 @@ object flogr: Tflogr
         Caption = 'A&bout'
         ImageIndex = 4
         ShortCut = 112
+        OnClick = abmClick
       end
     end
   end
   object logd: TOpenDialog
-    left = 64
+    left = 88
     top = 8
   end
   object savd: TSaveDialog
-    left = 112
+    left = 136
     top = 8
   end
 end

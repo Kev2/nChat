@@ -6,6 +6,7 @@
     <n3></n3>
     <u></u>
     <rn></rn>
+    <gi>enabled</gi>
   </axxGlobal>
   <a2600Net>
     <s1 name="server">irc.2600.net/6667</s1>

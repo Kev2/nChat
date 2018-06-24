@@ -10,8 +10,8 @@ uses
     cmem, // the c memory manager is on some systems much faster for multi-threading
     {$endif}}
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, ssl_openssl, ssl_openssl_lib,
-    SynEdit, SynHighlighterPosition, crt,
+    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, // ssl_openssl, ssl_openssl_lib,
+    SynEdit, SynHighlighterPosition,
     dateutils, IniFiles, abform, setf, logf, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
@@ -263,8 +263,9 @@ var
    tmp:  string;
    mess: string;
 begin
+     if fserv.Visible then fserv.hide; //Win
      //fmainc.TreeView1.Items[0].Text:= fserv.netw.Caption;
-     //ShowMessage(inttostr(co));
+     //ShowMessage(conn.GetRemoteSinIP);
      if fmainc.TreeView1.Selected = nil then
         fmainc.TreeView1.Items[0].Selected:= true;
 
@@ -298,14 +299,13 @@ begin
      //TTCBlockSocket.Create;
      //Tloop.Create(true); // Connecting
      //Tloop.Start;
-     conn.SetRemoteSin('','');
+     conn.SetRemoteSin('192.168.1.0','');
 
-     if (conn.GetRemoteSinIP = '') then begin
+     if (conn.GetRemoteSinIP = '192.168.1.0') then begin
         conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
            while not (conn.CanRead(2000)) and (m < 5) do begin
-           //ShowMessage('connex: ' + inttostr(m));
               if m = 5 then begin
               conn.CloseSocket;
               //conn:= TTCPBlockSocket.Create;
@@ -543,23 +543,48 @@ end;
 procedure Tfmainc.FormActivate(Sender: TObject);
 var n:     smallint = 0;
     iniv:  TStrings;
+    r:     boolean;
+    path:  array[0..MAX_PATH] of char;
 begin
-     caption:= 'n-chat';
+     caption:= 'nChat';
      //einput.SetFocus;
      TrayIcon1.Show;
-     if not assigned(m0[0]) then begin
+
+     {$ifdef UNIX}
+     if not FileExists(GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml') then
+        CopyFile(ExtractFilePath(ParamStr(0)) + '/servers.xml', GetEnvironmentVariable('APPDATA') + '/nchat/nchat.xml');
+     {$EndIf}
+
+     {$ifdef Windows}
+     if not FileExists(GetEnvironmentVariable('APPDATA') + '\nchat\servers.xml') then
+        CopyFile(ExtractFilePath(ParamStr(0)) + '\servers.xml', GetEnvironmentVariable('APPDATA') + '\nchat\servers.xml');
+     {$EndIf}
+
+     if TreeView1.Items[0].Text = 'Server' then begin
      fserv.Show;
 
         for n:= 1 to 6 do begin
             gr[n]:= TPortableNetworkGraphic.Create;
         end;
 
+        //Loading icons: ircop vio admin blue green voice
+        {$ifdef Unix}
+        gr[1].LoadFromFile( '/usr/share/pixmaps/' + 'ircop.png' );
+        gr[2].LoadFromFile( '/usr/share/pixmaps/' + 'vio.png' );
+        gr[3].LoadFromFile( '/usr/share/pixmaps/' + 'admin.png' );
+        gr[4].LoadFromFile( '/usr/share/pixmaps/' + 'blue.png' );
+        gr[5].LoadFromFile( '/usr/share/pixmaps/' + 'green.png' );
+        gr[6].LoadFromFile( '/usr/share/pixmaps/' + 'voice.png' );
+        {$endif}
+
+        {$ifdef Windows}
         gr[1].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'ircop.png' );
         gr[2].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'vio.png' );   //owner
         gr[3].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'admin.png' ); // &
         gr[4].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'blue.png' );  // op
         gr[5].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'green.png' ); // half op
         gr[6].LoadFromFile( ExtractFilePath(ParamStr(0)) + 'voice.png' );
+        {$endif}
      end;
      {red    = IRCop
       Violet = owner
@@ -569,29 +594,44 @@ begin
 
       // ini.file
       iniv:= TStringList.Create;
-      if FileExists(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat' + DirectorySeparator + 'Lemon.ini') then begin
-      ini:= TIniFile.Create(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat' + DirectorySeparator + 'Lemon.ini');
+
+      {$ifdef Unix}
+      if FileExists(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'nchat' + DirectorySeparator + 'nchat.ini') then begin
+      ini:= TIniFile.Create(GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'nchat' + DirectorySeparator + 'nchat.ini');
+      {$EndIf}
+
+      {$ifdef Windows}
+      if FileExists(GetEnvironmentVariable('APPDATA') + DirectorySeparator + 'nchat' + DirectorySeparator + 'nchat.ini') then begin
+      ini:= TIniFile.Create(GetEnvironmentVariable('APPDATA') + DirectorySeparator + 'nchat' + DirectorySeparator + 'nchat.ini');
+      {$EndIf}
+
+
       ini.ReadSectionValues('Settings', iniv);
       for n:= 0 to iniv.Count-1 do begin
           //ShowMessage(iniv[n]);
           if iniv[0] = 'Traffic=yes' then fsett.chg1.Checked[0]:= true;
-          if iniv[1] = 'Log=yes' then fsett.chg1.Checked[1]:= true;
+          if iniv[1] = 'Log=yes' then begin
+             fsett.chg1.Checked[1]:= true;
+             fsett.GroupBox1.Enabled:= true;
+             end;
       end;
       iniv.Clear;
 
       ini.ReadSectionValues('Path', iniv);
       if iniv[0] <> '' then fsett.pathl.Caption:= copy(iniv[0], pos('=', iniv[0])+1, length(iniv[0]));
+
       end;
 
       if (fsett.pathl.Caption = '') then begin
 
       {$ifdef Windows}
-      fsett.pathl.Caption:= GetEnvironmentVariable('MyDocs') + DirectorySeparator + 'LemonChat Logs';
-      mkdir(fsett.pathl.Caption);
+      r:= SHGetSpecialFolderPath(0, path, CSIDL_PERSONAL, false);
+      fsett.pathl.Caption:= path + DirectorySeparator + 'nchat Logs';
+      if not DirectoryExists(fsett.pathl.Caption) then mkdir(fsett.pathl.Caption);
       {$endif}
 
       {$ifdef unix}
-      fsett.pathl.Caption:= GetEnvironmentVariable('HOME') + DirectorySeparator + '.config' + DirectorySeparator + 'LemonChat/Logs';
+      fsett.pathl.Caption:= GetEnvironmentVariable('HOME') + DirectorySeparator + 'nchat/Logs';
       mkdir(fsett.pathl.Caption);
       {$endif}
       end;
@@ -610,13 +650,15 @@ var i: smallint = 0;
     path: string;
 begin
      while (i < length(log)) do begin
-           AssignFile(t, log[i]);
-           //ShowMessage(log[i]);
-           if FileExists(log[i]) then append(t);
+           if FileExists(log[i]) then begin
+              AssignFile(t, log[i]);
+              //ShowMessage(log[i]);
+              Append(t);
            writeln(t, '**** END LOGGING AT ' + FormatDateTime('MMMM, ddd d hh:mm:ss yyyy', now));
-           writeln(t, #13#10);
+           //writeln(t, #13#10);
            //writeln(t, #13#10);
            CloseFile(t);
+           end;
      inc(i);
      end;
      for i:= 1 to 6 do gr[i].Free;
@@ -734,10 +776,12 @@ begin
      path:= path + net[con+1].server;
      if not DirectoryExists(path) then mkdir(path);
 
+     //if assigned(m0[1]) then ShowMessage(path);
+
      //if pos('#', chann) > 0 then delete(chann, 1, 1);
 
      chann:= StringReplace(chann, '-', '_', [rfReplaceAll]);
-     path:= path + DirectorySeparator + chann;
+     path:= path + DirectorySeparator + chann + '.txt';
 
      if length(log) = 0 then SetLength(log, 1);
 
@@ -751,7 +795,6 @@ begin
          end;
 
      try
-
      //ShowMessage(path);
      AssignFile(t, path);
      if not FileExists(path) then Rewrite(t) else append(t);
@@ -759,7 +802,7 @@ begin
         if (FileSize(path) = 0) or (dateof(FileDateToDateTime(FileAge(path))) <> Today) then
            writeln(t, '**** LOGGING STARTED AT ' + FormatDateTime('MMMM, ddd d hh:mm:ss yyyy', now));
      log[i]:= path;
-     finally
+     except ShowMessage('clog ' + path);
      end;
 end;
 
@@ -808,8 +851,8 @@ begin
      end;
      }
      pin:= Notebook1.PageIndex;
-
      //ShowMessage('Chan: ' + chan + ' n: ' + inttostr(n) + ' pi: ' + inttostr(Notebook1.PageIndex));
+
      while not (Notebook1.Page[pin].Controls[n] is TSyn) do inc(n);
            tc:= Notebook1.Page[pin].Controls[n];
            s:= tsyn(Notebook1.Page[pin].Controls[n]).name;
@@ -819,7 +862,7 @@ begin
            trm:= TreeView1.Selected.AbsoluteIndex;
            n:= cnode(5,trm,0,'');
            //if pos('#', chan) = 0 then chan:= '';
-           //ShowMessage(chan);
+           //ShowMessage(inttostr(n));
 
      if key = #13 then begin
 
@@ -827,8 +870,7 @@ begin
         SetLength(m0[n].com, length(m0[n].com)+1);
         //SetLength(com, TreeView1.Items.Count, l[trm]+2);
 
-        if (pos('(', TreeView1.Selected.Text) = 0) then
-        createlog(ne-1, TreeView1.Selected.Text);
+        if (pos('(', TreeView1.Selected.Text) = 0) then createlog(ne-1, TreeView1.Selected.Text);
 
         if TEdit(sender).Caption <> '' then begin
 
@@ -895,7 +937,7 @@ begin
                  //ShowMessage(replce(s +  ' :' + chan))
               else
                   if (pos('/me', lowercase(s)) = 1) then
-                  net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
+                  net[ne].conn.SendString('PRIVMSG ' + copy(m0[n].chan,length(inttostr(net[ne].num))+1,length(m0[n].chan)) + ' :' + replce(StringReplace(s, '/', '/ ', [rfReplaceAll]))) else
                   net[ne].conn.SendString(replce(s));
 
               //com[trm, l[trm]]:= s;
@@ -914,13 +956,13 @@ begin
            //if assigned(m0[3]) then ShowMessage(copy(m0[n].chan,2,length(m0[n].chan)));
 
            if (pos('(', TreeView1.Selected.Text) = 0) then
-              net[ne].send('PRIVMSG ' + copy(m0[n].chan,2,length(m0[n].chan)) + ' : ' + s + #13#10);
+              net[ne].send('PRIVMSG ' + copy(m0[n].chan,length(inttostr(net[ne].num))+1,length(m0[n].chan)) + ' :' + s + #13#10);
 
            if (pos('(', TreeView1.Selected.Text) = 0) then
               net[ne].output(clnone, net[ne].nick + ': ' + s, n) else
+              //m0[n].append(net[ne].nick + ': ' + s) else
               m0[n].append('No channel joined, try /join #channel');
 
-           if (pos('(', TreeView1.Selected.Text) = 0) then CloseFile(t);
 
            //com[trm, l[trm]]:= s;
            //inc(l[trm]);
@@ -930,7 +972,9 @@ begin
         TEdit(sender).Clear;
         m0[n].com[length(m0[n].com)-1]:= s;
         m0[n].comn:= length(m0[n].com);
-     end;
+
+     if (pos('(', TreeView1.Selected.Text) = 0) then CloseFile(t);
+     end; // Key 13
      //tr:= TreeView1.Selected.AbsoluteIndex;
      end; // fmainc
 end;
@@ -963,6 +1007,7 @@ begin
      end;
      }
      pin:= Notebook1.PageIndex;
+     //ShowMessage(' n: ' + inttostr(n) + ' pi: ' + inttostr(Notebook1.PageIndex));
 
      // Getting the right memo to get treenode (notebook.page)
      ctrl:= 0;
@@ -971,6 +1016,7 @@ begin
            trm:= TreeView1.Selected.AbsoluteIndex;
            n:= cnode(5, trm,0,'');
            //ShowMessage('n: ' + inttostr(tsyn(Notebook1.page[Notebook1.PageIndex].Controls[ctrl]).node));
+           //ShowMessage('down' + inttostr(n));
 
      // Re Page
      if (key = 33) or (key = 34) then
@@ -1004,19 +1050,22 @@ begin
      if length(m0[n].com) > 0 then begin
 
      if key = 38 then begin
+        key:= 0;
         //if TEdit(sender).Caption = '' then m0[n].comn:= length(m0[n].com)-1;
            if m0[n].comn > 0 then dec(m0[n].comn);
            TEdit(sender).Caption:= m0[n].com[m0[n].comn];
            //if TEdit(sender).Caption <> '' then
-           TEdit(sender).SelStart:= length(TEdit(sender).Caption);
+           //TEdit(sender).SelStart:= length(TEdit(sender).Caption)+1;
+           ed0[n].SelStart:= length(ed0[n].Caption)+1;
      end;
 
      if key = 40 then begin
+        key:= 0;
            if (length(m0[n].com) > 0) and (m0[n].comn < length(m0[n].com)) then inc(m0[n].comn); //and (n < length(com)) then inc(n);
            if m0[n].comn = length(m0[n].com) then
            TEdit(sender).Caption:= '' else
            TEdit(sender).Caption:= m0[n].com[m0[n].comn];
-           TEdit(sender).SelStart:= length(TEdit(sender).Caption);
+           TEdit(sender).SelStart:= length(TEdit(sender).Caption)+1;
      end;
      end; // Up and down (Command History)
 
@@ -1068,7 +1117,7 @@ end;
 
 procedure connex.loop;
 var r: string = ''; // recvstring
-begin      r:= conn.RecvString(200);
+begin      r:= conn.RecvString(1000);
            //if (pos('PING', r) > 0) then conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) + #13#10);
            //if (r <> '' ) then
            //result:= r;
@@ -1117,6 +1166,7 @@ begin
      end;
      }
 
+     //if r <> '' then m0[0].Append(r);
      if (pos(':', r) = 1) or (pos(' :', r) = 1) then
      delete(r, 1, pos(':', r)); // First colon
 
@@ -1197,13 +1247,13 @@ begin
      if (pos('367 ' + nick, r) > 0) then s:= 11;
      //if (pos('#', r) > 0) and (pos(nick, r) > 0) and (pos('=', r) = 0) then s:= 12; // Messages
 
-     //if (assigned(m0[1])) then if s > 0 then ShowMessage(r);
+     //if (pos('JOIN', r) > 0) then ShowMessage(r);
 
                     // TEST
                     //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
                     //if s=10 then s:= 0;
 
-
+                    {
                     // Sending to test file
                     //if (pos('magic', lowercase(r)) > 0) or (pos('Goofus', lowercase(r)) > 0) then begin
                     if r <> '' then begin
@@ -1212,7 +1262,7 @@ begin
                        writeln(test, r + sLineBreak + mess);
                        CloseFile(test);
                     end;
-
+                    }
      //if (assigned(m0[2])) and (pos('ART', r) > 0) then ShowMessage('n: ' + inttostr(n) + ' r: ' + r);
      if (pos('#', r) > 0) or (pos('#', mess) > 0) then begin
      //if (pos('#', r) < pos(':', r)) then
@@ -1263,7 +1313,7 @@ begin
      }
      //if (mess = 'You left') then ShowMessage(mess);
      //if cname <> '' then while (not assigned(m0[n])) do inc(n);
-     //if (assigned(m0[1])) and (pos('MODE', r) > 0) then ShowMessage(r + mess);
+     //if (assigned(m0[1])) then if r <> '' then ShowMessage(r + mess);
 
 case s of
      0: Begin // MOTD
@@ -1293,16 +1343,16 @@ case s of
         // Deleting 1 to nick from r
         for m:= 0 to 2 do delete(r, 1, pos(' ', r));
 
-        fmainc.createlog(num, server); //file open on connect
-
         if (pos('NOTICE', r) > 0) and ( (pos('*', r) > 0) or (pos('auth', lowercase(r)) > 0) ) then r:= '';
 
         r:= r + mess;
-        if (r <> '') then output(clnone, r, n);
-
-        //if (pos('End of', r) > 0) then begin fmainc.Timer1.Interval:= 2000;
+        if (r <> '') then
+           fmainc.createlog(num, server); //file open on connect
+           output(clnone, r, n);
            closefile(t);
         end;
+
+        //if (pos('End of', r) > 0) then begin fmainc.Timer1.Interval:= 2000;
      end;
 
      1: Begin // Join
@@ -1582,9 +1632,10 @@ case s of
 
     4: Begin // I PART
        //Searching Parent
+       //if assigned(m0[1100]) then ShowMessage('');
        //m:= strtoint( copy(cname, 1, pos('#', cname)-1) );
                          //ShowMessage(nick + sLineBreak+ r);
-       n:= 0;
+
        while (fmainc.TreeView1.Items[n].Index < num) do begin
              //ShowMessage(fmainc.TreeView1.Items[n].Text);
              if (fmainc.TreeView1.Items[n].GetNextSibling <> nil) then
@@ -1604,13 +1655,15 @@ case s of
              m:= s;
              end;
        end;
-       if m = s then m:= fmainc.cnode(5, m, 0, '');
+       m:= fmainc.cnode(5, m, 0, '');
        n:= fmainc.cnode(5,n,0,'');
+
+       if (m<0) and (m>20) then m:= -1;
 
        //ShowMessage('4: ' + inttostr(n) + sLineBreak + inttostr(num) + server);
        //if assigned(m0[m]) then ShowMessage('m2: ' + inttostr(m));
 
-       if (m >= 0) then n:= m;
+       if (m >= 0) and (m < 21) then n:= m;
        //ShowMessage('n' + inttostr(n)); // ?
 
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
@@ -1620,12 +1673,12 @@ case s of
        //if (assigned(m0[2])) or (assigned(m0[3])) then ShowMessage('s ' + inttostr(m));
 
 
-       if (m >= 0) then begin
+       if (m >= 0) and (m < 21) then begin
           lb0[m].Clear;
           lab0[m].Caption:= '';
        end else
                fmainc.LeaveRoom(1);
-
+       CloseFile(t);
     end;
 
     5: Begin // JOIN PART QUIT
@@ -1791,7 +1844,14 @@ case s of
     7: Begin // NOTICE
 
        i:= ticon.Create;
+       {$ifdef Unix}
+       i.LoadFromFile('/usr/share/pixmaps/' + 'trayblue.ico');
+       {$endif}
+
+       {$ifdef Windows}
        i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
+       {$endif}
+
 
        // Using cname as sender
        cname:= copy(r, 1, pos('!',r)-1); // Author
@@ -1821,7 +1881,7 @@ case s of
        //while (m <> m0[n].node) do inc(n);
        // Getting the right memo
        n:= fmainc.cnode(5, m, 0, '');
-       fmainc.createlog(num, fmainc.TreeView1.Items[m].Text);
+       fmainc.createlog(num, fmainc.TreeView1.Items[m].Text );
 
        //writeln(t, mess);
        output(clgreen, '< ' + cname + ' > ' + mess, n);
@@ -2267,7 +2327,7 @@ begin
 
      for l:= 1 to length(a) do if (pos(a[l],r) > 0) then u1:= true;
      if u1 = false then
-        r:= ConvertEncoding(r, 'ISO8859-1', 'UTF8', false);
+        r:= ConvertEncoding(r, 'ISO8859-15', 'UTF8', false);
         //r:= ISO_8859_1ToUTF8(r);
         //r:= ISO_8859_15ToUTF8(r);
         //r:= ConvertEncoding(r, 'UTF8', 'ISO8859-1', false);
@@ -2317,8 +2377,8 @@ begin
 
      // If it is modified and notebook page is not visible then color the tree item
 
-     r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
-     m0[o].procstring(r); // To file
+     //r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
+     if (r <> '') then m0[o].procstring(r); // To file
 
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
@@ -3308,6 +3368,7 @@ begin
           // getting i to insert notebook page
           while (c > TreeView1.Items[i].Text) do inc(i);
                 //i:= n.GetLastChild.AbsoluteIndex;
+          //ShowMessage('i ' + inttostr(i));
       end;
 
       if (TreeView1.Items[0].Text = 'Server') then TreeView1.Selected.Text:= c;
@@ -3398,7 +3459,7 @@ var a: smallint = 0; // Memo number
 begin
 
       if i = Notebook1.PageCount then
-         Notebook1.Pages.Add('Page' + inttostr(i))
+         Notebook1.Pages.Add('Page' + inttostr(a))
       else
          Notebook1.Pages.Insert(i, 'Page' + inttostr(i));
          //Notebook1.Pages.Add('Page' + inttostr(i));
@@ -3515,7 +3576,12 @@ begin
           //name:= 'Nimbus Mono L';
           name:= 'Monospace';
           //CanUTF8;
-          height:= 10;
+          {$ifdef Unix}
+          Height:= 10;
+          {$endif}
+          {$ifdef Windows}
+          Height:= 14;
+          {$endif}
           Color:= clBlack;
           Style:= [];
           //BkColor:= clWhite;
@@ -3562,9 +3628,10 @@ begin
 
      // Group (label)
      gb0[a]:= TGroupBox.Create(fmainc);
-     gb0[a].Height:= 20;
+     gb0[a].Height:= 25;
      gb0[a].Width:= 170;
      gb0[a].Parent:= Notebook1.Page[i];
+     gb0[a].BorderSpacing.Bottom:= 5;
      //gb0[a].Name:= 'gbox' + inttostr(a);
      gb0[a].Caption:= '';
      gb0[a].Font.Size:= 7;
@@ -3582,7 +3649,7 @@ begin
 
 
      // List box
-     lb0[a].AnchorToNeighbour(akBottom,10, gb0[a]);
+     lb0[a].AnchorToNeighbour(akBottom,20, gb0[a]);
      lb0[a].AnchorToNeighbour(akBottom,0, Notebook1.Page[i]);
      lb0[a].AnchorToNeighbour(akRight,0, splt[a]);
      lb0[a].AnchorToNeighbour(akLeft,0, Notebook1.Page[i]);
@@ -3603,14 +3670,14 @@ begin
      //lab0[a].Name:= 'countl' + inttostr(a);
      lab0[a].Caption:= 'Users: ';
 
-     lab0[a].BorderSpacing.Bottom:= 10;
+     lab0[a].BorderSpacing.Bottom:= 5;
      lab0[a].AnchorToNeighbour(akTop,0, gb0[a]);
      lab0[a].AnchorToNeighbour(akRight,0, gb0[a]);
 
 
      lab0[a].AnchorSide[akTop].Side:= asrCenter;
      lab0[a].AnchorSide[akTop].Control:= gb0[a];
-     lab0[a].AnchorSide[akRight].Side:= asrRight;
+     lab0[a].AnchorSide[akRight].Side:= asrCenter;
      lab0[a].AnchorSide[akRight].Control:= gb0[a];
      lab0[a].Anchors:= [aktop] + [akRight];
 
@@ -3632,7 +3699,7 @@ begin
      if i = Notebook1.PageCount then
         Notebook1.Pages.Add('Page' + inttostr(i))
      else
-         Notebook1.Pages.Insert(i, 'Page' + inttostr(i));
+         Notebook1.Pages.Insert(i, 'Page' + inttostr(a));
          //Notebook1.Pages.Add('Page' + inttostr(i+1));
 
 
@@ -3700,7 +3767,12 @@ begin
           //name:= 'Nimbus Mono L';
           name:= 'Monospace';
           //CanUTF8;
+          {$ifdef Unix}
           Height:= 10;
+          {$endif}
+          {$ifdef Windows}
+          Height:= 14;
+          {$endif}
           Color:= clBlack;
           Style:= [];
      end;
@@ -3809,12 +3881,11 @@ begin
                 if (chanod[n].node >= nod) then chanod[n].node:= chanod[n].node-1;
                    {com[n]:= com[n+1];
                    length(com):= length(com)-1;}
-                   //ShowMessage('1: ' + inttostr(cnode(5,nod,0,'')));
           inc(n);
           end;
           SetLength(chanod, length(chanod)-1);
           //for n:= 0 to length(chanod)-1 do if chanod[n].node > nod then chanod[n].node:= chanod[n].node-1;
-          //for n:= 0 to length(chanod) do ShowMessage(inttostr(chanod[n].node) + sLineBreak + inttostr(chanod[n].arr) + ' ' + chanod[n].chan + ' ' + chan + sLineBreak + inttostr(length(chanod)));
+          //for n:= 0 to length(chanod)-1 do ShowMessage(inttostr(chanod[n].node) + sLineBreak + inttostr(chanod[n].arr) + ' ' + chanod[n].chan + ' ' + chan + sLineBreak + inttostr(length(chanod)));
           end; // Delete
 
           2: begin // Search channel by name
@@ -4663,11 +4734,9 @@ case task of
      end;
         freeandnil(ed0[c]);freeandnil(m0[c]);
 
-
      // Deleting chan and node
      //cnode(1, rc, rc, inttostr(conn-1) + room);
      cnode(1, rc, 0, '');
-
      // Arranging Notebook pages?
      {count:= rc;
      while (count < PageCount-1) do begin
@@ -4889,7 +4958,13 @@ begin
 
      i:= TIcon.Create;
      //i.LoadFromFile('/home/nor/Lazarus/n-chat/Accessories/images/trayblue.ico');
+     {$ifdef Unix}
+     i.LoadFromFile('/usr/share/pixmaps/' + 'trayblue.ico');
+     {$endif}
+
+     {$ifdef Windows}
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
+     {$endif}
 
      {
      if Notebook1.PageCount = 1 then begin
@@ -4948,7 +5023,15 @@ begin
                    sender.Canvas.Font.Color:= clred;
                    //if blue[m] = false then
                  if (r = false) then begin
-                    i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
+
+                 {$ifdef Unix}
+                 i.LoadFromFile('/usr/share/pixmaps/' + 'trayred.ico');
+                 {$endif}
+
+                 {$ifdef Windows}
+                 i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
+                 {$endif}
+
                     TrayIcon1.Icon:= i;
                  end;
 
@@ -5028,8 +5111,14 @@ var
    c: string;
 begin
      i:= TIcon.Create;
-     i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
 
+     {$ifdef Unix}
+     i.LoadFromFile('/usr/share/pixmaps/' + 'tray.ico');
+     {$endif}
+
+     {$ifdef Windows}
+     i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'tray.ico');
+     {$endif}
      //showmessage(inttostr(TreeView1.Selected.AbsoluteIndex));
      //if not assigned(TreeView1.Selected) then TreeView1.items[0].Selected:= true;
      //if (Notebook1.PageCount > 0) then Notebook1.PageIndex:= 2;
@@ -5080,8 +5169,13 @@ var
    b:      boolean = false;
 begin
      i:= ticon.Create;
+     {$ifdef Unix}
+     i.LoadFromFile('/usr/share/pixmaps/' + 'trayred.ico');
+     {$endif}
+
+     {$ifdef Windows}
      i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayred.ico');
-     ShowMessage('changed ');
+     {$endif}
 
      if TreeView1.Items.Count > 1 then
      for arr:= 0 to length(chanod)-1 do begin
@@ -5102,7 +5196,14 @@ begin
      //TreeView1.Refresh;
 
      if b = true then begin
-        i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
+     {$ifdef Unix}
+     i.LoadFromFile('/usr/share/pixmaps/' + 'trayblue.ico');
+     {$endif}
+
+     {$ifdef Windows}
+     i.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'trayblue.ico');
+     {$endif}
+
         TrayIcon1.Icon:= i;
      end;
 end;

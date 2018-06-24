@@ -89,6 +89,7 @@ uses mainc;
 procedure Tfserv.FormCreate(Sender: TObject);
 begin
      fserv.Left:= fmainc.Left;
+     fserv.Top:=  fmainc.top + (fmainc.Height - Height);
 end;
 
 procedure Tfserv.FormActivate(Sender: TObject);
@@ -102,8 +103,15 @@ begin
      if Listbox1.Items.Count = 0 then begin
 
      f:= TXMLDocument.Create;
+     {$ifdef UNIX}
      if FileExists(GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml') then
         ReadXMLFile(f, GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml');
+     {$EndIf}
+
+     {$ifdef Windows}
+     if FileExists(GetEnvironmentVariable('APPDATA') + '\nchat\servers.xml') then
+        ReadXMLFile(f, GetEnvironmentVariable('HOME') + '\nchat\servers.xml');
+     {$EndIf}
 
      n1:= f.FindNode('Networks');
      n1:= n1.FirstChild;
@@ -118,6 +126,9 @@ begin
             guser.Caption:= n1.ChildNodes.Item[c].TextContent;
          if (n1.ChildNodes.Item[c].NodeName = 'rn') then
             grname.Caption:= n1.ChildNodes.Item[c].TextContent;
+         if (n1.ChildNodes.Item[c].NodeName = 'gi') then
+            if n1.ChildNodes.Item[c].TextContent = 'enabled' then
+            globalc.Checked:= true;
      end;
      c:= 0;
 
@@ -248,6 +259,11 @@ begin
          b:= f.CreateTextNode(grname.Caption);
          a.AppendChild(b);
          n1.AppendChild(a);
+         a:= f.CreateElement('gi');
+         if (globalc.Checked) then
+         b:= f.CreateTextNode('enabled') else b:= f.CreateTextNode('disabled');
+         a.AppendChild(b);
+         n1.AppendChild(a);
        //
 
      n1:= f.FindNode('Networks');
@@ -298,7 +314,14 @@ begin
 
      inc(n);
      end;
+     {$IfDef UNIX}
      WriteXML(f, GetEnvironmentVariable('HOME') + '/.config/nchat/nchat.xml');
+     {$EndIf}
+
+     {$IfDef Windows}
+     WriteXML(f, GetEnvironmentVariable('APPDATA') + '\nchat\nchat.xml');
+     {$EndIf}
+
      f.Free;
 end;
 
@@ -490,13 +513,11 @@ begin
      with (fmainc) do begin
      while (TreeView1.Items[n].GetNextSibling <> nil) do
            n:= TreeView1.Items[n].GetNextSibling.Index;
-     inc(n);
-     if assigned(m0[0]) then inc(n);
      end;
+     if fmainc.TreeView1.Items[0].Text <> 'Server' then inc(n);
      close;
-     net[n]:= connex.create;
-     net[n].connect(n-1, True);
-     //inc(n);
+     net[n+1]:= connex.create;
+     net[n+1].connect(n, True);
      //nick1.Text:= 'coccco';
 end;
 
