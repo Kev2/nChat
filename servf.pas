@@ -110,7 +110,7 @@ begin
 
      {$ifdef Windows}
      if FileExists(GetEnvironmentVariable('APPDATA') + '\nchat\servers.xml') then
-        ReadXMLFile(f, GetEnvironmentVariable('HOME') + '\nchat\servers.xml');
+        ReadXMLFile(f, GetEnvironmentVariable('APPDATA') + '\nchat\servers.xml');
      {$EndIf}
 
      n1:= f.FindNode('Networks');

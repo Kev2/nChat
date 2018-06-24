@@ -9,6 +9,9 @@ uses
     cthreads,
     cmem, // the c memory manager is on some systems much faster for multi-threading
     {$endif}}
+    {$IFDEF Windows}
+    shlojb,
+    {$ENDIF}
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, // ssl_openssl, ssl_openssl_lib,
     SynEdit, SynHighlighterPosition,
@@ -631,7 +634,7 @@ begin
       {$endif}
 
       {$ifdef unix}
-      fsett.pathl.Caption:= GetEnvironmentVariable('HOME') + DirectorySeparator + 'nchat/Logs';
+      fsett.pathl.Caption:= GetEnvironmentVariable('HOME') + DirectorySeparator + 'nchatlogs';
       mkdir(fsett.pathl.Caption);
       {$endif}
       end;
@@ -802,7 +805,7 @@ begin
         if (FileSize(path) = 0) or (dateof(FileDateToDateTime(FileAge(path))) <> Today) then
            writeln(t, '**** LOGGING STARTED AT ' + FormatDateTime('MMMM, ddd d hh:mm:ss yyyy', now));
      log[i]:= path;
-     except ShowMessage('clog ' + path);
+     except ShowMessage('Invalid path ' + path);
      end;
 end;
 

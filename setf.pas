@@ -5,6 +5,9 @@ unit setf;
 interface
 
 uses
+  {$IFDEF Windows}
+  shlojb,
+  {$ENDIF}
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, IniFiles, LConvEncoding;
 
