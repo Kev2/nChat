@@ -51,7 +51,7 @@ var
    row:         smallint = 1;
    ban,op,dat: string;
 begin
-     caption:= 'n-Chat' + ' ' + fmainc.TreeView1.Selected.Text;
+     caption:= Application.Title + ' - Bans in ' + fmainc.TreeView1.Selected.Text;
      Show;
      // :server code nick #nvx mcclane!*@* Sollo!~Sollo@181.31.118.135 1500940056
 

@@ -293,18 +293,24 @@ begin
 
         n:= fmainc.cnode(5,n,0,'');
 
-     if fserv.nick1.Caption <> '' then
-        if not fserv.globalc.Checked then
+     //if fserv.nick1.Caption <> '' then
+     if not fserv.globalc.Checked then
            nick:= fserv.nick1.Caption else
-           nick:= fserv.gnick1.Caption else
-           nick:= 'nchat1';
+           nick:= fserv.gnick1.Caption;
+     if nick = '' then nick:= 'nchat1';
 
      //TTCBlockSocket.Create;
      //Tloop.Create(true); // Connecting
      //Tloop.Start;
+     {$ifdef Unix}
+     conn.SetRemoteSin('','');
+     if (conn.GetRemoteSinIP = '') then begin
+     {$endif}
+     {$ifdef Windows}
      conn.SetRemoteSin('192.168.1.0','');
-
      if (conn.GetRemoteSinIP = '192.168.1.0') then begin
+     {$endif}
+
         conn.Connect(servadd, fserv.Port.Caption);
            if (fserv.Port.Caption = '6697') or (fserv.Port.Caption = '7000') or (fserv.Port.Caption = '7070') then
            conn.SSLDoConnect;
@@ -543,13 +549,22 @@ end;
 
 // Starting date thu 2016-sep-08
 // 4500 lines 2017-nov-24
+// End date mon 2018-jun-25
 procedure Tfmainc.FormActivate(Sender: TObject);
 var n:     smallint = 0;
     iniv:  TStrings;
     r:     boolean;
     path:  array[0..MAX_PATH] of char;
 begin
-     caption:= 'nChat';
+     Caption:= Application.Title;
+     abf.Caption:= 'About ' + Application.Title;
+     fserv.Caption:= Application.Title + ' - Servers';
+     fsett.Caption:= Application.Title + ' - Settings';
+     flogr.Caption:= Application.Title + ' - Logs Reader';
+     fbanlist.Caption:= Application.Title + ' - Bans List';
+     fclist.Caption:= Application.Title + ' - Channels List';
+     fjoin.Caption:= Application.Title + ' - Join a channel';
+
      //einput.SetFocus;
      TrayIcon1.Show;
 
@@ -652,6 +667,7 @@ procedure Tfmainc.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var i: smallint = 0;
     path: string;
 begin
+     if fsett.chg1.Checked[1] then
      while (i < length(log)) do begin
            if FileExists(log[i]) then begin
               AssignFile(t, log[i]);
@@ -717,7 +733,7 @@ end;
 
 procedure Tfmainc.optmClick(Sender: TObject);
 begin
-  fsett.show;
+  fsett.ShowModal;
 end;
 
 procedure Tfmainc.clistmClick(Sender: TObject);
@@ -805,7 +821,7 @@ begin
         if (FileSize(path) = 0) or (dateof(FileDateToDateTime(FileAge(path))) <> Today) then
            writeln(t, '**** LOGGING STARTED AT ' + FormatDateTime('MMMM, ddd d hh:mm:ss yyyy', now));
      log[i]:= path;
-     except ShowMessage('Invalid path ' + path);
+     except ShowMessage('Invalid folder ' + path);
      end;
 end;
 
@@ -873,6 +889,7 @@ begin
         SetLength(m0[n].com, length(m0[n].com)+1);
         //SetLength(com, TreeView1.Items.Count, l[trm]+2);
 
+        if fsett.chg1.Checked[1] then
         if (pos('(', TreeView1.Selected.Text) = 0) then createlog(ne-1, TreeView1.Selected.Text);
 
         if TEdit(sender).Caption <> '' then begin
@@ -976,7 +993,7 @@ begin
         m0[n].com[length(m0[n].com)-1]:= s;
         m0[n].comn:= length(m0[n].com);
 
-     if (pos('(', TreeView1.Selected.Text) = 0) then CloseFile(t);
+     if (pos('(', TreeView1.Selected.Text) = 0) and fsett.chg1.Checked[1] then CloseFile(t);
      end; // Key 13
      //tr:= TreeView1.Selected.AbsoluteIndex;
      end; // fmainc
@@ -1120,7 +1137,7 @@ end;
 
 procedure connex.loop;
 var r: string = ''; // recvstring
-begin      r:= conn.RecvString(1000);
+begin      r:= conn.RecvString(200);
            //if (pos('PING', r) > 0) then conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r)) + #13#10);
            //if (r <> '' ) then
            //result:= r;
@@ -1172,11 +1189,6 @@ begin
      //if r <> '' then m0[0].Append(r);
      if (pos(':', r) = 1) or (pos(' :', r) = 1) then
      delete(r, 1, pos(':', r)); // First colon
-
-     try
-        n:= strtoint(r);
-     except
-     end;
 
      if (pos('PING ', r) > 0) or (n <> 0) then begin
         conn.SendString('PONG ' + copy(r, pos(':', r)+1, length(r) - pos(':', r)) +#13#10);
@@ -1236,8 +1248,8 @@ begin
      if (pos('NICK ', r) > 0) and (pos('!', r) > 0) then s:= 2;
      if (pos('PRIVMSG ', r) > 0) and (pos('@', r) > 0) then s:= 3;
      //if (pos(copy(r, 2, pos('!', r) -1), r) = 0) and
-     if (pos(nick, copy(r, 1, pos('!',r)-1)) > 0) and ( (pos('PART ', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4;
-     if (pos(nick, copy(r, 1, pos('!',r)-1)) = 0) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) and (pos('PART:', r) = 0) then s:= 5;
+     if (copy(r, 1, pos('!',r)-1) = nick) and ( (pos('PART ', r) > 0) or (pos('461', r) > 0) ) and (pos('PART:', r) = 0) then s:= 4;
+     if (nick <> copy(r, 1, pos('!',r)-1)) and ((pos('JOIN', r) > 0) or (pos('PART', r) > 0) or (pos('QUIT', r) > 0)) and (pos('PART:', r) = 0) then s:= 5;
      if (pos('311 ' + nick, r) > 0) or (pos('352 ' + nick, r) > 0) then s:= 6; // Whois
      if (pos('NOTICE ', r) > 0) and (pos('NOTICE:', r) = 0) and (pos('!', r) > 0) then s:= 7;
      //if (pos('QUERY', r) > 0) and (pos(nick, r) > 0) then s:= 7;
@@ -1250,7 +1262,7 @@ begin
      if (pos('367 ' + nick, r) > 0) then s:= 11;
      //if (pos('#', r) > 0) and (pos(nick, r) > 0) and (pos('=', r) = 0) then s:= 12; // Messages
 
-     //if (pos('JOIN', r) > 0) then ShowMessage(r);
+     //if (pos('JOIN', r) > 0) then ShowMessage(inttostr(s));
 
                     // TEST
                     //IF not (r = '') THEN fmainc.Label1.Caption:= inttostr(s);
@@ -1328,14 +1340,17 @@ case s of
         //if (mess <> '') then fmainc.Timer1.Interval:= 50 else
              fmainc.Timer1.Interval:= 2000;
              fast:= false;
+             //if assigned(m0[1]) then ShowMessage(r);
         end;
 
         if (r <> '') or (mess <> '') then begin
 
         n:= fmainc.cnode(5,n,0,'');
+
         //ShowMessage('0 ' + inttostr(n) + sLineBreak + inttostr(m));
 
         // Searching channel
+
         if (pos('#', cname) > 0) then begin
            //if (assigned(m0[1])) then ShowMessage(r + sLineBreak + mess);
            m:= fmainc.cnode(2,0,0,cname);
@@ -1349,9 +1364,13 @@ case s of
         if (pos('NOTICE', r) > 0) and ( (pos('*', r) > 0) or (pos('auth', lowercase(r)) > 0) ) then r:= '';
 
         r:= r + mess;
-        if (r <> '') then
+
+        if fsett.chg1.Checked[1] then
            fmainc.createlog(num, server); //file open on connect
+
            output(clnone, r, n);
+
+        if fsett.chg1.Checked[1] then
            closefile(t);
         end;
 
@@ -1389,6 +1408,7 @@ case s of
        //m0[n].Canvas.Pen.Color:= clred;
        //m0[n].Canvas.Line(0,m0[n].CaretY, m0[n].Width,m0[n].CaretY);
 
+       if fsett.chg1.Checked[1] then
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
 
        fmainc.Timer1.Enabled:= false;
@@ -1466,7 +1486,8 @@ case s of
         output(clnone, #13, n);
 
         fmainc.timer1.Enabled:= true;
-        CloseFile(t);
+        if fsett.chg1.Checked[1] then
+           CloseFile(t);
 
         //m0[n].Lines.LoadFromFile(log[n]);
     n:= 1;
@@ -1505,7 +1526,8 @@ case s of
                 end;
 
 
-                   fmainc.createlog(num, copy(m0[s].chan, length(inttostr(num))+1,length(m0[s].chan)));
+                if fsett.chg1.Checked[1] then
+                fmainc.createlog(num, copy(m0[s].chan, length(inttostr(num))+1,length(m0[s].chan)));
 
                     if (pos('You', cname) = 1) then begin
                        m0[s].nnick:= mess;
@@ -1530,7 +1552,7 @@ case s of
                    end;
 
              end;
-             CloseFile(t);
+             if fsett.chg1.Checked[1] then CloseFile(t);
              inc(n);
              end; // lb0[n]
     n:= 1;
@@ -1595,6 +1617,7 @@ case s of
       //ShowMessage(inttostr(num) + cname);
 
       //delete(cname, 1, 1);
+      if fsett.chg1.Checked[1] then
       fmainc.createlog(num, cname);
 
       //if (pos('Bastian', r) > 0) or (pos('action', lowercase(r)) > 0) then WriteLn(t, r + #13 + mess + #13);
@@ -1620,11 +1643,11 @@ case s of
       end;
 
       if (pos('*', mess) = 1) then output(clPurple, mess, n) else
-      if (pos(lowercase(nick), lowercase(mess)) = 0) then // and (copy(r, 1, pos(':', r) -1) <> '') then
+      if (pos(lowercase(nick + ' '), lowercase(mess)) = 0) then // and (copy(r, 1, pos(':', r) -1) <> '') then
          output(clNone, mess, n) else output(clred, mess, n);
 
       //if pos('reinadrama', lowercase(mess)) > 0 then writeln(t, mess);
-      CloseFile(t);
+      if fsett.chg1.Checked[1] then CloseFile(t);
 
       //if (pos(nick,r) > 0) then rc:= n; // Cuidado!!!
       //if (pos(nick,copy(r,1,pos('!',r)-1)) = 0) then rc:= n;
@@ -1669,6 +1692,7 @@ case s of
        if (m >= 0) and (m < 21) then n:= m;
        //ShowMessage('n' + inttostr(n)); // ?
 
+       if fsett.chg1.Checked[1] then
        fmainc.createlog(num, copy(cname, length(inttostr(num))+1, length(cname)));
        if mess = '' then mess:= 'Leaving';
        output(clnone, 'You have left ' + copy(cname,length(inttostr(num))+1,length(cname)) + ' :' + mess, n);
@@ -1681,7 +1705,7 @@ case s of
           lab0[m].Caption:= '';
        end else
                fmainc.LeaveRoom(1);
-       CloseFile(t);
+       if fsett.chg1.Checked[1] then CloseFile(t);
     end;
 
     5: Begin // JOIN PART QUIT
@@ -1692,7 +1716,8 @@ case s of
        //ShowMessage('5 ' + r + sLineBreak + cname + sLineBreak + inttostr(n));
 
        if (pos('QUIT', r) = 0) then begin
-          fmainc.createlog(num, copy(cname, pos('#', cname), length(cname)));
+          if fsett.chg1.Checked[1] then
+             fmainc.createlog(num, copy(cname, pos('#', cname), length(cname)));
           cname:= copy(r, pos('!', r)+1, pos(' ', r)-pos('!', r)); // ident + IP
           delete(cname, pos(' ', cname), length(cname));
        end;
@@ -1705,7 +1730,7 @@ case s of
           //ShowMessage('JOIN ?' + inttostr(n) + ' r: ' + r + ' mess: ' + mess + ' cname: ' + cname);
           if not fsett.chg1.Checked[0] then
           output(clgreen, copy(r, 1, pos('!', r)-1) + ' (' + cname + ')' + ' has joined ' +
-          copy(m0[n].chan, 2, length(m0[n].chan)), n);
+          copy(m0[n].chan, length(inttostr(num))+1, length(m0[n].chan)), n);
        end;
 
        if (pos('PART', r) > 0) then begin
@@ -1725,7 +1750,7 @@ case s of
           delete(mess, 1, pos(':', mess));
        end;
        }
-       if (pos('QUIT', r) = 0) then closefile(t);
+       if (pos('QUIT', r) = 0) and fsett.chg1.Checked[1] then closefile(t);
 
        //n:= 0;
        if (pos('QUIT', r) > 0) then
@@ -1738,6 +1763,7 @@ case s of
                    (fmainc.srchnick(copy(r, 1, pos('!', r)-1), 0, s) = 'true') ) then begin
 
                 //ShowMessage('true ' + inttostr(s));
+                if fsett.chg1.Checked[1] then
                 fmainc.createlog(num, copy(m0[s].chan, pos('#', m0[s].chan), length(m0[s].chan)));
 
                 //ShowMessage('quit nor_' + mess);
@@ -1751,7 +1777,7 @@ case s of
                 //lb0[n].Clear;
                 if (assigned(lb0[n])) then
                 fmainc.lbchange(copy(r, 1, pos('!', r)-1), '', 1, s, num+1);
-                closefile(t);
+                if fsett.chg1.Checked[1] then closefile(t);
                 //m0[n].lines.LoadFromFile(log[n]);
                 end;
 
@@ -1800,9 +1826,11 @@ case s of
                 if (pos(':', r) = 0) then r:= r + mess;
                 r:= StringReplace(r, ':', '', [rfReplaceAll]);
              // File and output
-                fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+                if fsett.chg1.Checked[1] then
+                   fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
                 output(clnone, r, n);
-                closefile(t);
+                if fsett.chg1.Checked[1] then
+                   closefile(t);
              end;
              r:= conn.RecvString(100);
              until (pos('WHO', r) > 0);
@@ -1833,9 +1861,11 @@ case s of
                 cname:= tmp + mess + ' ' + copy(cname, pos(' ',cname)+1, length(cname));
 
              // File and output
-             fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
+             if fsett.chg1.Checked[1] then
+                fmainc.createlog(num, fmainc.TreeView1.Items[n].Text);
              if (cname <> '') then output(clnone, cname, n);
-             closefile(t);
+             if fsett.chg1.Checked[1] then
+                closefile(t);
 
              cname:= ''; r:= '';
              while (r = '') do r:= conn.RecvString(100); if r <> '' then delete(r, 1, 1);
@@ -1884,11 +1914,12 @@ case s of
        //while (m <> m0[n].node) do inc(n);
        // Getting the right memo
        n:= fmainc.cnode(5, m, 0, '');
-       fmainc.createlog(num, fmainc.TreeView1.Items[m].Text );
+       if fsett.chg1.Checked[1] then
+          fmainc.createlog(num, fmainc.TreeView1.Items[m].Text );
 
        //writeln(t, mess);
        output(clgreen, '< ' + cname + ' > ' + mess, n);
-       closefile(t);
+       if fsett.chg1.Checked[1] then closefile(t);
        //if not (fmainc.Notebook1.page[m].IsVisible) then
        fmainc.TrayIcon1.Icon:= i;
        //m0[TreeView1.Selected.AbsoluteIndex].lines.Add(log[TreeView1.Selected.AbsoluteIndex]);
@@ -1922,12 +1953,13 @@ case s of
        r:= 'The topic has been removed' else
        r:= r + ' has changed the topic to: ' + mess;
 
+       if fsett.chg1.Checked[1] then
        fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
 
        if (pos('332', tmp) > 0) or (pos('333', tmp) > 0) then
           output(clPurple, r, n) else
           output(clnone, r, n);
-       closefile(t);
+       if fsett.chg1.Checked[1] then closefile(t);
     end;     // TOPIC
 
     9: Begin // INVITE
@@ -1946,9 +1978,11 @@ case s of
                  ' (' + server + ')';
        end;
 
-       fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
+       if fsett.chg1.Checked[1] then
+          fmainc.createlog(num, copy(m0[n].chan, pos('#', m0[n].chan), length(m0[n].chan)));
        output(clGreen, mess ,n);
-       closefile(t);
+       if fsett.chg1.Checked[1] then
+          closefile(t);
     end;
 
 
@@ -1975,6 +2009,7 @@ case s of
        tmp:= bak;
 
        if cname <> '' then n:= fmainc.cnode(2, 0,0, cname);
+       if fsett.chg1.Checked[1] then
        fmainc.createlog(num, copy(m0[n].chan, length(inttostr(num))+1, length(m0[n].chan)));
 
        // Kick
@@ -2149,7 +2184,7 @@ case s of
        if (pos('-a',mess) > 0) then fmainc.lbchange(tmp, '&', 4, n, num+1);
        end;
 
-       CloseFile(t);
+       if fsett.chg1.Checked[1] then CloseFile(t);
        end;
 
     11: Begin // Banlist
@@ -2381,7 +2416,7 @@ begin
      // If it is modified and notebook page is not visible then color the tree item
 
      //r:= ConvertEncoding(r, 'UTF8', 'iso8859-1', false);
-     if (r <> '') then m0[o].procstring(r); // To file
+     if (r <> '') and fsett.chg1.Checked[1] then m0[o].procstring(r); // To file
 
      {for l:= 0 to 100 do
      if (pos(char(l),r) > 0) and (pos('=',r) > 0) then ShowMessage(inttostr(l));}
@@ -3460,16 +3495,16 @@ procedure tfmainc.nbadd1(c,nick: string; con,i: smallint);
  c = text, con = connection, i = pageindex}
 var a: smallint = 0; // Memo number
 begin
+     while assigned(m0[a]) do inc(a);
 
       if i = Notebook1.PageCount then
          Notebook1.Pages.Add('Page' + inttostr(a))
       else
-         Notebook1.Pages.Insert(i, 'Page' + inttostr(i));
+         Notebook1.Pages.Insert(i, 'Page' + inttostr(a));
          //Notebook1.Pages.Add('Page' + inttostr(i));
 
      //Notebook1.Page[i].Name:= 'x' + inttostr(i);
 
-     while assigned(m0[a]) do inc(a);
      //ShowMessage('a ' +inttostr(a));
 
      // Splitter
@@ -3542,7 +3577,7 @@ begin
      m0[a].Text:= '';
      m0[a].lc:= 0; // Counting lines;
      m0[a].node:= a;
-     m0[a].Cursor:= crHandPoint;
+     m0[a].Cursor:= crArrow;
      //m0[a].Color:= RGBToColor(243,243,243);
      m0[a].Color:= RGBToColor(255,251,240);
      m0[a].Gutter.Visible:= false;
@@ -3556,7 +3591,7 @@ begin
      m0[a].ScrollBars:= ssAutoVertical;
      m0[a].Modified:= false;
      //m0[a].OnChange:= @mstatusChange;
-     m0[a].OnKeyPress:= @SynEdit1KeyPress;
+     //m0[a].OnKeyPress:= @SynEdit1KeyPress;
      m0[a].OnMouseMove:= @tsynMouseMove;
      m0[a].OnMouseUp:= @tsynMouseUp; //(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
      m0[a].OnPaint:= @tsynPaint;
@@ -3577,13 +3612,13 @@ begin
 
           //Name:= 'Ubuntu Mono';
           //name:= 'Nimbus Mono L';
-          name:= 'Monospace';
+          name:= 'Courier New';
           //CanUTF8;
           {$ifdef Unix}
           Height:= 10;
           {$endif}
           {$ifdef Windows}
-          Height:= 14;
+          height:= 14;
           {$endif}
           Color:= clBlack;
           Style:= [];
@@ -3697,17 +3732,18 @@ var a: smallint = 0;      // Memo number
 begin
      //ShowMessage('nb2 '+inttostr(Notebook1.PageCount));
 
+     while assigned(m0[a]) do inc(a);
+
      //if i > Notebook1.PageCount -1 then Carefull!!!
      if (i > 0) then
      if i = Notebook1.PageCount then
-        Notebook1.Pages.Add('Page' + inttostr(i))
+        Notebook1.Pages.Add('Page' + inttostr(a))
      else
          Notebook1.Pages.Insert(i, 'Page' + inttostr(a));
          //Notebook1.Pages.Add('Page' + inttostr(i+1));
 
 
      //Notebook1.Page[i].Name:= 'x' + inttostr(i);
-     while assigned(m0[a]) do inc(a);
 
      //if (pos('(', TreeView1.Items[0].Text) = 1) then dec(i);
      //if i = 1 then a:= 3;
@@ -3768,13 +3804,14 @@ begin
      with m0[a].Font do begin
           //Name:= 'Ubuntu Mono';
           //name:= 'Nimbus Mono L';
-          name:= 'Monospace';
+          //name:= 'Bookshelf symbol';
+          name:= 'Courier New';
           //CanUTF8;
           {$ifdef Unix}
           Height:= 10;
           {$endif}
           {$ifdef Windows}
-          Height:= 14;
+          height:= 14;
           {$endif}
           Color:= clBlack;
           Style:= [];
@@ -4855,12 +4892,11 @@ begin
      p:= Notebook1.PageCount;
      n:= rc;
      while (n <= maxnode) do begin
-           //ShowMessage('p ' + inttostr(n));
            Notebook1.Pages.Delete(rc);
      inc(n);
      end;
      Notebook1.PageIndex:= rc;
-
+     //ShowMessage('nb ' + inttostr(n));
      {
      p:= 0;
      while (p < Notebook1.PageCount) do begin
@@ -5006,7 +5042,7 @@ begin
 
               if node.AbsoluteIndex = m then
 
-              if (pos(lowercase(m0[n].nnick), lowercase(s)) > 0)
+              if (pos(lowercase(m0[n].nnick + ' '), lowercase(s)) > 0)
                  or (blue[m] = true)
                  then begin
                  sender.Canvas.Font.Color:= clBlue;
@@ -5244,6 +5280,7 @@ begin
      end;
 
      //while (assigned(net[n])) and (assigned(net[n].conn)) do begin
+     if net[n].active then
      while (assigned(net[n])) do begin
 
      net[n].loop;
