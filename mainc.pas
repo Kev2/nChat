@@ -13,7 +13,7 @@ uses
     shlobj,
     {$ENDIF}
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock, // ssl_openssl, ssl_openssl_lib,
+    StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock,
     SynEdit, SynHighlighterPosition,
     dateutils, IniFiles, abform, setf, logf, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
@@ -53,7 +53,6 @@ Type
     helpm: TMenuItem;
     abm: TMenuItem;
     hlpm: TMenuItem;
-    MenuItem1: TMenuItem;
     Kbm: TMenuItem;
     MenuItem2: TMenuItem;
     nickm: TMenuItem;
@@ -90,6 +89,7 @@ Type
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormPaint(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    //procedure ListBox1Click(Sender: TObject);
     procedure Splitter1Moved(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
 
@@ -546,10 +546,16 @@ procedure connex.send(t: string);
 begin
      conn.SendString(t + #13#10);
 end;
+{
+procedure Tfmainc.ListBox1Click(Sender: TObject);
+begin
+  m0[0].font.Name:= ListBox1.Items[ListBox1.ItemIndex];
+end;
+}
 
 // Starting date thu 2016-sep-08
 // 4500 lines 2017-nov-24
-// End date mon 2018-jun-25
+// End date 2018-jun-25
 procedure Tfmainc.FormActivate(Sender: TObject);
 var n:     smallint = 0;
     iniv:  TStrings;
@@ -564,6 +570,8 @@ begin
      fbanlist.Caption:= Application.Title + ' - Bans List';
      fclist.Caption:= Application.Title + ' - Channels List';
      fjoin.Caption:= Application.Title + ' - Join a channel';
+
+     //ListBox1.Items.Assign(screen.Fonts);
 
      //einput.SetFocus;
      TrayIcon1.Show;
@@ -800,7 +808,7 @@ begin
      //if pos('#', chann) > 0 then delete(chann, 1, 1);
 
      chann:= StringReplace(chann, '-', '_', [rfReplaceAll]);
-     path:= path + DirectorySeparator + chann + '.txt';
+     path:= path + DirectorySeparator + chann + '.log';
 
      if length(log) = 0 then SetLength(log, 1);
 
@@ -1489,6 +1497,7 @@ case s of
         if fsett.chg1.Checked[1] then
            CloseFile(t);
 
+        lb0[n].Repaint;
         //m0[n].Lines.LoadFromFile(log[n]);
     n:= 1;
     end; // JOIN
@@ -2316,7 +2325,7 @@ begin
         r:= char(3) + '12throws confetti & balloons all over' + char(3)+ '1 Everly ' + char(3) + '4`;~''' + char(3) + '3O' + char(3) + '8~~~*`;.' + char(3) + '12O' + char(3) + '9~~~~*`' + char(3)+ '1 Everly ' + char(3)+ '8.`~;`~`' + char(3) + '4O' + char(3) + '13~~~~*`;.' + char(3) + '6O' + char(3) + '11~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '14~~~*`;~' + char(3) + '13O' + char(3)+ '2~~~*`;.' + char(3)+ '3O' + char(3) + '5~~~~*`'+ char(3)+ '1 Everly ' + char(3) + '9.`~;`~`' + char(3) + '12O' + char(3) + '4~~~~*`;.' + char(3) + '8O' + char(3) + '10~~~~*`;.`~;`~`' + char(3) + '11O' + char(3) + '13~~~*`;~' + char(3) + '1O' + char(3) + '4~~~*`;.' + char(3)+ '9O' + char(3)+ '2~~~~*`' + char(3) + '1 Everly ' + char(3) + '6.`~;`~`' + char(3) + '12O' + char(3)+ '13~~~~*`;.' + char(3) + '4O' + char(3) + '3~~~~*`;.`~;`~`' + char(3) + '1O' + char(3) + '13~~~*`';
         r:= char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '1,16D~~ ' +char(2) + char(3) + '16,5[_]' + char(2) + char(3) + '16,5[_]' +char(2) + char(3) + '1,16D~~ ' + char(2) + char(3) + '8,5Coffee Anyone??' + char(3) + '16,16';
         r:= char(3) + '4 hangs' +char(3) + '10 a' +char(3) + '13 string' + char(3) + '2 of' +char(3) + '5 party' +char(3) + '10 lights' +char(3) + '9 out' +char(3) + '7 for' +char(3) + '9Ai.*A*.' +char(3) + '8Ai. *A*.' +char(3) + '10Ai.*A*' +char(3) + '1Capt^Goodvib es *A*.' +char(3) + '12Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '8Ai.*A*' +char(3) + '1 Capt^Goodvibes *A*.' +char(3) + '9Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '14Ai.*' +char(3) + '1 Capt^Goodvibes *.' +char(3) + '2Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '7Ai.*A*.' +char(3) + '9Ai.*A*.' +char(3) + '13Ai.*A*.' +char(3) + '8Ai.*A*.' +char(3) + '2Ai.*A*.' +char(3) + '10Ai.*A*.' +char(3) + '4Ai.*A*.' +char(3) + '5Ai.*A*.' +char(3) + '8Ai.' +char(1);
-
+     }
      if (pos('h1', r) > 0) then begin
      //r:= char(3) + 'Hola ' + char(3) + '00,01Hola este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba este es un texto de prueba';
      //r:= '< Autobot > ' + char(3) + '4Tune in via our Website: ' + char(3) + '4' + char(15) + 'http://ChanOps.com/radio.html ' + char(15) + char(3) + '3 or using a Program (Winamp, WM-Player or VLC): ' + char(3) +'4' + char(15) + 'http://salt-lake-server.myautodj.com:8164/listen.pls/stream';
@@ -2338,7 +2347,7 @@ begin
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3);
      //r:= 'CamilaAndreina: ' + char(3) + '01' + char(2) + char(3) + '1Esta transmitiendo <' + char(3) + char(3) + '13CamilaAndreina' + char(3) + ' ' + char(3) + '1en' + char(3) + ' ' + char(3) + '3Radio Lc-Argentina' + char(3)+char(3) + '1>. Escuchala en: ' +char(3) + char(15) + char(3) + '12http://radiolcargentina.radiostream123.com' + char(2) + char(15);
      //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
-     //r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
+     r:= 'mcclane https://duckduckgo.com% and http://duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com/duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%duckduckgo.com%) hola';
      //r:= 'Olives: Hi, ' + char(3)+ '6-' + char(3) + '6,6 ' + char(3)+ '0,0 ' + char(3) + '6,0Sherbet' + char(3) + '0,0 ' + char(3) + '6,6 ' + char(15) + char(3) + '6- ' + char(15) + char(3) + '1';
      //r:= 'llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll';
      //c:= clgreen;
@@ -2348,7 +2357,7 @@ begin
      r:= char(3) + '0,1Your behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chattingYour behaviour is inapropiate, please change your way of chatting';
      //c:= clGreen;
      end;
-     }
+
 
      u:= 'Ã¡Ã©Ã­Ã³ÃºÃÃÃÃÃÃ±ÃÃÃ¨Ã¬Ã²Ã¹ÃÃÃÃÃ¤Ã«Ã¯Ã¶Ã¼ÃÃÃÃÃ';
      a:= 'áéíóúÁÉÍÓÚñÑäëïöüÄËÏÖÜàèìòùÀÈÌÒÙ¡';
@@ -2483,7 +2492,12 @@ begin
      if lines.Count > 0 then
      while (l < Lines.Count) do begin
            tmp:= lines[l];
+           {$ifdef Unix}
            w:=   Width div (font.Height div 2) - 36; // Monospace
+           {$endif}
+           {$ifdef Windows}
+           w:=   Width div (font.Height div 2) - 5; // Courier New
+           {$endif}
      {
      tmp2:= StringReplace(lines[l], char(1), '', [rfReplaceAll]);
      if (pos('bkcol', BStrings[l1]) = 1) then
@@ -3802,16 +3816,24 @@ begin
      //      // spanish iso8859-1
      // adobe-courier-medium-r-normal-*-*-100-*-*-m-*-iso10646-1
      with m0[a].Font do begin
-          //Name:= 'Ubuntu Mono';
-          //name:= 'Nimbus Mono L';
-          //name:= 'Bookshelf symbol';
+          {Name:= 'Ubuntu Mono';
+           name:= 'Nimbus Mono L';
+           name:= 'Bookshelf symbol';
+           DFkai-sb
+           Batangche
+           Consolas
+           Dotumche
+           fixedSys
+           Gungsuhche
+           MiriamFixed}
+
           name:= 'Courier New';
           //CanUTF8;
           {$ifdef Unix}
           Height:= 10;
           {$endif}
           {$ifdef Windows}
-          height:= 14;
+          Height:= 14;
           {$endif}
           Color:= clBlack;
           Style:= [];
@@ -4051,7 +4073,8 @@ var
     ip:     string;
     p:      smallint;
     s:      smallint = 0;
-    m:      TMenuItem;
+    count:  smallint = 0;
+    m,n:    TMenuItem;
     l:      string;
     tmp:    string = '';
 begin
@@ -4073,6 +4096,7 @@ begin
 
      if (task = true) then while a = '' do a:= net[s].conn.RecvString(100);
      while (pos('WHO', tmp) = 0) do tmp:= net[s].conn.RecvString(200);
+
      //m0[1].Append(a);
 
      if a <> '' then
@@ -4097,8 +4121,9 @@ begin
      sollo End of /WHOIS list.
      :server code sollo sollo 13
      }
-     m:= nickpop.Items[0].Items[0];
-
+     m:= nickpop.Items[0];
+     // Deleting old items
+        while (m.Count > 0) do m.Delete(0);
 
      // Querying whois
      if (task = true) then
@@ -4160,12 +4185,21 @@ begin
          end;
 
          inc(p);
-         if l = '' then l:= a else if a <> '' then l:= l + sLineBreak + a;
+
+         // m:= nickpop.Items[0].Items[0];
+         n:= TMenuItem.Create(m);
+
+         //if l = '' then l:= a else if a <> '' then begin
+            m.Add(n);
+            n.Caption:= a;
+            //ShowMessage(m.Items[count].Caption);
+            //m.Items[0].Caption:= a;
+         //end;
 
      end;
      p:= 0;
+     inc(count);
      end;
-     m.Caption:= l;
 end;
 
 procedure tfmainc.nickrclick(sender: TMenuItem);
@@ -4716,7 +4750,9 @@ begin
       if Button = mbRight then
          if TreeView1.GetNodeAt(x, y) <> nil then begin
          rc:= (TreeView1.GetNodeAt(x, y).AbsoluteIndex);
-         if TreeView1.Items.Count > 1 then treepop.PopUp;
+         if (TreeView1.items[rc].GetNextSibling <> nil) or (TreeView1.items[rc].GetPrevSibling <> nil) or
+            (TreeView1.Items[rc].Parent <> nil)
+            then treepop.PopUp;
       end;
 end;
 
