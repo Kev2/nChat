@@ -14,7 +14,7 @@ uses
     {$ENDIF}
     Interfaces, Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     StdCtrls, ExtCtrls, ComCtrls, Menus, ActnList, LCLIntf, LConvEncoding, blcksock,
-    SynEdit, SynHighlighterPosition,
+    SynEdit, SynHighlighterPosition, ssl_openssl,
     dateutils, IniFiles, abform, setf, logf, servf, chanlist, joinf, functions, Types, Clipbrd, kmessf, banlist;
     //LMessages; //, LType;
 
